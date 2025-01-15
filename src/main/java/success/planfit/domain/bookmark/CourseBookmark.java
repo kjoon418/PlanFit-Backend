@@ -1,9 +1,12 @@
 package success.planfit.domain.bookmark;
 
-
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.user.User;
+
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -11,17 +14,25 @@ import lombok.NoArgsConstructor;
 public class CourseBookmark {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    private int user_id;
+    @JoinColumn(nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-    @Column(nullable = false)
-    private int title;
+    private String title;
 
-    @Column(nullable = false)
-    private int date;
+    @Column(nullable = false, unique = true)
+    private LocalDate date;
 
-    @Column(nullable = false)
-    private int title_photo;
+    private String titlePhoto;
+
+    @Builder
+    private CourseBookmark(User user, String title, LocalDate date, String titlePhoto) {
+        this.user = user;
+        this.title = title;
+        this.date = date;
+        this.titlePhoto = titlePhoto;
+    }
 
 }

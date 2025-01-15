@@ -1,26 +1,31 @@
 package success.planfit.domain.bookmark;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.user.User;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name= "space_bookmark_uq_space", columnNames={"user_id", "google_places_identifier"}))
 public class SpaceBookmark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column(nullable = false)
-    private int user_id;
+    private String googlePlacesIdentifier;
 
-    @Column(nullable = false)
-    private int google_placed_identifier;
-
-    private SpaceBookmark(int user_id, int google_placed_identifier) {
-        this.user_id = user_id;
-        this.google_placed_identifier = google_placed_identifier;
+    @Builder
+    private SpaceBookmark(User user, String googlePlacesIdentifier) {
+        this.user = user;
+        this.googlePlacesIdentifier = googlePlacesIdentifier;
     }
 
 }

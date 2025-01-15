@@ -1,10 +1,7 @@
 package success.planfit.domain.preference;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,13 +14,15 @@ public class Preference {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
+    //@Column(unique = true)
+    @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private PreferenceType name;
 
     @Builder
-    public Preference(int id, PreferenceType name) {
-        this.id = id;
+    public Preference(PreferenceType name) {
         this.name = name;
     }
 }

@@ -13,19 +13,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @DiscriminatorColumn(name="authorized_by", discriminatorType = DiscriminatorType.STRING)
-public class User {
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    private String phone_number;
+    private String phoneNumber;
 
     @Column(nullable = false)
-    private LocalDateTime birth_of_date;
+    private LocalDateTime birthOfDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -34,17 +34,17 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    private String profile_url;
+    private String profileUrl;
 
     @Builder
-    private User(String name, String phone_number, LocalDateTime birth_of_date, IdentityType identity, String email
-    , String profile_url){
+    private User(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email
+    , String profileUrl){
         this.name = name;
-        this.phone_number = phone_number;
-        this.birth_of_date = birth_of_date;
+        this.phoneNumber = phoneNumber;
+        this.birthOfDate = birthOfDate;
         this.identity = identity;
         this.email = email;
-        this.profile_url = profile_url;
+        this.profileUrl = profileUrl;
     }
 
 

@@ -1,12 +1,10 @@
 package success.planfit.domain.course;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.user.User;
 
 import java.time.LocalDate;
 
@@ -17,10 +15,11 @@ import java.time.LocalDate;
 public class Calendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(nullable = false)
-    private int user_id;
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -29,6 +28,14 @@ public class Calendar {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String share_serial;
+    private String shareSerial;
+
+    @Builder
+    private Calendar(User user, String title, LocalDate date, String shareSerial) {
+        this.user = user;
+        this.title = title;
+        this.date = date;
+        this.shareSerial = shareSerial;
+    }
 
 }

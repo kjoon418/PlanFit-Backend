@@ -9,25 +9,26 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class PlanfitUser {
+public class PlanfitUser{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @Column(nullable = false,unique = true)
+    private String loginId;
 
     @Column(nullable = false)
-    private int user_id;
-
-    @Column(nullable = false)
-    private int login_id;
-
-    @Column(nullable = false)
-    private int password;
+    private String password;
 
     @Builder
-    private PlanfitUser(int user_id, int login_id, int password) {
-        this.user_id = user_id;
-        this.login_id = login_id;
+    private PlanfitUser(User user, String loginId, String password) {
+        this.user = user;
+        this.loginId = loginId;
         this.password = password;
     }
 

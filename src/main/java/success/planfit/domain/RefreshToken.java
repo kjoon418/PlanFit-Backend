@@ -1,30 +1,29 @@
-package success.planfit.domain.user;
+package success.planfit.domain;
 
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.user.User;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class KakaoUser{
-
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false)
+    @JoinColumn (nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false, unique = true)
-    private Long kakaoIdentifier;
+    private String tokenValue;
 
     @Builder
-    private KakaoUser(User user, Long kakaoIdentifier) {
+    private RefreshToken(User user, String tokenValue) {
         this.user = user;
-        this.kakaoIdentifier = kakaoIdentifier;
+        this.tokenValue = tokenValue;
     }
 }

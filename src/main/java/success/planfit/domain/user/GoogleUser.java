@@ -10,17 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 public class GoogleUser {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int id;
-    private int user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String google_identifier;
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @Column(nullable = false, unique = true)
+    private String googleIdentifier;
 
     @Builder
-    private GoogleUser(int user_id, String google_identifier) {
-        this.user_id = user_id;
-        this.google_identifier = google_identifier;
+    private GoogleUser(User user, String googleIdentifier) {
+        this.user = user;
+        this.googleIdentifier = googleIdentifier;
     }
 }

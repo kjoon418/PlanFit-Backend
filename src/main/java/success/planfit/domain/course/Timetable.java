@@ -1,8 +1,8 @@
 package success.planfit.domain.course;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,28 +11,51 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "timetable_uq_start_time", columnNames = {"calendar_id", "start_time"}),
+        @UniqueConstraint(name = "timetable_uq_end_time", columnNames = {"calendar_id", "end_time"})
+})
 public class Timetable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private int id;
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Calendar calendar;
 
-    private int calendar_id;
+    @Column(nullable = false)
+    private LocalTime startTime;
 
-    private LocalTime start_time;
+    @Column(nullable = false)
+    private LocalTime endTime;
 
-    private LocalTime end_time;
+    @Column(nullable = false)
+    private String spaceName;
 
-    private String space_name;
-
+    @Column(nullable = false)
     private String location;
 
-    private SpaceType space_tag;
+    @Enumerated(EnumType.STRING)
+    private SpaceType spaceTag;
 
     private String memo;
 
+    @Column(nullable = false)
     private String link;
 
+    @Builder
+    private Timetable(Calendar calendar,LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo, String link) {
+        this.calendar = calendar;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.spaceName = spaceName;
+        this.location = location;
+        this.spaceTag = spaceTag;
+        this.memo = memo;
+        this.link = link;
+    }
 
 
 

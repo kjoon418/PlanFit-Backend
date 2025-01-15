@@ -2,39 +2,60 @@ package success.planfit.domain.bookmark;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.course.SpaceType;
+
+import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "timetable_bookmark_uq_start_time", columnNames = {"course_bookmark_id", "start_time"}),
+        @UniqueConstraint(name = "timetable_bookmark_uq_end_time", columnNames = {"course_bookmark_id", "end_time"})
+})
 public class TimetableBookmark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private CourseBookmark courseBookmark;
 
     @Column(nullable = false)
-    private int course_bookmark_id;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private int start_time;
+    private LocalTime endTime;
 
     @Column(nullable = false)
-    private int end_time;
+    private String spaceName;
 
     @Column(nullable = false)
-    private int space_name;
+    private String location;
+
+    @Enumerated(EnumType.STRING)
+    private SpaceType spaceTag;
+
+    private String memo;
 
     @Column(nullable = false)
-    private int location;
+    private String link;
 
-    private int space_tag;
-
-    private int memo;
-
-    @Column(nullable = false)
-    private int link;
-
-
+    @Builder
+    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo
+    , String link) {
+        this.courseBookmark = courseBookmark;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.spaceName = spaceName;
+        this.location = location;
+        this.spaceTag = spaceTag;
+        this.memo = memo;
+        this.link = link;
+    }
 }
