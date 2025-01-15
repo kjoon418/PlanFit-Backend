@@ -2,7 +2,6 @@ package success.planfit.domain.user;
 
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="authorized_by", discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
 
@@ -36,9 +36,7 @@ public abstract class User {
 
     private String profileUrl;
 
-    @Builder
-    private User(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email
-    , String profileUrl){
+    protected User(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
@@ -46,7 +44,5 @@ public abstract class User {
         this.email = email;
         this.profileUrl = profileUrl;
     }
-
-
 
 }
