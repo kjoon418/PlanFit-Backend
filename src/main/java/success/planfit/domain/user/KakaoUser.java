@@ -6,25 +6,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @Entity
-public class KakaoUser{
+public class KakaoUser extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-
     @Column(nullable = false, unique = true)
     private Long kakaoIdentifier;
 
     @Builder
-    private KakaoUser(User user, Long kakaoIdentifier) {
-        this.user = user;
+    private KakaoUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.kakaoIdentifier = kakaoIdentifier;
     }
 }

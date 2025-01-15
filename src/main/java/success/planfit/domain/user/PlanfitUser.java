@@ -6,18 +6,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @Entity
-public class PlanfitUser{
+public class PlanfitUser extends User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
     @Column(nullable = false,unique = true)
     private String loginId;
@@ -26,8 +24,8 @@ public class PlanfitUser{
     private String password;
 
     @Builder
-    private PlanfitUser(User user, String loginId, String password) {
-        this.user = user;
+    private PlanfitUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.loginId = loginId;
         this.password = password;
     }
