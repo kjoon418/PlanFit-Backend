@@ -1,9 +1,10 @@
 package success.planfit.controller.utils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import success.planfit.domain.user.User;
+import success.planfit.jwt.TokenProvider;
 import success.planfit.service.UserService;
 
 import java.security.Principal;
@@ -14,12 +15,17 @@ import java.security.Principal;
 public class ControllerUtil {
 
     private final UserService userService;
+    private final TokenProvider tokenProvider;
 
-    public User findUserByPrincipal(Principal principal) {
+    public Long findUserIdByPrincipal(Principal principal) {
         log.info("ControllerUtil.findUserByPrincipal()");
 
-        long userId = Long.parseLong(principal.getName());
+        return Long.parseLong(principal.getName());
+    }
 
-        return userService.findById(userId);
+    public String getTokenFromServletRequest(HttpServletRequest request) {
+        log.info("ControllerUtil.getTokenFromServletRequest()");
+
+        return tokenProvider.resolveToken(request);
     }
 }

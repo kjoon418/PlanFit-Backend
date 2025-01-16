@@ -1,5 +1,6 @@
 package success.planfit.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -7,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
-import success.planfit.domain.user.User;
 import success.planfit.dto.request.PlanFitUserSignInRequestDto;
 import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.service.AuthorizationService;
 
@@ -92,8 +93,8 @@ public class AuthorizationController {
     public ResponseEntity<Void> logout(Principal principal) {
         log.info("UserController.logout() called");
 
-        User user = util.findUserByPrincipal(principal);
-        authorizationService.invalidateRefreshToken(user);
+        Long userId = util.findUserIdByPrincipal(principal);
+        authorizationService.invalidateRefreshToken(userId);
 
         return ResponseEntity.ok().build();
     }
@@ -102,9 +103,19 @@ public class AuthorizationController {
     public ResponseEntity<Void> withdraw(Principal principal) {
         log.info("UserController.withdraw() called");
 
-        User user = util.findUserByPrincipal(principal);
-        authorizationService.deleteUser(user);
+        Long userId = util.findUserIdByPrincipal(principal);
+        authorizationService.deleteUser(userId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/authorization/reissue")
+    public ResponseEntity<AccessTokenResponseDto> reissueAccessToken(HttpServletRequest request) {
+        log.info("UserController.reissueAccessToken() called");
+
+        String refreshToken = util.getTokenFromServletRequest(request);
+        AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

@@ -19,6 +19,7 @@ import success.planfit.dto.kakao.KaKaoUserInfoDto;
 import success.planfit.dto.kakao.KakaoAccessTokenDto;
 import success.planfit.dto.request.PlanFitUserSignInRequestDto;
 import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.jwt.TokenProvider;
 import success.planfit.jwt.TokenType;
@@ -307,15 +308,41 @@ public class AuthorizationService {
         throw new RuntimeException("카카오 유저 정보 획득 실패");
     }
 
-    public void invalidateRefreshToken(User user) {
+    public void invalidateRefreshToken(Long userId) {
         log.info("AuthorizationService.invalidateRefreshToken() called");
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("ID를 통해 유저 조회 실패"));
         user.getRefreshToken().setTokenValue(null);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(Long userId) {
         log.info("AuthorizationService.removeUser() called");
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("ID를 통해 유저 조회 실패"));
         userRepository.delete(user);
+    }
+
+    public AccessTokenResponseDto reissueAccessToken(String refreshToken) {
+        log.info("AuthorizationService.reissueAccessToken() called");
+
+        // 유효성 검사: 토큰 자체가 부적절한지 확인
+        long userId = Long.parseLong(tokenProvider.parseClaims(refreshToken).getSubject());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("토큰으로 조회되는 회원 없음"));
+        if (!tokenProvider.validateToken(refreshToken, TokenType.REFRESH)) {
+            throw new IllegalArgumentException("부적절한 토큰");
+        }
+
+        // 유효성 검사: DB에 저장된 리프레쉬 토큰과 동일한지 확인
+        if (!refreshToken.equals(user.getRefreshToken().getTokenValue())) {
+            throw new IllegalArgumentException("부적절한 토큰: 다른 곳에서 로그인됨");
+        }
+
+        // 엑세스 토큰 생성 및 반환
+        return AccessTokenResponseDto.builder()
+                .accessToken(tokenProvider.createToken(user, TokenType.ACCESS))
+                .build();
     }
 }
