@@ -306,4 +306,16 @@ public class AuthorizationService {
 
         throw new RuntimeException("카카오 유저 정보 획득 실패");
     }
+
+    public void invalidateRefreshToken(User user) {
+        log.info("AuthorizationService.invalidateRefreshToken() called");
+
+        user.getRefreshToken().setTokenValue(null);
+    }
+
+    public void deleteUser(User user) {
+        log.info("AuthorizationService.removeUser() called");
+
+        userRepository.delete(user);
+    }
 }

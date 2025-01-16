@@ -6,10 +6,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import success.planfit.controller.utils.ControllerUtil;
+import success.planfit.domain.user.User;
 import success.planfit.dto.request.PlanFitUserSignInRequestDto;
 import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.service.AuthorizationService;
+
+import java.security.Principal;
 
 /**
  * 회원가입/로그인과 관련된 API를 처리하는 컨트롤러
@@ -20,6 +24,7 @@ import success.planfit.service.AuthorizationService;
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
+    private final ControllerUtil util;
 
     @PostMapping("/authorization")
     public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanFitUserSignUpRequestDto requestDto) {
@@ -81,5 +86,25 @@ public class AuthorizationController {
         TokenResponseDto responseDto = authorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/user/logout")
+    public ResponseEntity<Void> logout(Principal principal) {
+        log.info("UserController.logout() called");
+
+        User user = util.findUserByPrincipal(principal);
+        authorizationService.invalidateRefreshToken(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/user/withdraw")
+    public ResponseEntity<Void> withdraw(Principal principal) {
+        log.info("UserController.withdraw() called");
+
+        User user = util.findUserByPrincipal(principal);
+        authorizationService.deleteUser(user);
+
+        return ResponseEntity.ok().build();
     }
 }
