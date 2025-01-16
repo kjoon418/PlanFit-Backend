@@ -17,12 +17,11 @@ import success.planfit.service.AuthorizationService;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/authorization")
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
 
-    @PostMapping
+    @PostMapping("/authorization")
     public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanFitUserSignUpRequestDto requestDto) {
         log.info("UserController.planFitSignUp() called");
 
@@ -31,7 +30,7 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping
+    @GetMapping("/authorization")
     public ResponseEntity<TokenResponseDto> planFitSignIn(@RequestBody PlanFitUserSignInRequestDto requestDto) {
         log.info("UserController.planFitSignIn() called");
 
@@ -40,7 +39,7 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/google")
+    @GetMapping("/authorization/google")
     public ResponseEntity<Void> googleRedirect() {
         log.info("UserController.googleRedirect() called");
 
@@ -52,7 +51,7 @@ public class AuthorizationController {
     /**
      * 사용자가 구글 로그인을 마치면, 구글 측의 리다이렉트로 연결될 컨트롤러
      */
-    @GetMapping("/google/callback")
+    @GetMapping("/authorization/google/callback")
     public ResponseEntity<TokenResponseDto> googleAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.googleCallback() called");
 
@@ -62,7 +61,7 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/kakao")
+    @GetMapping("/authorization/kakao")
     public ResponseEntity<Void> kakaoRedirect() {
         log.info("UserController.kakaoRedirect() called");
 
@@ -74,7 +73,7 @@ public class AuthorizationController {
     /**
      * 사용자가 카카오 로그인을 마치면, 카카오 측의 리다이렉트로 연결될 컨트롤러
      */
-    @GetMapping("/kakao/callback")
+    @GetMapping("/authorization/kakao/callback")
     public ResponseEntity<TokenResponseDto> kakaoAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.kakaoAuthorization() called");
 
