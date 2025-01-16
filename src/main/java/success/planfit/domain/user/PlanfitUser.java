@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.domain.RefreshToken;
 
 import java.time.LocalDate;
 
@@ -25,8 +24,8 @@ public class PlanfitUser extends User {
     private String password;
 
     @Builder
-    private PlanfitUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password, RefreshToken refreshToken) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl, refreshToken);
+    private PlanfitUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.loginId = loginId;
         this.password = password;
     }
