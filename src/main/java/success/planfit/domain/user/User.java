@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Getter
@@ -25,7 +25,7 @@ public abstract class User {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private LocalDateTime birthOfDate;
+    private LocalDate birthOfDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public abstract class User {
 
     private String profileUrl;
 
-    protected User(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl){
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
