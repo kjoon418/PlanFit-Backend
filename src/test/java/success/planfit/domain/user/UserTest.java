@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @SpringBootTest
@@ -25,7 +26,6 @@ class UserTest {
                 .googleIdentifier("helloGoogle")
                 .name("googleUserA")
                 .phoneNumber("01011112222")
-                .birthOfDate(LocalDateTime.now())
                 .identity(IdentityType.STUDENT)
                 .email("googleUser@gmail.com")
                 .profileUrl("helloProfileUrl")
@@ -47,7 +47,7 @@ class UserTest {
                 .kakaoIdentifier(123L)
                 .name("kakaoUserA")
                 .phoneNumber("01011112222")
-                .birthOfDate(LocalDateTime.now())
+                .birthOfDate(LocalDate.now())
                 .identity(IdentityType.STUDENT)
                 .email("kakaoUser@kakao.com")
                 .profileUrl("helloProfileUrl")
@@ -70,7 +70,7 @@ class UserTest {
                 .password("helloPassword")
                 .name("planFitUserA")
                 .phoneNumber("01011112222")
-                .birthOfDate(LocalDateTime.now())
+                .birthOfDate(LocalDate.now())
                 .identity(IdentityType.STUDENT)
                 .email("planFitUser@planfit.com")
                 .profileUrl("helloProfileUrl")
