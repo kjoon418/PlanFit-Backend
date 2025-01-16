@@ -91,7 +91,6 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             return hasProperType(token, tokenType);
         } catch (UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException | MalformedJwtException e) {
-            e.printStackTrace();
             return false;
         }
     }
