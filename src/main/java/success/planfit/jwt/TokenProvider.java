@@ -8,12 +8,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import success.planfit.domain.user.User;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class TokenProvider {
@@ -58,7 +60,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(claims.getSubject(), "");
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(claims.getSubject(), "", List.of(new SimpleGrantedAuthority("ROLE_USER")));
         authentication.setDetails(claims);
 
         return authentication;
@@ -89,6 +91,7 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             return hasProperType(token, tokenType);
         } catch (UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException | MalformedJwtException e) {
+            e.printStackTrace();
             return false;
         }
     }
