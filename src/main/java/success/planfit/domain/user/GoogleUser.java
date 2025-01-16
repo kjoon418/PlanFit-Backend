@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.RefreshToken;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Getter
@@ -20,8 +21,8 @@ public class GoogleUser extends User {
     private String googleIdentifier;
 
     @Builder
-    private GoogleUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, String googleIdentifier) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
+    private GoogleUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String googleIdentifier, RefreshToken refreshToken) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl, refreshToken);
         this.googleIdentifier = googleIdentifier;
     }
 }

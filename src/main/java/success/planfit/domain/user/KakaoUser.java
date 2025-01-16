@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.RefreshToken;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -21,8 +22,8 @@ public class KakaoUser extends User {
     private Long kakaoIdentifier;
 
     @Builder
-    private KakaoUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
+    private KakaoUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier, RefreshToken refreshToken) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl, refreshToken);
         this.kakaoIdentifier = kakaoIdentifier;
     }
 }
