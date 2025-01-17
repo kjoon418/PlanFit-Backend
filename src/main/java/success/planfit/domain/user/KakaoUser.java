@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class KakaoUser extends User {
     private Long kakaoIdentifier;
 
     @Builder
-    private KakaoUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier) {
+    private KakaoUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier) {
         super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.kakaoIdentifier = kakaoIdentifier;
     }

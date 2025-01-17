@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -24,7 +24,7 @@ public class PlanfitUser extends User {
     private String password;
 
     @Builder
-    private PlanfitUser(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password) {
+    private PlanfitUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password) {
         super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.loginId = loginId;
         this.password = password;

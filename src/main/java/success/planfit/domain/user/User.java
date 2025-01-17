@@ -4,31 +4,34 @@ package success.planfit.domain.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.RefreshToken;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="authorized_by", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn
+    private RefreshToken refreshToken;
+
     @Column(nullable = false)
     private String name;
 
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private LocalDateTime birthOfDate;
+    private LocalDate birthOfDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private IdentityType identity;
 
     @Column(nullable = false)
@@ -36,13 +39,14 @@ public abstract class User {
 
     private String profileUrl;
 
-    protected User(String name, String phoneNumber, LocalDateTime birthOfDate, IdentityType identity, String email, String profileUrl){
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
         this.identity = identity;
         this.email = email;
         this.profileUrl = profileUrl;
+        this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 
 }
