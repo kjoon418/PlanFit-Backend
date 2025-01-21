@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor
@@ -16,13 +19,15 @@ public class Preference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Column(unique = true)
     @Enumerated(EnumType.STRING)
     @Column(unique = true)
     private PreferenceType name;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "preference")
+    private final List<UserPreference> userPreferences = new ArrayList<>();
+
     @Builder
-    public Preference(PreferenceType name) {
+    private Preference(PreferenceType name) {
         this.name = name;
     }
 }
