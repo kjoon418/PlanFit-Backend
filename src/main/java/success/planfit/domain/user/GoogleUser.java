@@ -5,25 +5,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class GoogleUser {
+public class GoogleUser extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
     @Column(nullable = false, unique = true)
     private String googleIdentifier;
 
     @Builder
-    private GoogleUser(User user, String googleIdentifier) {
-        this.user = user;
+    private GoogleUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String googleIdentifier) {
+        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
         this.googleIdentifier = googleIdentifier;
     }
 }

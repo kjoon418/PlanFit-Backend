@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import success.planfit.domain.user.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,6 +21,9 @@ public class CourseBookmark {
     @JoinColumn(nullable=false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "courseBookmark")
+    private final List<TimetableBookmark> timetableBookmarks = new ArrayList<>();
 
     private String title;
 
