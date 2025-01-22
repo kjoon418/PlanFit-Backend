@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import success.planfit.domain.user.IdentityType;
 import success.planfit.domain.user.PlanfitUser;
+import success.planfit.photo.PhotoProvider;
 
 import java.time.LocalDate;
 
@@ -29,7 +30,7 @@ public class PlanFitUserSignUpRequestDto {
                 .birthOfDate(birthOfDate)
                 .identity(identity)
                 .email(email)
-                .profileUrl(profileUrl)
+                .profilePhoto(PhotoProvider.getImageFromUrl(profileUrl))
                 .build();
     }
 }

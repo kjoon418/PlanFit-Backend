@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class GoogleUser extends User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,8 +21,8 @@ public class GoogleUser extends User {
     private String googleIdentifier;
 
     @Builder
-    private GoogleUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String googleIdentifier) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
+    private GoogleUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto, String googleIdentifier) {
+        super(name, phoneNumber, birthOfDate, identity, email, profilePhoto);
         this.googleIdentifier = googleIdentifier;
     }
 }
