@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Calendar {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,5 +43,4 @@ public class Calendar {
         this.date = date;
         this.shareSerial = shareSerial;
     }
-
 }

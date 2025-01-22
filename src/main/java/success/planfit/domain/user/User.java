@@ -55,15 +55,16 @@ public abstract class User {
     @Column(nullable = false)
     private String email;
 
-    private String profileUrl;
+    @Lob
+    private byte[] profilePhoto;
 
-    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl){
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
         this.identity = identity;
         this.email = email;
-        this.profileUrl = profileUrl;
+        this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 

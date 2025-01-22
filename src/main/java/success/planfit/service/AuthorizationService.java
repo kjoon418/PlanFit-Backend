@@ -23,6 +23,7 @@ import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.jwt.TokenProvider;
 import success.planfit.jwt.TokenType;
+import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 
 import java.net.URI;
@@ -117,8 +118,8 @@ public class AuthorizationService {
     public String getGoogleRedirectUrl() {
         log.info("AuthorizationService.getGoogleAuthorizationRedirect() called");
 
-        StringBuilder url = new StringBuilder();
-        url.append("https://accounts.google.com/o/oauth2/v2/auth?client_id=")
+        StringBuilder url = new StringBuilder()
+                .append("https://accounts.google.com/o/oauth2/v2/auth?client_id=")
                 .append(GOOGLE_CLIENT_ID)
                 .append("&redirect_uri=")
                 .append(GOOGLE_REDIRECT_URI)
@@ -169,7 +170,7 @@ public class AuthorizationService {
                         .googleIdentifier(googleUserInfo.getId())
                         .email(googleUserInfo.getEmail())
                         .name(googleUserInfo.getName())
-                        .profileUrl(googleUserInfo.getPictureUrl())
+                        .profilePhoto(PhotoProvider.getImageFromUrl(googleUserInfo.getPictureUrl()))
                         .build())
                 );
 
@@ -270,7 +271,7 @@ public class AuthorizationService {
                         .kakaoIdentifier(kakaoUserInfo.getId())
                         .email(kakaoUserInfo.getEmail())
                         .name(kakaoUserInfo.getName())
-                        .profileUrl(kakaoUserInfo.getProfileUrl())
+                        .profilePhoto(PhotoProvider.getImageFromUrl(kakaoUserInfo.getProfileUrl()))
                         .build())
                 );
 

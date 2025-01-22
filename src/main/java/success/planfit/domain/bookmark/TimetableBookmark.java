@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.domain.course.SpaceType;
+import success.planfit.domain.embeddable.SpaceInformation;
 
 import java.time.LocalTime;
 
@@ -32,30 +32,17 @@ public class TimetableBookmark {
     @Column(nullable = false)
     private LocalTime endTime;
 
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceTag;
-
     private String memo;
 
-    @Column(nullable = false)
-    private String link;
+    @Embedded
+    private SpaceInformation spaceInformation;
 
     @Builder
-    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo
-    , String link) {
+    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String memo, SpaceInformation spaceInformation) {
         this.courseBookmark = courseBookmark;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.spaceName = spaceName;
-        this.location = location;
-        this.spaceTag = spaceTag;
         this.memo = memo;
-        this.link = link;
+        this.spaceInformation = spaceInformation;
     }
 }

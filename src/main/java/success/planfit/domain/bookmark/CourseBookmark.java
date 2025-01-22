@@ -30,10 +30,11 @@ public class CourseBookmark {
     @Column(nullable = false, unique = true)
     private LocalDate date;
 
-    private String titlePhoto;
+    @Lob
+    private byte[] titlePhoto;
 
     @Builder
-    private CourseBookmark(User user, String title, LocalDate date, String titlePhoto) {
+    private CourseBookmark(User user, String title, LocalDate date, byte[] titlePhoto) {
         this.user = user;
         this.title = title;
         this.date = date;
