@@ -1,8 +1,6 @@
 package success.planfit.domain.embeddable;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.*;
 import success.planfit.domain.course.SpaceType;
 
@@ -19,6 +17,7 @@ public class SpaceInformation {
     @Column(nullable = false)
     private String location;
 
+    @Enumerated(EnumType.STRING)
     private SpaceType spaceTag;
 
     @Column(nullable = false)
