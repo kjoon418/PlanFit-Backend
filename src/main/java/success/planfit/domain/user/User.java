@@ -2,13 +2,18 @@ package success.planfit.domain.user;
 
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import success.planfit.domain.RefreshToken;
+import success.planfit.domain.bookmark.CourseBookmark;
+import success.planfit.domain.bookmark.SpaceBookmark;
+import success.planfit.domain.course.Calendar;
+import success.planfit.domain.preference.UserPreference;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -25,6 +30,18 @@ public abstract class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private RefreshToken refreshToken;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<CourseBookmark> courseBookmarks = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<SpaceBookmark> spaceBookmarks = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<Calendar> calendars = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<UserPreference> userPreferences = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)
@@ -45,10 +62,10 @@ public abstract class User {
     private String email;
 
     @Setter
-    private String profilePhoto;
+    @Lob
+    private byte[] profilePhoto;
 
-
-    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profilePhoto){
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;

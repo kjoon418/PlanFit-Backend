@@ -7,12 +7,15 @@ import lombok.NoArgsConstructor;
 import success.planfit.domain.user.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
 @NoArgsConstructor
 @Entity
 public class Calendar {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,6 +23,9 @@ public class Calendar {
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "calendar")
+    private final List<Timetable> timetables = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
@@ -37,5 +43,4 @@ public class Calendar {
         this.date = date;
         this.shareSerial = shareSerial;
     }
-
 }

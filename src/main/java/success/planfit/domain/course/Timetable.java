@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import success.planfit.domain.embeddable.SpaceInformation;
 
 import java.time.LocalTime;
 
@@ -31,32 +32,18 @@ public class Timetable {
     @Column(nullable = false)
     private LocalTime endTime;
 
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceTag;
-
     private String memo;
 
-    @Column(nullable = false)
-    private String link;
+    @Embedded
+    private SpaceInformation spaceInformation;
 
     @Builder
-    private Timetable(Calendar calendar,LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo, String link) {
+    private Timetable(Calendar calendar,LocalTime startTime, LocalTime endTime, String memo, SpaceInformation spaceInformation) {
         this.calendar = calendar;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.spaceName = spaceName;
-        this.location = location;
-        this.spaceTag = spaceTag;
         this.memo = memo;
-        this.link = link;
+        this.spaceInformation = spaceInformation;
     }
-
-
 
 }

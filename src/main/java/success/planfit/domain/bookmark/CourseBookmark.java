@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import success.planfit.domain.user.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -20,15 +22,19 @@ public class CourseBookmark {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "courseBookmark")
+    private final List<TimetableBookmark> timetableBookmarks = new ArrayList<>();
+
     private String title;
 
     @Column(nullable = false, unique = true)
     private LocalDate date;
 
-    private String titlePhoto;
+    @Lob
+    private byte[] titlePhoto;
 
     @Builder
-    private CourseBookmark(User user, String title, LocalDate date, String titlePhoto) {
+    private CourseBookmark(User user, String title, LocalDate date, byte[] titlePhoto) {
         this.user = user;
         this.title = title;
         this.date = date;

@@ -20,12 +20,13 @@ public class UserPreference {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false)
-    private int preferenceId;
+    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Preference preference;
 
     @Builder
-    private UserPreference(User user, int preferenceId){
+    private UserPreference(User user, Preference preference){
         this.user = user;
-        this.preferenceId = preferenceId;
+        this.preference = preference;
     }
 }

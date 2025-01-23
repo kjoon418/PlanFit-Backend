@@ -21,8 +21,8 @@ public class KakaoUser extends User {
     private Long kakaoIdentifier;
 
     @Builder
-    private KakaoUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, Long kakaoIdentifier) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
+    private KakaoUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto, Long kakaoIdentifier) {
+        super(name, phoneNumber, birthOfDate, identity, email, profilePhoto);
         this.kakaoIdentifier = kakaoIdentifier;
     }
 }
