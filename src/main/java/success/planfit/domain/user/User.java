@@ -2,8 +2,10 @@ package success.planfit.domain.user;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.RefreshToken;
 
 import java.time.LocalDate;
@@ -24,29 +26,37 @@ public abstract class User {
     @JoinColumn
     private RefreshToken refreshToken;
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
+    @Setter
     private String phoneNumber;
 
+    @Setter
     private LocalDate birthOfDate;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private IdentityType identity;
 
+    @Setter
     @Column(nullable = false)
     private String email;
 
-    private String profileUrl;
+    @Setter
+    private String profilePhoto;
 
-    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl){
+
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profilePhoto){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
         this.identity = identity;
         this.email = email;
-        this.profileUrl = profileUrl;
+        this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
+
 
 }
