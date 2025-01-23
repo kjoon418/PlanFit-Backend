@@ -1,10 +1,7 @@
 package success.planfit.domain.bookmark;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
 
@@ -18,6 +15,7 @@ public class SpaceBookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
