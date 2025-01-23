@@ -53,8 +53,6 @@ public class BookmarkService {
     public List<SpaceBookmarkInfoResponseDto> findAllSpaceBookmarks(Long userId) {
         log.info("BookmarkService.findAllSpaceBookmarks() called");
 
-        System.out.println("userId = " + userId);
-
         // 엔티티 조회
         User user = userRepository.findByIdWithSpaceBookmark(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
