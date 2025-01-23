@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import success.planfit.domain.user.IdentityType;
 import success.planfit.domain.user.PlanfitUser;
 import success.planfit.photo.PhotoProvider;
+import success.planfit.photo.PhotoType;
 
 import java.time.LocalDate;
 
@@ -19,9 +20,17 @@ public class PlanFitUserSignUpRequestDto {
     private LocalDate birthOfDate;
     private IdentityType identity;
     private String email;
-    private String profileUrl;
+    private String profilePhoto;
+    private PhotoType photoType;
 
     public PlanfitUser toEntity() {
+
+        byte[] photo = switch (photoType) {
+            case URL -> PhotoProvider.getImageFromUrl(profilePhoto);
+            case ENCODED_BINARY -> PhotoProvider.decode(profilePhoto);
+            default -> null;
+        };
+
         return PlanfitUser.builder()
                 .name(name)
                 .loginId(loginId)
@@ -30,7 +39,7 @@ public class PlanFitUserSignUpRequestDto {
                 .birthOfDate(birthOfDate)
                 .identity(identity)
                 .email(email)
-                .profilePhoto(PhotoProvider.getImageFromUrl(profileUrl))
+                .profilePhoto(photo)
                 .build();
     }
 }
