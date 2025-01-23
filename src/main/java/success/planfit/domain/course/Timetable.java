@@ -26,11 +26,8 @@ public class Timetable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;
 
-    @Column(nullable = false)
-    private LocalTime startTime;
-
-    @Column(nullable = false)
-    private LocalTime endTime;
+    @Column(nullable = false, unique = true)
+    private Integer sequence;
 
     private String memo;
 
@@ -38,10 +35,9 @@ public class Timetable {
     private SpaceInformation spaceInformation;
 
     @Builder
-    private Timetable(Calendar calendar,LocalTime startTime, LocalTime endTime, String memo, SpaceInformation spaceInformation) {
+    private Timetable(Calendar calendar, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.calendar = calendar;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.sequence = sequence;
         this.memo = memo;
         this.spaceInformation = spaceInformation;
     }

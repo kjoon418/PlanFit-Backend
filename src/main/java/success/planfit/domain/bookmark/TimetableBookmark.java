@@ -26,11 +26,8 @@ public class TimetableBookmark {
     @ManyToOne(fetch = FetchType.LAZY)
     private CourseBookmark courseBookmark;
 
-    @Column(nullable = false)
-    private LocalTime startTime;
-
-    @Column(nullable = false)
-    private LocalTime endTime;
+    @Column(nullable = false, unique = true)
+    private Integer sequence;
 
     private String memo;
 
@@ -38,10 +35,9 @@ public class TimetableBookmark {
     private SpaceInformation spaceInformation;
 
     @Builder
-    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String memo, SpaceInformation spaceInformation) {
+    private TimetableBookmark(CourseBookmark courseBookmark, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.courseBookmark = courseBookmark;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.sequence = sequence;
         this.memo = memo;
         this.spaceInformation = spaceInformation;
     }
