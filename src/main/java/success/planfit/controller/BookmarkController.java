@@ -35,7 +35,7 @@ public class BookmarkController {
     }
 
     @DeleteMapping("/space/{identifier}")
-    public ResponseEntity<Void> deleteSpace(Principal principal, @RequestParam("identifier") String googlePlacesIdentifier) {
+    public ResponseEntity<Void> deleteSpace(Principal principal, @PathVariable("identifier") String googlePlacesIdentifier) {
         log.info("BookmarkController.deleteSpace() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
