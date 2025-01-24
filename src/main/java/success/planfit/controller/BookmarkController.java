@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
 import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
-import success.planfit.dto.request.SpaceBookmarkDeleteRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
 import success.planfit.dto.response.CourseBookmarkInfoResponseDto;
 import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
@@ -35,12 +34,12 @@ public class BookmarkController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/space")
-    public ResponseEntity<Void> deleteSpace(Principal principal, @RequestBody SpaceBookmarkDeleteRequestDto requestDto) {
+    @DeleteMapping("/space/{identifier}")
+    public ResponseEntity<Void> deleteSpace(Principal principal, @RequestParam("identifier") String googlePlacesIdentifier) {
         log.info("BookmarkController.deleteSpace() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
-        bookmarkService.deleteSpaceBookmark(userId, requestDto);
+        bookmarkService.deleteSpaceBookmark(userId, googlePlacesIdentifier);
 
         return ResponseEntity.ok().build();
     }

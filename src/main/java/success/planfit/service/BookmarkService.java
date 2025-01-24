@@ -11,7 +11,6 @@ import success.planfit.domain.bookmark.TimetableBookmark;
 import success.planfit.domain.course.Calendar;
 import success.planfit.domain.user.User;
 import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
-import success.planfit.dto.request.SpaceBookmarkDeleteRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
 import success.planfit.dto.response.CourseBookmarkInfoResponseDto;
 import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
@@ -40,14 +39,14 @@ public class BookmarkService {
         user.addSpaceBookmark(spaceBookmark);
     }
 
-    public void deleteSpaceBookmark(Long userId, SpaceBookmarkDeleteRequestDto requestDto) {
+    public void deleteSpaceBookmark(Long userId, String googlePlacesIdentifier) {
         log.info("BookmarkService.deleteSpaceBookmark() called");
 
         // 엔티티 조회
         User user = userRepository.findByIdWithSpaceBookmark(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
         SpaceBookmark spaceBookmark = user.getSpaceBookmarks().stream()
-                .filter(spacebookmark -> spacebookmark.getGooglePlacesIdentifier().equals(requestDto.getGooglePlacesIdentifier()))
+                .filter(spacebookmark -> spacebookmark.getGooglePlacesIdentifier().equals(googlePlacesIdentifier))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("좋아요에 등록된 장소 조회 실패"));
 
