@@ -32,6 +32,7 @@ public class CourseBookmarkInfoResponseDto {
         for (TimetableBookmark timetableBookmark : timetableBookmarks) {
             SpaceInformation spaceInformation = timetableBookmark.getSpaceInformation();
             spaces.add(Space.builder()
+                    .spaceId(timetableBookmark.getId())
                     .sequence(timetableBookmark.getSequence())
                     .memo(timetableBookmark.getMemo())
                     .spaceName(spaceInformation.getSpaceName())
@@ -60,6 +61,7 @@ public class CourseBookmarkInfoResponseDto {
     @AllArgsConstructor
     static class Space implements Comparable<Space> {
 
+        private Long spaceId;
         private Integer sequence;
         private String memo;
         private String spaceName;
