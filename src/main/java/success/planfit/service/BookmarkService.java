@@ -5,13 +5,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
+import success.planfit.domain.bookmark.TimetableBookmark;
+import success.planfit.domain.course.Calendar;
 import success.planfit.domain.user.User;
+import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
 import success.planfit.dto.request.SpaceBookmarkDeleteRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
+import success.planfit.dto.response.CourseBookmarkInfoResponseDto;
 import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
 import success.planfit.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -61,5 +67,85 @@ public class BookmarkService {
         return user.getSpaceBookmarks().stream()
                 .map(SpaceBookmarkInfoResponseDto::of)
                 .toList();
+    }
+
+    public void registerCourseBookmark(Long userId, CourseBookmarkRegistrationRequestDto requestDto) {
+        log.info("BookmarkService.registerCourseBookmark() called");
+
+        LocalDate date = requestDto.getDate();
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCalendar(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+
+        // User를 통해 Date에 맞는 Calendar 조회
+        Calendar calendar = user.getCalendars().stream()
+                .filter(streamCalendar -> streamCalendar.getDate().equals(date))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 날짜에 코스가 존재하지 않음"));
+
+        // 해당 Calendar의 연관 Timetable 엔티티를 통해 TimetableBookmark 엔티티 생성
+        List<TimetableBookmark> timetableBookmarks = calendar.getTimetables().stream()
+                .map(TimetableBookmark::from)
+                .toList();
+
+        // 새로운 CourseBookmark 엔티티를 생성
+        CourseBookmark courseBookmark = CourseBookmark.builder()
+                .title(date.toString()) // 코스 이름의 기본값은 날짜로 함
+                .titlePhoto(timetableBookmarks.getFirst().getSpaceInformation().getSpacePhoto()) // 코스 사진의 기본값은 첫 번째 장소로 함
+                .build();
+
+        // CourseBookmark 엔티티와 TimetableBookmark 엔티티 연결
+        for (TimetableBookmark timetableBookmark : timetableBookmarks) {
+            courseBookmark.addTimetableBookmark(timetableBookmark);
+        }
+
+        // User 엔티티와 CourseBookmark 엔티티 연결
+        user.addCourseBookmark(courseBookmark);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CourseBookmarkInfoResponseDto> findAllCourseBookmarks(Long userId) {
+        log.info("BookmarkService.findAllCourseBookmarks() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+
+        // Dto로 변환하여 반환
+        return user.getCourseBookmarks().stream()
+                .map(CourseBookmarkInfoResponseDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CourseBookmarkInfoResponseDto findCourseBookmark(Long userId, Long courseBookmarkId) {
+        log.info("BookmarkService.findCourseBookmark() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+        CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
+                .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("코스 조회 실패"));
+
+        // DTO로 변환하여 반환
+        return CourseBookmarkInfoResponseDto.from(courseBookmark);
+    }
+
+    public void deleteCourseBookmark(Long userId, Long courseBookmarkId) {
+        log.info("BookmarkService.deleteCourseBookmark() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+        CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
+                .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("코스 조회 실패"));
+
+        // 엔티티 삭제
+        user.removeCourseBookmark(courseBookmark);
     }
 }
