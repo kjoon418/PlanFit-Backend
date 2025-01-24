@@ -6,9 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import success.planfit.domain.course.Timetable;
 import success.planfit.domain.embeddable.SpaceInformation;
-
-import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
@@ -42,5 +41,16 @@ public class TimetableBookmark {
         this.sequence = sequence;
         this.memo = memo;
         this.spaceInformation = spaceInformation;
+    }
+
+    /**
+     * Timetable을 통해 TimetableBookmark를 생성하는 정적 팩터리 메서드
+     */
+    public static TimetableBookmark from(Timetable timetable) {
+        return TimetableBookmark.builder()
+                .sequence(timetable.getSequence())
+                .memo(timetable.getMemo())
+                .spaceInformation(timetable.getSpaceInformation())
+                .build();
     }
 }

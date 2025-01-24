@@ -83,4 +83,20 @@ public abstract class User {
         this.spaceBookmarks.remove(spaceBookmark);
         spaceBookmark.setUser(null);
     }
+
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.add(courseBookmark);
+        courseBookmark.setUser(this);
+    }
+
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.remove(courseBookmark);
+        courseBookmark.setUser(null);
+    }
 }

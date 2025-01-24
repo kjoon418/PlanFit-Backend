@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.user.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +18,7 @@ public class CourseBookmark {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable=false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -27,18 +28,21 @@ public class CourseBookmark {
 
     private String title;
 
-    @Column(nullable = false, unique = true)
-    private LocalDate date;
-
     @Lob
     private byte[] titlePhoto;
 
     @Builder
-    private CourseBookmark(User user, String title, LocalDate date, byte[] titlePhoto) {
+    private CourseBookmark(User user, String title, byte[] titlePhoto) {
         this.user = user;
         this.title = title;
-        this.date = date;
         this.titlePhoto = titlePhoto;
     }
 
+    /**
+     * CourseBookmark - TimetableBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addTimetableBookmark(TimetableBookmark timetableBookmark) {
+        this.timetableBookmarks.add(timetableBookmark);
+        timetableBookmark.setCourseBookmark(this);
+    }
 }
