@@ -74,8 +74,8 @@ public class BookmarkController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/course/{id}")
-    public ResponseEntity<CourseBookmarkInfoResponseDto> findCourseBookmark(Principal principal, @PathVariable("id") Long courseBookmarkId) {
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<CourseBookmarkInfoResponseDto> findCourseBookmark(Principal principal, @PathVariable("courseId") Long courseBookmarkId) {
         log.info("BookmarkController.findCourseBookmark() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
@@ -84,8 +84,8 @@ public class BookmarkController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @DeleteMapping("/course/{id}")
-    public ResponseEntity<Void> deleteCourseBookmark(Principal principal, @PathVariable("id") Long courseBookmarkId) {
+    @DeleteMapping("/course/{courseId}")
+    public ResponseEntity<Void> deleteCourseBookmark(Principal principal, @PathVariable("courseId") Long courseBookmarkId) {
         log.info("BookmarkController.deleteCourseBookmark() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
