@@ -20,5 +20,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u left join fetch u.spaceBookmarks where u.id = :userId")
     Optional<User> findByIdWithSpaceBookmark(@Param("userId") Long userId);
+
+    @Query("select u from User u left join fetch u.calendars where u.id = :userId")
+    Optional<User> findByIdWithCalendar(@Param("userId") Long userId);
+
+    @Query("select u from User u left join fetch u.courseBookmarks where u.id = :userId")
+    Optional<User> findByIdWithCourseBookmark(@Param("userId") Long userId);
 ;
 }
