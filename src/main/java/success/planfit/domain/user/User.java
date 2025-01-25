@@ -68,4 +68,19 @@ public abstract class User {
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 
+    /**
+     * User - SpaceBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceBookmark(SpaceBookmark spaceBookmark) {
+        this.spaceBookmarks.add(spaceBookmark);
+        spaceBookmark.setUser(this);
+    }
+
+    /**
+     * User - SpaceBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceBookmark(SpaceBookmark spaceBookmark) {
+        this.spaceBookmarks.remove(spaceBookmark);
+        spaceBookmark.setUser(null);
+    }
 }

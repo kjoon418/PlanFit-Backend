@@ -1,11 +1,7 @@
 package success.planfit.domain.bookmark;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import success.planfit.domain.course.SpaceType;
+import lombok.*;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
 
@@ -19,35 +15,13 @@ public class SpaceBookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column(nullable = false)
     private String googlePlacesIdentifier;
-
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceType;
-
-    @Column(nullable = false)
-    private String link;
-
-    @Column(nullable = false)
-    private Double latitude;
-
-    @Column(nullable = false)
-    private Double longitude;
-
-    @Column(nullable = false)
-    private byte[] spacePhoto;
-
 
     @Embedded
     private SpaceInformation spaceInformation;
