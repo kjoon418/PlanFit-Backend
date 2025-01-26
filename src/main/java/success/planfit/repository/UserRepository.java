@@ -26,5 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u left join fetch u.courseBookmarks where u.id = :userId")
     Optional<User> findByIdWithCourseBookmark(@Param("userId") Long userId);
-;
+
 }
