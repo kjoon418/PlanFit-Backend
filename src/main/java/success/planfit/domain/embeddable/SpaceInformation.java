@@ -2,6 +2,7 @@ package success.planfit.domain.embeddable;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.util.StringUtils;
 import success.planfit.domain.course.SpaceType;
 
 @Embeddable
@@ -30,4 +31,27 @@ public class SpaceInformation {
     @Lob
     private byte[] spacePhoto;
 
+    /**
+     * null이 아닌 값만 이용해 새로운 SpaceInformation 인스턴스를 생성하는 메서드
+     */
+    public SpaceInformation copyNotNulls(SpaceInformation newValue) {
+         return SpaceInformation.builder()
+                .spaceName(isNull(newValue.spaceName) ? this.spaceName : newValue.spaceName)
+                .location(isNull(newValue.location) ? this.location : newValue.location)
+                .spaceTag(isNull(newValue.spaceTag) ? this.spaceTag : newValue.spaceTag)
+                .link(isNull(newValue.link) ? this.link : newValue.link)
+                .latitude(isNull(newValue.latitude) ? this.latitude : newValue.latitude)
+                .longitude(isNull(newValue.longitude) ? this.longitude : newValue.longitude)
+                .spacePhoto(isNull(newValue.spacePhoto) ? this.spacePhoto : newValue.spacePhoto)
+                .build();
+    }
+
+    private <T> boolean isNull(T value) {
+        if (value == null) {
+            return true;
+        }
+
+        // 문자열도 null도 아니면 true, 문자열이라면 StringUtils를 통과하지 못해야 true
+        return !(value instanceof String) || !StringUtils.hasText((String) value);
+    }
 }
