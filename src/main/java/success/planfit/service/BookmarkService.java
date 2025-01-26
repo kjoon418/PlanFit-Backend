@@ -10,7 +10,6 @@ import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.bookmark.TimetableBookmark;
 import success.planfit.domain.course.Calendar;
-import success.planfit.domain.course.Timetable;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
 import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
