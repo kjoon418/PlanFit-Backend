@@ -75,5 +75,14 @@ public abstract class User {
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 
+    public void addCalendar(Calendar calendar){
+        calendars.add(calendar);
+        calendar.setUser(this);
+    }
+
+    public void removeCalendar(Calendar calendar){
+        calendars.remove(calendar);
+        calendar.setUser(null);
+    }
 
 }

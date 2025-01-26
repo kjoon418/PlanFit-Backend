@@ -3,6 +3,7 @@ package success.planfit.domain.user;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import success.planfit.photo.PhotoProvider;
 
 import java.time.LocalDate;
 
@@ -10,8 +11,6 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class UserDto {
-
-    private Long id;
     private String name;
     private String email;
     private String phoneNumber;
@@ -23,11 +22,12 @@ public class UserDto {
     public static UserDto from(User user) {
         return UserDto.builder()
                 .name(user.getName())
-                .profilePhoto(user.getProfilePhoto())
+                .profilePhoto(PhotoProvider.encode(user.getProfilePhoto()))
                 .birthOfDate(user.getBirthOfDate())
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .identity(user.getIdentity())
+                .email(user.getEmail())
                 .build();
     }
 

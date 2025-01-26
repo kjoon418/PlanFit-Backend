@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -20,6 +21,7 @@ public class PlanfitUser extends User {
     @Column(nullable = false, unique = true)
     private String loginId;
 
+    @Setter
     @Column(nullable = false)
     private String password;
 

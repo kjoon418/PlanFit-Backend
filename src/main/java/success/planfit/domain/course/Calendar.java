@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.user.User;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ public class Calendar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -33,7 +35,6 @@ public class Calendar {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
     private String shareSerial;
 
     @Builder
@@ -43,4 +44,15 @@ public class Calendar {
         this.date = date;
         this.shareSerial = shareSerial;
     }
+
+    public void addTimetable(Timetable timetable) {
+        this.timetables.add(timetable);
+        timetable.setCalendar(this);
+    }
+
+    public void removeTimetable(Timetable timetable) {
+        this.timetables.remove(timetable);
+        timetable.setCalendar(null);
+    }
+
 }
