@@ -19,7 +19,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/bookmark")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkController {
 
@@ -29,7 +28,7 @@ public class BookmarkController {
     /**
      * 장소 좋아요 등록
      */
-    @PostMapping("/space")
+    @PostMapping("/space/bookmark")
     public ResponseEntity<Void> registerSpace(Principal principal, @RequestBody SpaceBookmarkRegistrationRequestDto requestDto) {
         log.info("BookmarkController.registerSpace() called");
 
@@ -42,7 +41,7 @@ public class BookmarkController {
     /**
      * 장소 좋아요 삭제
      */
-    @DeleteMapping("/space/{identifier}")
+    @DeleteMapping("/space/bookmark/{identifier}")
     public ResponseEntity<Void> deleteSpace(Principal principal, @PathVariable("identifier") String googlePlacesIdentifier) {
         log.info("BookmarkController.deleteSpace() called");
 
@@ -55,7 +54,7 @@ public class BookmarkController {
     /**
      * 장소 좋아요 조회
      */
-    @GetMapping("/space")
+    @GetMapping("/space/bookmark")
     public ResponseEntity<List<SpaceBookmarkInfoResponseDto>> findAllSpaceBookmarks(Principal principal) {
         log.info("BookmarkController.findAllSpaceBookmarks() called");
 
@@ -68,7 +67,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 등록
      */
-    @PostMapping("/course")
+    @PostMapping("/course/bookmark")
     public ResponseEntity<Void> registerCourse(Principal principal, @RequestBody CourseBookmarkRegistrationRequestDto requestDto) {
         log.info("BookmarkController.registerCourse() called");
 
@@ -81,7 +80,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 수정(대표 정보)
      */
-    @PatchMapping("/course/{courseId}")
+    @PatchMapping("/course/bookmark/{courseId}")
     public ResponseEntity<Void> updateCourseTitleInfo(
             Principal principal,
             @PathVariable("courseId") Long courseBookmarkId,
@@ -97,7 +96,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 수정(장소 정보)
      */
-    @PatchMapping("/course/{courseId}/{spaceId}")
+    @PatchMapping("/course/bookmark/{courseId}/{spaceId}")
     public ResponseEntity<Void> updateCourseSpaceInfo(
             Principal principal,
             @PathVariable("courseId") Long courseBookmarkId,
@@ -114,7 +113,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 전체 조회
      */
-    @GetMapping("/course")
+    @GetMapping("/course/bookmark")
     public ResponseEntity<List<CourseBookmarkInfoResponseDto>> findAllCourseBookmarks(Principal principal) {
         log.info("BookmarkController.findAllCourseBookmarks() called");
 
@@ -127,7 +126,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 단건 조회
      */
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/course/bookmark/{courseId}")
     public ResponseEntity<CourseBookmarkInfoResponseDto> findCourseBookmark(Principal principal, @PathVariable("courseId") Long courseBookmarkId) {
         log.info("BookmarkController.findCourseBookmark() called");
 
@@ -140,7 +139,7 @@ public class BookmarkController {
     /**
      * 코스 좋아요 삭제
      */
-    @DeleteMapping("/course/{courseId}")
+    @DeleteMapping("/course/bookmark/{courseId}")
     public ResponseEntity<Void> deleteCourseBookmark(Principal principal, @PathVariable("courseId") Long courseBookmarkId) {
         log.info("BookmarkController.deleteCourseBookmark() called");
 
