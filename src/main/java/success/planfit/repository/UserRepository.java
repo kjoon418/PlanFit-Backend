@@ -17,4 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from KakaoUser u where u.kakaoIdentifier = :identifier")
     Optional<User> findByKakaoIdentifier(@Param("identifier") Long identifier);
+
+    @Query("select u from User u left join fetch u.spaceBookmarks where u.id = :userId")
+    Optional<User> findByIdWithSpaceBookmark(@Param("userId") Long userId);
+;
 }
