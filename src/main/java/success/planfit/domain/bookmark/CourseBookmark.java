@@ -26,9 +26,11 @@ public class CourseBookmark {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "courseBookmark")
     private final List<TimetableBookmark> timetableBookmarks = new ArrayList<>();
 
+    @Setter
     private String title;
 
     @Lob
+    @Setter
     private byte[] titlePhoto;
 
     @Builder

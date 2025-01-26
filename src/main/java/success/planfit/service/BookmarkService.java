@@ -5,19 +5,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.bookmark.TimetableBookmark;
 import success.planfit.domain.course.Calendar;
+import success.planfit.domain.course.Timetable;
+import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
 import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
+import success.planfit.dto.request.CourseBookmarkUpdateSpaceRequestDto;
+import success.planfit.dto.request.CourseBookmarkUpdateTitleRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
 import success.planfit.dto.response.CourseBookmarkInfoResponseDto;
 import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
+import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Slf4j
 @Transactional
@@ -103,6 +110,47 @@ public class BookmarkService {
         user.addCourseBookmark(courseBookmark);
     }
 
+    public void updateCourseBookmarkTitleInfo(Long userId, Long courseBookmarkId, CourseBookmarkUpdateTitleRequestDto requestDto) {
+        log.info("BookmarkService.updateCourseBookmarkTitleInfo() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+        CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
+                .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+
+        // 엔티티 수정
+        updateIfNotNull(courseBookmark::setTitle, requestDto.getTitle());
+        switch (requestDto.getPhotoType()) {
+            case URL -> updateIfNotNull(courseBookmark::setTitlePhoto, PhotoProvider.getImageFromUrl(requestDto.getTitlePhoto()));
+            case ENCODED_BINARY -> updateIfNotNull(courseBookmark::setTitlePhoto, PhotoProvider.decode(requestDto.getTitlePhoto()));
+        }
+    }
+
+    public void updateCourseBookmarkSpaceInfo(Long userId, Long courseBookmarkId, Long timetableBookmarkId, CourseBookmarkUpdateSpaceRequestDto requestDto) {
+        log.info("BookmarkService.updateCourseBookmarkSpaceInfo() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+        CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
+                .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+        TimetableBookmark timetableBookmark = courseBookmark.getTimetableBookmarks().stream()
+                .filter(timetablebookmark -> timetablebookmark.getId().equals(timetableBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("장소 조회 실패"));
+
+        // 엔티티 수정
+        updateIfNotNull(timetableBookmark::setMemo, requestDto.getMemo());
+        SpaceInformation existsSpaceInfo = timetableBookmark.getSpaceInformation();
+        SpaceInformation newSpaceInfo = existsSpaceInfo.copyNotNulls(requestDto.getSpaceInformation());
+        timetableBookmark.setSpaceInformation(newSpaceInfo);
+    }
+
     @Transactional(readOnly = true)
     public List<CourseBookmarkInfoResponseDto> findAllCourseBookmarks(Long userId) {
         log.info("BookmarkService.findAllCourseBookmarks() called");
@@ -146,5 +194,16 @@ public class BookmarkService {
 
         // 엔티티 삭제
         user.removeCourseBookmark(courseBookmark);
+    }
+
+    private <T> void updateIfNotNull(Consumer<T> setter, T value) {
+        if (value == null) {
+            return;
+        }
+
+        // 문자열이 아닐 경우 null이 아니기만 하면 통과, 문자열일 경우 StringUtils.hasText()가 true여야 통과
+        if (!(value instanceof String) || StringUtils.hasText((String) value)) {
+            setter.accept(value);
+        }
     }
 }

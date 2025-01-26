@@ -27,11 +27,14 @@ public class TimetableBookmark {
     @ManyToOne(fetch = FetchType.LAZY)
     private CourseBookmark courseBookmark;
 
+    @Setter
     @Column(nullable = false, unique = true)
     private Integer sequence;
 
+    @Setter
     private String memo;
 
+    @Setter
     @Embedded
     private SpaceInformation spaceInformation;
 
