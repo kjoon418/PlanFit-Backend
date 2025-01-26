@@ -38,7 +38,7 @@ public class BookmarkService {
         log.info("BookmarkService.registerSpaceBookmark() called");
 
         // 엔티티 조회 및 생성
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdWithSpaceBookmark(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
         SpaceBookmark spaceBookmark = requestDto.toEntity();
 
