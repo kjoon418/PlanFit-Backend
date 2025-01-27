@@ -35,7 +35,6 @@ public class Calendar {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
     private String shareSerial;
 
     @Builder
@@ -61,4 +60,5 @@ public class Calendar {
         this.timetables.remove(timetable);
         timetable.setCalendar(null);
     }
+  
 }

@@ -13,10 +13,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "timetable_uq_start_time", columnNames = {"calendar_id", "start_time"}),
-        @UniqueConstraint(name = "timetable_uq_end_time", columnNames = {"calendar_id", "end_time"})
-})
+
 public class Timetable {
 
     @Id
@@ -28,11 +25,14 @@ public class Timetable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    @Setter
     private Integer sequence;
 
+    @Setter
     private String memo;
 
+    @Setter
     @Embedded
     private SpaceInformation spaceInformation;
 

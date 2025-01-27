@@ -54,4 +54,5 @@ public class SpaceInformation {
         // 문자열도 null도 아니면 true, 문자열이라면 StringUtils를 통과하지 못해야 true
         return !(value instanceof String) || !StringUtils.hasText((String) value);
     }
+
 }
