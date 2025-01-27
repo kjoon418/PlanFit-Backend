@@ -28,7 +28,7 @@ public class TimetableBookmark {
     private CourseBookmark courseBookmark;
 
     @Setter
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Integer sequence;
 
     @Setter
