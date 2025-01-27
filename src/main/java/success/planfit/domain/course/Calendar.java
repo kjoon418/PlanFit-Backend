@@ -45,14 +45,20 @@ public class Calendar {
         this.shareSerial = shareSerial;
     }
 
+    /**
+     * Calendar - Timetable 연관관계 편의 메서드(생성)
+     */
     public void addTimetable(Timetable timetable) {
         this.timetables.add(timetable);
         timetable.setCalendar(this);
     }
 
+    /**
+     * Calendar - Timetable 연관관계 편의 메서드(삭제)
+     */
     public void removeTimetable(Timetable timetable) {
         this.timetables.remove(timetable);
         timetable.setCalendar(null);
     }
-
+  
 }

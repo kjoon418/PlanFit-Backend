@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import success.planfit.domain.course.Timetable;
 import success.planfit.domain.embeddable.SpaceInformation;
-
-import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
@@ -22,27 +22,38 @@ public class TimetableBookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private CourseBookmark courseBookmark;
 
+    @Setter
     @Column(nullable = false)
-    private LocalTime startTime;
+    private Integer sequence;
 
-    @Column(nullable = false)
-    private LocalTime endTime;
-
+    @Setter
     private String memo;
 
+    @Setter
     @Embedded
     private SpaceInformation spaceInformation;
 
     @Builder
-    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String memo, SpaceInformation spaceInformation) {
+    private TimetableBookmark(CourseBookmark courseBookmark, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.courseBookmark = courseBookmark;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.sequence = sequence;
         this.memo = memo;
         this.spaceInformation = spaceInformation;
+    }
+
+    /**
+     * Timetable을 통해 TimetableBookmark를 생성하는 정적 팩터리 메서드
+     */
+    public static TimetableBookmark from(Timetable timetable) {
+        return TimetableBookmark.builder()
+                .sequence(timetable.getSequence())
+                .memo(timetable.getMemo())
+                .spaceInformation(timetable.getSpaceInformation())
+                .build();
     }
 }

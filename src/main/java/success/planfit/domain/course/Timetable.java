@@ -25,6 +25,7 @@ public class Timetable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;
 
+    @Column(nullable = false)
     @Setter
     private Integer sequence;
 
@@ -36,7 +37,7 @@ public class Timetable {
     private SpaceInformation spaceInformation;
 
     @Builder
-    private Timetable(Calendar calendar, String memo, SpaceInformation spaceInformation, Integer sequence) {
+    private Timetable(Calendar calendar, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.calendar = calendar;
         this.sequence = sequence;
         this.memo = memo;
