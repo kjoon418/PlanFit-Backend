@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.embeddable.SpaceInformation;
 
 import java.time.LocalTime;
@@ -22,6 +23,7 @@ public class Timetable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;

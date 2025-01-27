@@ -47,4 +47,12 @@ public class CourseBookmark {
         this.timetableBookmarks.add(timetableBookmark);
         timetableBookmark.setCourseBookmark(this);
     }
+
+    /**
+     * CourseBookmark - TimetableBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeTimetableBookmark(TimetableBookmark timetableBookmark) {
+        this.timetableBookmarks.remove(timetableBookmark);
+        timetableBookmark.setCourseBookmark(null);
+    }
 }

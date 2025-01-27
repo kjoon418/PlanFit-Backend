@@ -30,4 +30,20 @@ public class Preference {
     private Preference(PreferenceType name) {
         this.name = name;
     }
+
+    /**
+     * Preference - UserPreference 연관관계 편의 메서드(생성)
+     */
+    public void addUserPreference(UserPreference userPreference) {
+        this.userPreferences.add(userPreference);
+        userPreference.setPreference(this);
+    }
+
+    /**
+     * Preference - UserPreference 연관관계 편의 메서드(삭제)
+     */
+    public void removeUserPreference(UserPreference userPreference) {
+        this.userPreferences.remove(userPreference);
+        userPreference.setPreference(null);
+    }
 }

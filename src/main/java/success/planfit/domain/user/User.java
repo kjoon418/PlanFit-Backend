@@ -69,6 +69,22 @@ public abstract class User {
     }
 
     /**
+     * User - CourseBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.add(courseBookmark);
+        courseBookmark.setUser(this);
+    }
+
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.remove(courseBookmark);
+        courseBookmark.setUser(null);
+    }
+
+    /**
      * User - SpaceBookmark 연관관계 편의 메서드(생성)
      */
     public void addSpaceBookmark(SpaceBookmark spaceBookmark) {
@@ -85,18 +101,35 @@ public abstract class User {
     }
 
     /**
-     * User - CourseBookmark 연관관계 편의 메서드(생성)
+     * User - Calendar 연관관계 편의 메서드(생성)
      */
-    public void addCourseBookmark(CourseBookmark courseBookmark) {
-        this.courseBookmarks.add(courseBookmark);
-        courseBookmark.setUser(this);
+    public void addCalendar(Calendar calendar) {
+        this.calendars.add(calendar);
+        calendar.setUser(this);
     }
 
     /**
-     * User - CourseBookmark 연관관계 편의 메서드(삭제)
+     * User - Calendar 연관관계 편의 메서드(삭제)
      */
-    public void removeCourseBookmark(CourseBookmark courseBookmark) {
-        this.courseBookmarks.remove(courseBookmark);
-        courseBookmark.setUser(null);
+    public void removeCalendar(Calendar calendar) {
+        this.calendars.remove(calendar);
+        calendar.setUser(null);
     }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(생성)
+     */
+    public void addUserPreference(UserPreference userPreference) {
+        this.userPreferences.add(userPreference);
+        userPreference.setUser(this);
+    }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(삭제)
+     */
+    public void removeUserPreference(UserPreference userPreference) {
+        this.userPreferences.remove(userPreference);
+        userPreference.setUser(null);
+    }
+
 }
