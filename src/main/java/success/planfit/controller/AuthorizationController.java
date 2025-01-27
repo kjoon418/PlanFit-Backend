@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
 import success.planfit.controller.utils.PlanfitExceptionHandler;
-import success.planfit.dto.request.PlanFitUserSignInRequestDto;
-import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.dto.request.PlanfitUserSignInRequestDto;
+import success.planfit.dto.request.PlanfitUserSignUpRequestDto;
 import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.service.AuthorizationService;
@@ -30,7 +30,7 @@ public class AuthorizationController {
     private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanFitUserSignUpRequestDto requestDto) {
+    public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
         log.info("UserController.planFitSignUp() called");
 
         TokenResponseDto responseDto = authorizationService.planFitSignUp(requestDto);
@@ -39,7 +39,7 @@ public class AuthorizationController {
     }
 
     @GetMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignIn(@RequestBody PlanFitUserSignInRequestDto requestDto) {
+    public ResponseEntity<TokenResponseDto> planFitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
         log.info("UserController.planFitSignIn() called");
 
         TokenResponseDto responseDto = authorizationService.planFitSignIn(requestDto);

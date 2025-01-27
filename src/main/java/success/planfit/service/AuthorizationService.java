@@ -17,8 +17,8 @@ import success.planfit.dto.google.GoogleAccessTokenDto;
 import success.planfit.dto.google.GoogleUserInfoDto;
 import success.planfit.dto.kakao.KaKaoUserInfoDto;
 import success.planfit.dto.kakao.KakaoAccessTokenDto;
-import success.planfit.dto.request.PlanFitUserSignInRequestDto;
-import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.dto.request.PlanfitUserSignInRequestDto;
+import success.planfit.dto.request.PlanfitUserSignUpRequestDto;
 import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.jwt.TokenProvider;
@@ -73,7 +73,7 @@ public class AuthorizationService {
         this.KAKAO_REDIRECT_URL = kakaoRedirectUri;
     }
 
-    public TokenResponseDto planFitSignUp(PlanFitUserSignUpRequestDto requestDto) {
+    public TokenResponseDto planFitSignUp(PlanfitUserSignUpRequestDto requestDto) {
         log.info("AuthorizationService.planFitSignUp() called");
 
         // User 엔티티를 영속화
@@ -92,7 +92,7 @@ public class AuthorizationService {
                 .build();
     }
 
-    public TokenResponseDto planFitSignIn(PlanFitUserSignInRequestDto requestDto) {
+    public TokenResponseDto planFitSignIn(PlanfitUserSignInRequestDto requestDto) {
         log.info("AuthorizationService.planFitSignIn() called");
 
         // DTO로부터 값을 추출
