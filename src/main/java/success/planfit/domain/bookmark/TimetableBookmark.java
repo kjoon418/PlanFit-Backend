@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.domain.course.SpaceType;
-
-import java.time.LocalTime;
+import lombok.Setter;
+import success.planfit.domain.course.Timetable;
+import success.planfit.domain.embeddable.SpaceInformation;
 
 @Getter
 @NoArgsConstructor
@@ -22,40 +22,38 @@ public class TimetableBookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private CourseBookmark courseBookmark;
 
+    @Setter
     @Column(nullable = false)
-    private LocalTime startTime;
+    private Integer sequence;
 
-    @Column(nullable = false)
-    private LocalTime endTime;
-
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceTag;
-
+    @Setter
     private String memo;
 
-    @Column(nullable = false)
-    private String link;
+    @Setter
+    @Embedded
+    private SpaceInformation spaceInformation;
 
     @Builder
-    private TimetableBookmark(CourseBookmark courseBookmark, LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo
-    , String link) {
+    private TimetableBookmark(CourseBookmark courseBookmark, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.courseBookmark = courseBookmark;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.spaceName = spaceName;
-        this.location = location;
-        this.spaceTag = spaceTag;
+        this.sequence = sequence;
         this.memo = memo;
-        this.link = link;
+        this.spaceInformation = spaceInformation;
+    }
+
+    /**
+     * Timetable을 통해 TimetableBookmark를 생성하는 정적 팩터리 메서드
+     */
+    public static TimetableBookmark from(Timetable timetable) {
+        return TimetableBookmark.builder()
+                .sequence(timetable.getSequence())
+                .memo(timetable.getMemo())
+                .spaceInformation(timetable.getSpaceInformation())
+                .build();
     }
 }

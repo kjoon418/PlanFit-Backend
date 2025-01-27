@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -17,15 +18,16 @@ public class PlanfitUser extends User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String loginId;
 
+    @Setter
     @Column(nullable = false)
     private String password;
 
     @Builder
-    private PlanfitUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl, String loginId, String password) {
-        super(name, phoneNumber, birthOfDate, identity, email, profileUrl);
+    private PlanfitUser(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto, String loginId, String password) {
+        super(name, phoneNumber, birthOfDate, identity, email, profilePhoto);
         this.loginId = loginId;
         this.password = password;
     }

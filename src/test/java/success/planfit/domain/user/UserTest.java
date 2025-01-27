@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
@@ -28,7 +27,7 @@ class UserTest {
                 .phoneNumber("01011112222")
                 .identity(IdentityType.STUDENT)
                 .email("googleUser@gmail.com")
-                .profileUrl("helloProfileUrl")
+//                .profilePhoto("helloProfileUrl") 이미지 URL 값을 가져올 수 없어 테스트 보류
                 .build();
 
         // when
@@ -50,7 +49,7 @@ class UserTest {
                 .birthOfDate(LocalDate.now())
                 .identity(IdentityType.STUDENT)
                 .email("kakaoUser@kakao.com")
-                .profileUrl("helloProfileUrl")
+//                .profilePhoto("helloProfileUrl") 이미지 URL 값을 가져올 수 없어 테스트 보류
                 .build();
 
         // when
@@ -73,7 +72,7 @@ class UserTest {
                 .birthOfDate(LocalDate.now())
                 .identity(IdentityType.STUDENT)
                 .email("planFitUser@planfit.com")
-                .profileUrl("helloProfileUrl")
+//                .profilePhoto("helloProfileUrl") 이미지 URL 값을 가져올 수 없어 테스트 보류
                 .build();
 
         // when

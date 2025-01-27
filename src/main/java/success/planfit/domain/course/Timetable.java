@@ -5,58 +5,43 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import success.planfit.domain.embeddable.SpaceInformation;
 
 import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(name = "timetable_uq_start_time", columnNames = {"calendar_id", "start_time"}),
-        @UniqueConstraint(name = "timetable_uq_end_time", columnNames = {"calendar_id", "end_time"})
-})
+
 public class Timetable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;
 
     @Column(nullable = false)
-    private LocalTime startTime;
+    @Setter
+    private Integer sequence;
 
-    @Column(nullable = false)
-    private LocalTime endTime;
-
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceTag;
-
+    @Setter
     private String memo;
 
-    @Column(nullable = false)
-    private String link;
+    @Setter
+    @Embedded
+    private SpaceInformation spaceInformation;
 
     @Builder
-    private Timetable(Calendar calendar,LocalTime startTime, LocalTime endTime, String spaceName, String location, SpaceType spaceTag, String memo, String link) {
+    private Timetable(Calendar calendar, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.calendar = calendar;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.spaceName = spaceName;
-        this.location = location;
-        this.spaceTag = spaceTag;
+        this.sequence = sequence;
         this.memo = memo;
-        this.link = link;
+        this.spaceInformation = spaceInformation;
     }
-
-
 
 }

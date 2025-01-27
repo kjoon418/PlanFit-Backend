@@ -4,6 +4,7 @@ package success.planfit.domain.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.RefreshToken;
 import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
@@ -42,29 +43,100 @@ public abstract class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private final List<UserPreference> userPreferences = new ArrayList<>();
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
+    @Setter
     private String phoneNumber;
 
+    @Setter
     private LocalDate birthOfDate;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private IdentityType identity;
 
+    @Setter
     @Column(nullable = false)
     private String email;
 
-    private String profileUrl;
+    @Setter
+    @Lob
+    private byte[] profilePhoto;
 
-    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, String profileUrl){
+    protected User(String name, String phoneNumber, LocalDate birthOfDate, IdentityType identity, String email, byte[] profilePhoto){
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthOfDate = birthOfDate;
         this.identity = identity;
         this.email = email;
-        this.profileUrl = profileUrl;
+        this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
+    }
+
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.add(courseBookmark);
+        courseBookmark.setUser(this);
+    }
+
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.remove(courseBookmark);
+        courseBookmark.setUser(null);
+    }
+
+    /**
+     * User - SpaceBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceBookmark(SpaceBookmark spaceBookmark) {
+        this.spaceBookmarks.add(spaceBookmark);
+        spaceBookmark.setUser(this);
+    }
+
+    /**
+     * User - SpaceBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceBookmark(SpaceBookmark spaceBookmark) {
+        this.spaceBookmarks.remove(spaceBookmark);
+        spaceBookmark.setUser(null);
+    }
+
+    /**
+     * User - Calendar 연관관계 편의 메서드(생성)
+     */
+    public void addCalendar(Calendar calendar) {
+        this.calendars.add(calendar);
+        calendar.setUser(this);
+    }
+
+    /**
+     * User - Calendar 연관관계 편의 메서드(삭제)
+     */
+    public void removeCalendar(Calendar calendar) {
+        this.calendars.remove(calendar);
+        calendar.setUser(null);
+    }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(생성)
+     */
+    public void addUserPreference(UserPreference userPreference) {
+        this.userPreferences.add(userPreference);
+        userPreference.setUser(this);
+    }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(삭제)
+     */
+    public void removeUserPreference(UserPreference userPreference) {
+        this.userPreferences.remove(userPreference);
+        userPreference.setUser(null);
     }
 
 }
