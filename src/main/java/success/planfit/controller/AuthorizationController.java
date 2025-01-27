@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
+import success.planfit.controller.utils.PlanfitExceptionHandler;
 import success.planfit.dto.request.PlanFitUserSignInRequestDto;
 import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
 import success.planfit.dto.response.AccessTokenResponseDto;
@@ -26,6 +27,7 @@ public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
     private final ControllerUtil util;
+    private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/authorization")
     public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanFitUserSignUpRequestDto requestDto) {
@@ -117,5 +119,12 @@ public class AuthorizationController {
         AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("UserController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 }
