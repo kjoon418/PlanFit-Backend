@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
-import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateSpaceRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateTitleRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
@@ -107,6 +106,22 @@ public class BookmarkController {
 
         Long userId = util.findUserIdByPrincipal(principal);
         bookmarkService.updateCourseBookmarkSpaceInfo(userId, courseBookmarkId, timetableBookmarkId, requestDto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 코스 좋아요 수정(장소 순서)
+     */
+    @PatchMapping("/course/bookmark/{courseId}/sequence")
+    public ResponseEntity<Void> updateCourseSpaceSequence(
+            Principal principal,
+            @PathVariable(name = "courseId") Long courseBookmarkId,
+            @RequestBody List<Long> spaceIds) {
+        log.info("BookmarkController.updateCourseSpaceSequence() called");
+
+        Long userId = util.findUserIdByPrincipal(principal);
+        bookmarkService.updateCourseBookmarkSpaceSequence(userId, courseBookmarkId, spaceIds);
 
         return ResponseEntity.ok().build();
     }

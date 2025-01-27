@@ -12,7 +12,6 @@ import success.planfit.domain.bookmark.TimetableBookmark;
 import success.planfit.domain.course.Calendar;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
-import success.planfit.dto.request.CourseBookmarkRegistrationRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateSpaceRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateTitleRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
@@ -22,7 +21,7 @@ import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -148,6 +147,37 @@ public class BookmarkService {
         timetableBookmark.setSpaceInformation(newSpaceInfo);
     }
 
+    public void updateCourseBookmarkSpaceSequence(Long userId, Long courseBookmarkId, List<Long> spaceIds) {
+        log.info("BookmarkService.updateCourseBookmarkSpaceSequence() called");
+
+        // 엔티티 조회
+        User user = userRepository.findByIdWithCourseBookmark(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+        CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
+                .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+
+        // 로직에 사용하기 위해 List<TimetableBookmark>를 Map<Long, TimetableBookmark>로 매핑
+        HashMap<Long, TimetableBookmark> timetableBookmarks = new HashMap<>();
+        for (TimetableBookmark timetableBookmark : courseBookmark.getTimetableBookmarks()) {
+            timetableBookmarks.put(timetableBookmark.getId(), timetableBookmark);
+        }
+
+        // 유효성 검사
+        if (isIllegalSequenceUpdateRequest(timetableBookmarks, spaceIds)) {
+            throw new IllegalArgumentException("장소 ID 부적절");
+        }
+
+        // 요청의 순서대로 엔티티의 sequence 값 변경
+        int sequence = 1;
+        for (Long spaceId : spaceIds) {
+            TimetableBookmark timetableBookmark = timetableBookmarks.get(spaceId);
+            timetableBookmark.setSequence(sequence);
+            sequence++;
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<CourseBookmarkInfoResponseDto> findAllCourseBookmarks(Long userId) {
         log.info("BookmarkService.findAllCourseBookmarks() called");
@@ -202,5 +232,32 @@ public class BookmarkService {
         if (!(value instanceof String) || StringUtils.hasText((String) value)) {
             setter.accept(value);
         }
+    }
+
+    /**
+     * 순서 변경 요청이 부적합한지를 검사하고 여부를 반환하는 메서드
+     * true - 부적합
+     */
+    private boolean isIllegalSequenceUpdateRequest(Map<Long, TimetableBookmark> timetableBookmarks, List<Long> spaceIds) {
+        // 유효성 검사 1. 장소의 개수가 일치하는지 확인
+        if (spaceIds.size() != timetableBookmarks.size()) {
+            return true;
+        }
+
+        Set<Long> idDuplicateCheckSet = new HashSet<>();
+        for (Long spaceId : spaceIds) {
+            // 유효성 검사 2. 중복되는 id가 있는지 확인
+            if (idDuplicateCheckSet.contains(spaceId)) {
+                return true;
+            }
+            idDuplicateCheckSet.add(spaceId);
+
+            // 유효성 검사 3. 기존 엔티티에 없는 id가 있는지 확인
+            if (!timetableBookmarks.containsKey(spaceId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
