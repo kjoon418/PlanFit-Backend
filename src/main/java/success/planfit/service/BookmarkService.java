@@ -74,10 +74,8 @@ public class BookmarkService {
                 .toList();
     }
 
-    public void registerCourseBookmark(Long userId, CourseBookmarkRegistrationRequestDto requestDto) {
+    public void registerCourseBookmark(Long userId, LocalDate date) {
         log.info("BookmarkService.registerCourseBookmark() called");
-
-        LocalDate date = requestDto.getDate();
 
         // 엔티티 조회
         User user = userRepository.findByIdWithCalendar(userId)

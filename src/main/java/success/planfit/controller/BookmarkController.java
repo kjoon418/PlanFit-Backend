@@ -15,6 +15,7 @@ import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
 import success.planfit.service.BookmarkService;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -67,12 +68,12 @@ public class BookmarkController {
     /**
      * 코스 좋아요 등록
      */
-    @PostMapping("/course/bookmark")
-    public ResponseEntity<Void> registerCourse(Principal principal, @RequestBody CourseBookmarkRegistrationRequestDto requestDto) {
+    @PostMapping("/course/bookmark/{date}")
+    public ResponseEntity<Void> registerCourse(Principal principal, @PathVariable LocalDate date) {
         log.info("BookmarkController.registerCourse() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
-        bookmarkService.registerCourseBookmark(userId, requestDto);
+        bookmarkService.registerCourseBookmark(userId, date);
 
         return ResponseEntity.ok().build();
     }
