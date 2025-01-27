@@ -4,6 +4,7 @@ package success.planfit.domain.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.RefreshToken;
 import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
@@ -42,19 +43,25 @@ public abstract class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private final List<UserPreference> userPreferences = new ArrayList<>();
 
+    @Setter
     @Column(nullable = false)
     private String name;
 
+    @Setter
     private String phoneNumber;
 
+    @Setter
     private LocalDate birthOfDate;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private IdentityType identity;
 
+    @Setter
     @Column(nullable = false)
     private String email;
 
+    @Setter
     @Lob
     private byte[] profilePhoto;
 
@@ -66,6 +73,16 @@ public abstract class User {
         this.email = email;
         this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
+    }
+
+    public void addCalendar(Calendar calendar){
+        calendars.add(calendar);
+        calendar.setUser(this);
+    }
+
+    public void removeCalendar(Calendar calendar){
+        calendars.remove(calendar);
+        calendar.setUser(null);
     }
 
     /**
