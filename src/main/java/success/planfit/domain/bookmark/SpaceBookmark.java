@@ -8,7 +8,7 @@ import success.planfit.domain.user.User;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name= "space_bookmark_uq_space", columnNames={"user_id", "google_places_identifier"}))
+@Table(uniqueConstraints = @UniqueConstraint(name= "space_bookmark_uq_user_id_google_places_identifier", columnNames={"user_id", "google_places_identifier"}))
 public class SpaceBookmark {
 
     @Id
