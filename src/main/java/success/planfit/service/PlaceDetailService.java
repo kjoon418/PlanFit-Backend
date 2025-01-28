@@ -27,7 +27,6 @@ public class PlaceDetailService {
     private CachePlacedetailRepository cachePlacedetailRepository;
 
     // AI에게 좌표값과 유저 정보 전달
-    // 원래는 프론트한테 좌표값받아서 주변장소정보를 전달하는 줄 알앗음
     public LocationDetailResponseDto passPlaceDetail(Long id, PlaceDetailRequestDto placeDetailRequestDto){
         return LocationDetailResponseDto.builder()
                 .userDto(UserDto.from(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"))))
@@ -39,6 +38,9 @@ public class PlaceDetailService {
     // AI에게 받은 값들로 API 조회후 정보값 전달
     public PlaceDetailResponseDto getPlaceDetailsById(PlaceRelevanceDetail requestDto){
         String placeId = String.valueOf(requestDto.getPlaceId());
+
+
+        // AI가 준 값들 중 type과 적합도 처리 로직 구현 필요
 
         Optional<CachePlacedetail> place = cachePlacedetailRepository.findByGooglePlacesIdentifier(placeId);
 
