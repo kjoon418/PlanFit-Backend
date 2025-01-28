@@ -13,6 +13,7 @@ import success.planfit.dto.request.PlaceDetailRequestDto;
 @AllArgsConstructor
 @Builder
 public class LocationDetailResponseDto {
+    // AI에게 전달하는 정보 - 유저 정보, 위치 정보
     private UserDto userDto;
     private PlaceDetailRequestDto placeDetailRequestDto;
 
