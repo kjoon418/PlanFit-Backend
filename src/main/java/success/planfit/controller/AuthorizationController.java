@@ -30,19 +30,19 @@ public class AuthorizationController {
     private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
-        log.info("UserController.planFitSignUp() called");
+    public ResponseEntity<TokenResponseDto> planfitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
+        log.info("UserController.planfitSignUp() called");
 
-        TokenResponseDto responseDto = authorizationService.planFitSignUp(requestDto);
+        TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
-        log.info("UserController.planFitSignIn() called");
+    public ResponseEntity<TokenResponseDto> planfitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
+        log.info("UserController.planfitSignIn() called");
 
-        TokenResponseDto responseDto = authorizationService.planFitSignIn(requestDto);
+        TokenResponseDto responseDto = authorizationService.planfitSignIn(requestDto);
 
         return ResponseEntity.ok(responseDto);
     }

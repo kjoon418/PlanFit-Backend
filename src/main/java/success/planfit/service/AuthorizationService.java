@@ -73,8 +73,8 @@ public class AuthorizationService {
         this.KAKAO_REDIRECT_URL = kakaoRedirectUri;
     }
 
-    public TokenResponseDto planFitSignUp(PlanfitUserSignUpRequestDto requestDto) {
-        log.info("AuthorizationService.planFitSignUp() called");
+    public TokenResponseDto planfitSignUp(PlanfitUserSignUpRequestDto requestDto) {
+        log.info("AuthorizationService.planfitSignUp() called");
 
         // User 엔티티를 영속화
         PlanfitUser user = requestDto.toEntity();
@@ -92,8 +92,8 @@ public class AuthorizationService {
                 .build();
     }
 
-    public TokenResponseDto planFitSignIn(PlanfitUserSignInRequestDto requestDto) {
-        log.info("AuthorizationService.planFitSignIn() called");
+    public TokenResponseDto planfitSignIn(PlanfitUserSignInRequestDto requestDto) {
+        log.info("AuthorizationService.planfitSignIn() called");
 
         // DTO로부터 값을 추출
         String loginId = requestDto.getLoginId();
