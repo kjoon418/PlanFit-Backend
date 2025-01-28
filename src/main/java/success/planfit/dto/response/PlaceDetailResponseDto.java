@@ -1,63 +1,35 @@
 package success.planfit.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import success.planfit.domain.course.SpaceType;
 
 @ToString
-@Setter
 @Getter
+@Builder
 public class PlaceDetailResponseDto {
 
-    @JsonProperty("id")
     private String googlePlacesIdentifier;
-
-    // 내부 클래스로 구현
-    @JsonProperty("displayName")
-    private DisplayName spaceName;
-
-    // 형식화된 위치 이름
-    @JsonProperty("formattedAddress")
+    private String spaceName;
     private String location;
-
-    // 타입 저장하는 방식
     private SpaceType spaceType;
-
-    @JsonProperty("googleMapsUri")
     private String link;
+    private Double lat;
+    private Double lng;
+    private String googleMapLinks;
 
-    // 내부 클래스로 분리 - 위도 경도
-    @JsonProperty("location")
-    private Location locations;
-
-    // 내부 클래스로 구현
-    private GoogleMapLinks googleMapLinks;
-
-
-
-    @Getter
-    @NoArgsConstructor
-    public static class DisplayName{
-        @JsonProperty("text")
-        private String displayName;
+    // Mapping dto class에서 전달용 일반 dto로 만드는 과정 (생성자)
+    public PlaceDetailResponseDto create(PlaceDetailMappingDto placeDetailMappingDto){
+            return PlaceDetailResponseDto.builder()
+                    .googlePlacesIdentifier(placeDetailMappingDto.getGooglePlacesIdentifier())
+                    .spaceName(placeDetailMappingDto.getSpaceName().getDisplayName())
+                    .location(placeDetailMappingDto.getLocation())
+                    .spaceType(placeDetailMappingDto.getSpaceType())
+                    .link(placeDetailMappingDto.getLink())
+                    .lat(placeDetailMappingDto.getLocations().getLatitude())
+                    .lng(placeDetailMappingDto.getLocations().getLongitude())
+                    .googleMapLinks(placeDetailMappingDto.getGoogleMapLinks().getPhotosUri())
+                    .build();
     }
-
-    @Getter
-    @NoArgsConstructor
-    public static class Location {
-        private Double latitude;
-        private Double longitude;
-    }
-
-    @Getter
-    @NoArgsConstructor
-    public static class GoogleMapLinks{
-        private String photosUri;
-    }
-
 
 
 }
