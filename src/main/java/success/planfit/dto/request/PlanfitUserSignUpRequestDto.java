@@ -10,7 +10,7 @@ import success.planfit.photo.PhotoType;
 import java.time.LocalDate;
 
 @Getter
-public class PlanFitUserSignUpRequestDto {
+public class PlanfitUserSignUpRequestDto {
 
     private String name;
     private String loginId;

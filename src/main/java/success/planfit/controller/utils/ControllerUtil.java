@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import success.planfit.jwt.TokenProvider;
-import success.planfit.service.UserService;
 
 import java.security.Principal;
 
@@ -14,7 +13,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ControllerUtil {
 
-    private final UserService userService;
     private final TokenProvider tokenProvider;
 
     public Long findUserIdByPrincipal(Principal principal) {

@@ -8,8 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
-import success.planfit.dto.request.PlanFitUserSignInRequestDto;
-import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.controller.utils.PlanfitExceptionHandler;
+import success.planfit.dto.request.PlanfitUserSignInRequestDto;
+import success.planfit.dto.request.PlanfitUserSignUpRequestDto;
 import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
 import success.planfit.service.AuthorizationService;
@@ -26,21 +27,22 @@ public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
     private final ControllerUtil util;
+    private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignUp(@RequestBody PlanFitUserSignUpRequestDto requestDto) {
-        log.info("UserController.planFitSignUp() called");
+    public ResponseEntity<TokenResponseDto> planfitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
+        log.info("UserController.planfitSignUp() called");
 
-        TokenResponseDto responseDto = authorizationService.planFitSignUp(requestDto);
+        TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/authorization")
-    public ResponseEntity<TokenResponseDto> planFitSignIn(@RequestBody PlanFitUserSignInRequestDto requestDto) {
-        log.info("UserController.planFitSignIn() called");
+    public ResponseEntity<TokenResponseDto> planfitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
+        log.info("UserController.planfitSignIn() called");
 
-        TokenResponseDto responseDto = authorizationService.planFitSignIn(requestDto);
+        TokenResponseDto responseDto = authorizationService.planfitSignIn(requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -117,5 +119,12 @@ public class AuthorizationController {
         AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("UserController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 }
