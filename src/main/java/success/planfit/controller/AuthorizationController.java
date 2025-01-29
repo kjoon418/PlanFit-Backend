@@ -97,6 +97,9 @@ public class AuthorizationController {
                 .build();
     }
 
+    /**
+     * 로그아웃(리프레쉬 토큰 만료)
+     */
     @DeleteMapping("/user/logout")
     public ResponseEntity<Void> logout(Principal principal) {
         log.info("UserController.logout() called");
@@ -107,6 +110,9 @@ public class AuthorizationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 회원 탈퇴
+     */
     @DeleteMapping("/user/withdraw")
     public ResponseEntity<Void> withdraw(Principal principal) {
         log.info("UserController.withdraw() called");
