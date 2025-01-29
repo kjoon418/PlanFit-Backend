@@ -29,7 +29,7 @@ public class AuthorizationController {
     private final ControllerUtil util;
     private final PlanfitExceptionHandler exceptionHandler;
 
-    @PostMapping("/authorization")
+    @PostMapping("/authorization/planfit")
     public ResponseEntity<TokenResponseDto> planfitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
         log.info("UserController.planfitSignUp() called");
 
@@ -38,7 +38,7 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/authorization")
+    @GetMapping("/authorization/planfit")
     public ResponseEntity<TokenResponseDto> planfitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
         log.info("UserController.planfitSignIn() called");
 
