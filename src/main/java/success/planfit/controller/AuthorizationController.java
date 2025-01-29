@@ -47,19 +47,10 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/google")
-    public ResponseEntity<Void> googleRedirect() {
-        log.info("UserController.googleRedirect() called");
-
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
-                .build();
-    }
-
     /**
-     * 사용자가 구글 로그인을 마치면, 구글 측의 리다이렉트로 연결될 컨트롤러
+     * 구글 로그인/회원가입
      */
-    @GetMapping("/authorization/google/callback")
+    @GetMapping("/authorization/google")
     public ResponseEntity<TokenResponseDto> googleAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.googleCallback() called");
 
@@ -69,19 +60,22 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/kakao")
-    public ResponseEntity<Void> kakaoRedirect() {
-        log.info("UserController.kakaoRedirect() called");
+    /**
+     * 구글 로그인 화면으로 리다이렉트
+     */
+    @GetMapping("/authorization/google/redirection")
+    public ResponseEntity<Void> googleRedirect() {
+        log.info("UserController.googleRedirect() called");
 
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
                 .build();
     }
 
     /**
-     * 사용자가 카카오 로그인을 마치면, 카카오 측의 리다이렉트로 연결될 컨트롤러
+     * 카카오 로그인/회원가입
      */
-    @GetMapping("/authorization/kakao/callback")
+    @GetMapping("/authorization/kakao")
     public ResponseEntity<TokenResponseDto> kakaoAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.kakaoAuthorization() called");
 
@@ -89,6 +83,18 @@ public class AuthorizationController {
         TokenResponseDto responseDto = authorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 카카오 로그인 화면으로 리다이렉트
+     */
+    @GetMapping("/authorization/kakao/redirection")
+    public ResponseEntity<Void> kakaoRedirect() {
+        log.info("UserController.kakaoRedirect() called");
+
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .build();
     }
 
     @DeleteMapping("/user/logout")
