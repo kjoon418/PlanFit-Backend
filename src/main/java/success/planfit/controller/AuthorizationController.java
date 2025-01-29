@@ -123,6 +123,9 @@ public class AuthorizationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 엑세스 토큰 재발급
+     */
     @GetMapping("/authorization/reissue")
     public ResponseEntity<AccessTokenResponseDto> reissueAccessToken(HttpServletRequest request) {
         log.info("UserController.reissueAccessToken() called");
