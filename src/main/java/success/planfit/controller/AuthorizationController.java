@@ -29,7 +29,7 @@ public class AuthorizationController {
     private final ControllerUtil util;
     private final PlanfitExceptionHandler exceptionHandler;
 
-    @PostMapping("/authorization")
+    @PostMapping("/authorization/planfit")
     public ResponseEntity<TokenResponseDto> planfitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
         log.info("UserController.planfitSignUp() called");
 
@@ -38,7 +38,7 @@ public class AuthorizationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/authorization")
+    @GetMapping("/authorization/planfit")
     public ResponseEntity<TokenResponseDto> planfitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
         log.info("UserController.planfitSignIn() called");
 
@@ -47,19 +47,10 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/google")
-    public ResponseEntity<Void> googleRedirect() {
-        log.info("UserController.googleRedirect() called");
-
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
-                .build();
-    }
-
     /**
-     * 사용자가 구글 로그인을 마치면, 구글 측의 리다이렉트로 연결될 컨트롤러
+     * 구글 로그인/회원가입
      */
-    @GetMapping("/authorization/google/callback")
+    @GetMapping("/authorization/google")
     public ResponseEntity<TokenResponseDto> googleAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.googleCallback() called");
 
@@ -69,19 +60,22 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/kakao")
-    public ResponseEntity<Void> kakaoRedirect() {
-        log.info("UserController.kakaoRedirect() called");
+    /**
+     * 구글 로그인 화면으로 리다이렉트
+     */
+    @GetMapping("/authorization/google/redirection")
+    public ResponseEntity<Void> googleRedirect() {
+        log.info("UserController.googleRedirect() called");
 
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
                 .build();
     }
 
     /**
-     * 사용자가 카카오 로그인을 마치면, 카카오 측의 리다이렉트로 연결될 컨트롤러
+     * 카카오 로그인/회원가입
      */
-    @GetMapping("/authorization/kakao/callback")
+    @GetMapping("/authorization/kakao")
     public ResponseEntity<TokenResponseDto> kakaoAuthorization(@RequestParam(name = "code") String code) {
         log.info("UserController.kakaoAuthorization() called");
 
@@ -91,6 +85,21 @@ public class AuthorizationController {
         return ResponseEntity.ok(responseDto);
     }
 
+    /**
+     * 카카오 로그인 화면으로 리다이렉트
+     */
+    @GetMapping("/authorization/kakao/redirection")
+    public ResponseEntity<Void> kakaoRedirect() {
+        log.info("UserController.kakaoRedirect() called");
+
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .build();
+    }
+
+    /**
+     * 로그아웃(리프레쉬 토큰 만료)
+     */
     @DeleteMapping("/user/logout")
     public ResponseEntity<Void> logout(Principal principal) {
         log.info("UserController.logout() called");
@@ -101,6 +110,9 @@ public class AuthorizationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 회원 탈퇴
+     */
     @DeleteMapping("/user/withdraw")
     public ResponseEntity<Void> withdraw(Principal principal) {
         log.info("UserController.withdraw() called");
@@ -111,6 +123,9 @@ public class AuthorizationController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 엑세스 토큰 재발급
+     */
     @GetMapping("/authorization/reissue")
     public ResponseEntity<AccessTokenResponseDto> reissueAccessToken(HttpServletRequest request) {
         log.info("UserController.reissueAccessToken() called");
