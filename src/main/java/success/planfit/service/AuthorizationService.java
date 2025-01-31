@@ -17,10 +17,12 @@ import success.planfit.dto.google.GoogleAccessTokenDto;
 import success.planfit.dto.google.GoogleUserInfoDto;
 import success.planfit.dto.kakao.KaKaoUserInfoDto;
 import success.planfit.dto.kakao.KakaoAccessTokenDto;
-import success.planfit.dto.request.PlanFitUserSignInRequestDto;
-import success.planfit.dto.request.PlanFitUserSignUpRequestDto;
+import success.planfit.dto.request.PlanfitUserSignInRequestDto;
+import success.planfit.dto.request.PlanfitUserSignUpRequestDto;
 import success.planfit.dto.response.AccessTokenResponseDto;
 import success.planfit.dto.response.TokenResponseDto;
+import success.planfit.exception.EntityNotFoundException;
+import success.planfit.exception.IllegalRequestException;
 import success.planfit.jwt.TokenProvider;
 import success.planfit.jwt.TokenType;
 import success.planfit.photo.PhotoProvider;
@@ -73,8 +75,8 @@ public class AuthorizationService {
         this.KAKAO_REDIRECT_URL = kakaoRedirectUri;
     }
 
-    public TokenResponseDto planFitSignUp(PlanFitUserSignUpRequestDto requestDto) {
-        log.info("AuthorizationService.planFitSignUp() called");
+    public TokenResponseDto planfitSignUp(PlanfitUserSignUpRequestDto requestDto) {
+        log.info("AuthorizationService.planfitSignUp() called");
 
         // User 엔티티를 영속화
         PlanfitUser user = requestDto.toEntity();
@@ -92,8 +94,8 @@ public class AuthorizationService {
                 .build();
     }
 
-    public TokenResponseDto planFitSignIn(PlanFitUserSignInRequestDto requestDto) {
-        log.info("AuthorizationService.planFitSignIn() called");
+    public TokenResponseDto planfitSignIn(PlanfitUserSignInRequestDto requestDto) {
+        log.info("AuthorizationService.planfitSignIn() called");
 
         // DTO로부터 값을 추출
         String loginId = requestDto.getLoginId();
@@ -101,7 +103,7 @@ public class AuthorizationService {
 
         // 아이디와 비밀번호를 통해 유저 조회
         User user = userRepository.findByLoginIdAndPassword(loginId, password)
-                .orElseThrow(() -> new IllegalStateException("해당 아이디와 비밀번호를 가진 회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디와 비밀번호를 가진 회원을 찾을 수 없습니다."));
 
         // JWT 토큰 발급 및 RefreshToken 엔티티 값 갱신
         String accessTokenValue = tokenProvider.createToken(user, TokenType.ACCESS);
@@ -161,7 +163,7 @@ public class AuthorizationService {
 
         // 유효성 검사
         if (!googleUserInfo.getVerifiedEmail()) {
-            throw new IllegalStateException("이메일 인증이 되지 않은 유저입니다.");
+            throw new IllegalRequestException("이메일 인증이 되지 않은 유저입니다.");
         }
 
         // 기존에 회원가입 하지 않은 회원이라면 회원가입함
@@ -211,8 +213,8 @@ public class AuthorizationService {
     public String getKakaoRedirectUrl() {
         log.info("AuthorizationService.getKakaoRedirectUrl() called");
 
-        StringBuilder url = new StringBuilder();
-        url.append("https://kauth.kakao.com/oauth/authorize?")
+        StringBuilder url = new StringBuilder()
+                .append("https://kauth.kakao.com/oauth/authorize?")
                 .append("client_id=")
                 .append(KAKAO_CLIENT_ID)
                 .append("&redirect_uri=")
@@ -262,7 +264,7 @@ public class AuthorizationService {
 
         // 유효성 검사
         if (!kakaoUserInfo.isValidatedEmail()) {
-            throw new IllegalStateException("이메일 인증이 되지 않은 유저입니다.");
+            throw new IllegalRequestException("이메일 인증이 되지 않은 유저입니다.");
         }
 
         // 기존에 회원가입 하지 않은 회원이라면 회원가입함
@@ -313,7 +315,7 @@ public class AuthorizationService {
         log.info("AuthorizationService.invalidateRefreshToken() called");
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("ID를 통해 유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"));
         user.getRefreshToken().setTokenValue(null);
     }
 
@@ -321,7 +323,7 @@ public class AuthorizationService {
         log.info("AuthorizationService.removeUser() called");
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("ID를 통해 유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"));
         userRepository.delete(user);
     }
 
@@ -331,14 +333,14 @@ public class AuthorizationService {
         // 유효성 검사: 토큰 자체가 부적절한지 확인
         long userId = Long.parseLong(tokenProvider.parseClaims(refreshToken).getSubject());
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("토큰으로 조회되는 회원 없음"));
+                .orElseThrow(() -> new EntityNotFoundException("토큰으로 조회되는 회원 없음"));
         if (!tokenProvider.validateToken(refreshToken, TokenType.REFRESH)) {
-            throw new IllegalArgumentException("부적절한 토큰");
+            throw new IllegalRequestException("부적절한 토큰");
         }
 
         // 유효성 검사: DB에 저장된 리프레쉬 토큰과 동일한지 확인
         if (!refreshToken.equals(user.getRefreshToken().getTokenValue())) {
-            throw new IllegalArgumentException("부적절한 토큰: 다른 곳에서 로그인됨");
+            throw new IllegalRequestException("부적절한 토큰: 다른 곳에서 로그인됨");
         }
 
         // 엑세스 토큰 생성 및 반환
