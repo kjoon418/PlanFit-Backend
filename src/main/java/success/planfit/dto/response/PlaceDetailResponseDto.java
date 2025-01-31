@@ -3,7 +3,7 @@ package success.planfit.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import success.planfit.domain.CachePlacedetail;
+import success.planfit.domain.CachePlaceDetail;
 import success.planfit.domain.course.SpaceType;
 import success.planfit.photo.PhotoProvider;
 
@@ -57,7 +57,7 @@ public class PlaceDetailResponseDto {
     }
 
     // 캐시 테이블에 장소 정보 있을 경우 dto생성
-    public static PlaceDetailResponseDto create(CachePlacedetail cachePlacedetail){
+    public static PlaceDetailResponseDto create(CachePlaceDetail cachePlacedetail){
         return PlaceDetailResponseDto.builder()
                 .googlePlacesIdentifier(cachePlacedetail.getGooglePlacesIdentifier())
                 .spaceName(cachePlacedetail.getSpaceInformation().getSpaceName())

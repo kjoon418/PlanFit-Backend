@@ -22,7 +22,7 @@ public class PlaceDetailController {
     // AI에게 placeId로 요청받는 경우
     @GetMapping("/place/detailList/")
     public ResponseEntity<PlaceDetailResponseDto> placeDetail(
-            PlaceRelevanceDetail placeRelevanceDetail
+            @RequestBody PlaceRelevanceDetail placeRelevanceDetail
     ){
         return ResponseEntity.ok(placeDetailService.getPlaceDetailsById(placeRelevanceDetail));
     }

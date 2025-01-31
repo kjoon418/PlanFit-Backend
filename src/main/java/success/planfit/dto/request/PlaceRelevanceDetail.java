@@ -4,7 +4,7 @@ import success.planfit.domain.course.SpaceType;
 
 @Getter
 public class PlaceRelevanceDetail {
-    private Long placeId;
+    private String placeId;
     private SpaceType spaceType;
     private Double relevance;
 }
