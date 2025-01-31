@@ -58,8 +58,7 @@ public class UserService {
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
         }
-        if (userDto.getPassword() != null && user instanceof PlanfitUser) {
-            PlanfitUser planfitUser = (PlanfitUser) user;
+        if (userDto.getPassword() != null && user instanceof PlanfitUser planfitUser) {
             planfitUser.setPassword(userDto.getPassword());
         }
 
