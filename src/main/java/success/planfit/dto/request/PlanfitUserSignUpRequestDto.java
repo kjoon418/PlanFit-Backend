@@ -25,6 +25,8 @@ public class PlanfitUserSignUpRequestDto {
 
     public PlanfitUser toEntity() {
 
+        photoType = photoType == null ? PhotoType.NULL : photoType;
+
         byte[] photo = switch (photoType) {
             case URL -> PhotoProvider.getImageFromUrl(profilePhoto);
             case ENCODED_BINARY -> PhotoProvider.decode(profilePhoto);
