@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 @AllArgsConstructor
-public class UserDto {
+public class UserUpdateDto {
     private String name;
     private String email;
     private String phoneNumber;
@@ -19,8 +19,8 @@ public class UserDto {
     private String password;
     private String profilePhoto;
 
-    public static UserDto from(User user) {
-        return UserDto.builder()
+    public static UserUpdateDto from(User user) {
+        return UserUpdateDto.builder()
                 .name(user.getName())
                 .profilePhoto(PhotoProvider.encode(user.getProfilePhoto()))
                 .birthOfDate(user.getBirthOfDate())

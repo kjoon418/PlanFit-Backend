@@ -24,6 +24,7 @@ public class TimetableInfoResponseDto {
 
     public static TimetableInfoResponseDto from(Timetable timetable) {
         return TimetableInfoResponseDto.builder()
+                .memo(timetable.getMemo())
                 .timetableId(timetable.getId())
                 .sequence(timetable.getSequence())
                 .spaceName(timetable.getSpaceInformation().getSpaceName())
