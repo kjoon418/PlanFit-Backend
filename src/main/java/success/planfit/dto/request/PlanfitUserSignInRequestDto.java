@@ -6,10 +6,10 @@ import success.planfit.validation.NotEmptyAndNotBlank;
 @Getter
 public class PlanfitUserSignInRequestDto {
 
-    @NotEmptyAndNotBlank(value = "loginId")
+    @NotEmptyAndNotBlank(value = "loginId", allowWhiteSpace = false)
     private String loginId;
 
-    @NotEmptyAndNotBlank(value = "password")
+    @NotEmptyAndNotBlank(value = "password", allowWhiteSpace = false)
     private String password;
 
 }
