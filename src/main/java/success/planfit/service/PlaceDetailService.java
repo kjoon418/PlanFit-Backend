@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import success.planfit.domain.CachePlaceDetail;
 import success.planfit.domain.user.UserDto;
+import success.planfit.dto.PlaceDetailMappingDto;
 import success.planfit.dto.request.CachePlaceDetailSaveRequestDto;
 import success.planfit.dto.request.PlaceDetailRequestDto;
 import success.planfit.dto.request.PlaceRelevanceDetail;
@@ -45,7 +46,7 @@ public class PlaceDetailService {
 
         //만약에 캐시 테이블에 정보 있다면 해당 정보 테이블에서 찾아서 dto로 리턴
         if (place.isPresent()) {
-            return PlaceDetailResponseDto.create(place.orElseThrow(()-> new IllegalArgumentException()));
+            return PlaceDetailResponseDto.createFromCache(place.orElseThrow(()-> new IllegalArgumentException()));
         } // 만약에 캐시 테이블에 정보 없다면 API로 조회후 dto로 리턴
 
         String placeDetailJson = openGooglePlaceApi.fetchPlaceDetailsByplaceId(placeId);
@@ -53,30 +54,31 @@ public class PlaceDetailService {
         // json String SpaceBook 객체에 넣기
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        PlaceDetailResponseDto responseDto;
+        PlaceDetailMappingDto responseDto;
 
         try {
             // json -> dto에 맵핑
             responseDto = objectMapper.readValue(placeDetailJson,
-                    new TypeReference<PlaceDetailResponseDto>(){});
-            // dto -> savedto
-            CachePlaceDetailSaveRequestDto saveRequestDto = CachePlaceDetailSaveRequestDto.builder()
-                    .googlePlacesIdentifier(responseDto.getGooglePlacesIdentifier())
-                    .spaceName(responseDto.getSpaceName())
-                    .spaceType(responseDto.getSpaceTag())
-                    .link(responseDto.getLink())
-                    .latitude(responseDto.getLat())
-                    .longitude(responseDto.getLng())
-                    .spacePhoto(responseDto.getSpacePhoto())
-                    .build();
+                    new TypeReference<PlaceDetailMappingDto>(){});
+            // mappingDto -> savedto
+            CachePlaceDetailSaveRequestDto saveRequestDto = CachePlaceDetailSaveRequestDto.createSaveDtoFromMapper(responseDto);
             // 캐시메모리에 저장
             cachePlacedetailRepository.save(saveRequestDto.toEntity());
 
             // responseDto 리턴
-            return responseDto;
+            return PlaceDetailResponseDto.createFromMapper(responseDto);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
     }
+
+
+
+
+
+
+
+
+
 }
