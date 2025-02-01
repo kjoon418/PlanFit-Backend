@@ -4,7 +4,10 @@ import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import success.planfit.exception.EntityNotFoundException;
 import success.planfit.exception.IllegalRequestException;
 
@@ -19,6 +22,10 @@ public class PlanfitExceptionHandler {
     public ResponseEntity<String> handle(Exception e) {
         log.info("PlanfitExceptionHandler.handle() called");
 
+        if (e instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
+            FieldError fieldError = methodArgumentNotValidException.getBindingResult().getFieldErrors().getFirst();
+            return ResponseEntity.status(BAD_REQUEST).body(fieldError.getDefaultMessage());
+        }
         if (e instanceof EntityNotFoundException ||
                 e instanceof IllegalRequestException) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
@@ -29,6 +36,9 @@ public class PlanfitExceptionHandler {
         }
         if (e instanceof MalformedJwtException) {
             return ResponseEntity.status(UNAUTHORIZED).body("부적절한 JWT 토큰입니다.");
+        }
+        if (e instanceof HttpMessageNotReadableException) {
+            return ResponseEntity.status(BAD_REQUEST).body("JSON 파싱에 실패했습니다.");
         }
 
         log.error("Unhandled error occurred", e);
