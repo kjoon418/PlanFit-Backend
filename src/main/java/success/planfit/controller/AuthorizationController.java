@@ -1,6 +1,7 @@
 package success.planfit.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +31,7 @@ public class AuthorizationController {
     private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/authorization/planfit")
-    public ResponseEntity<TokenResponseDto> planfitSignUp(@RequestBody PlanfitUserSignUpRequestDto requestDto) {
+    public ResponseEntity<TokenResponseDto> planfitSignUp(@Valid @RequestBody PlanfitUserSignUpRequestDto requestDto) {
         log.info("UserController.planfitSignUp() called");
 
         TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
@@ -39,7 +40,7 @@ public class AuthorizationController {
     }
 
     @GetMapping("/authorization/planfit")
-    public ResponseEntity<TokenResponseDto> planfitSignIn(@RequestBody PlanfitUserSignInRequestDto requestDto) {
+    public ResponseEntity<TokenResponseDto> planfitSignIn(@Valid @RequestBody PlanfitUserSignInRequestDto requestDto) {
         log.info("UserController.planfitSignIn() called");
 
         TokenResponseDto responseDto = authorizationService.planfitSignIn(requestDto);
