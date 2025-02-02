@@ -47,4 +47,5 @@ public class NotEmptyAndNotBlankValidator implements ConstraintValidator<NotEmpt
         context.buildConstraintViolationWithTemplate(fieldName + message)
                 .addConstraintViolation();
     }
+
 }

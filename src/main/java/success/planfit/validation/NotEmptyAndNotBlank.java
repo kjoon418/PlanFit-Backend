@@ -20,4 +20,5 @@ public @interface NotEmptyAndNotBlank {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }
