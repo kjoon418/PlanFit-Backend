@@ -23,7 +23,10 @@ public class PlanfitExceptionHandler {
         log.info("PlanfitExceptionHandler.handle() called");
 
         if (e instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
-            FieldError fieldError = methodArgumentNotValidException.getBindingResult().getFieldErrors().getFirst();
+            FieldError fieldError = methodArgumentNotValidException
+                    .getBindingResult()
+                    .getFieldErrors()
+                    .getFirst();
             return ResponseEntity.status(BAD_REQUEST).body(fieldError.getDefaultMessage());
         }
         if (e instanceof EntityNotFoundException ||
