@@ -1,26 +1,29 @@
 package success.planfit.dto.request;
 
+
 import lombok.Getter;
-import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.course.SpaceType;
 import success.planfit.domain.embeddable.SpaceInformation;
+import success.planfit.domain.post.SpacePost;
 import success.planfit.photo.PhotoProvider;
 
 @Getter
-public class SpaceBookmarkRegistrationRequestDto {
+public class SpacePostSaveRequestDto {
 
-    private String googlePlacesIdentifier;
+    private String title;
+    private Integer sequence;
     private String spaceName;
     private String location;
     private SpaceType spaceTag;
     private String link;
     private Double latitude;
     private Double longitude;
-    private String spacePhoto; // 우선 Base64로 인코딩된 사진 정보를 받아온다고 가정함
+    private String spacePhoto;
 
-    public SpaceBookmark toEntity() {
-        return SpaceBookmark.builder()
-                .googlePlacesIdentifier(googlePlacesIdentifier)
+
+    public SpacePost toEntity(){
+        return SpacePost.builder()
+                .sequence(sequence)
                 .spaceInformation(SpaceInformation.builder()
                         .spaceName(spaceName)
                         .location(location)

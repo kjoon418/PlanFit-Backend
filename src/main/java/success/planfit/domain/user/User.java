@@ -9,6 +9,7 @@ import success.planfit.domain.RefreshToken;
 import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.course.Calendar;
+import success.planfit.domain.post.CoursePost;
 import success.planfit.domain.preference.UserPreference;
 
 import java.time.LocalDate;
@@ -42,6 +43,12 @@ public abstract class User {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private final List<UserPreference> userPreferences = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<CoursePost> coursePosts = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "users")
+    private final List<CoursePost> coursePostBookmarks = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)
@@ -137,6 +144,22 @@ public abstract class User {
     public void removeUserPreference(UserPreference userPreference) {
         this.userPreferences.remove(userPreference);
         userPreference.setUser(null);
+    }
+
+    /**
+     * User - CoursePost 연관관계 편의 메서드(생성)
+     */
+    public void addCoursePost(CoursePost coursePost){
+        this.coursePosts.add(coursePost);
+        coursePost.setUser(this);
+    }
+
+    /**
+     * User - CoursePost 연관관계 편의 메서드(삭제)
+     */
+    public void removeCoursePost(CoursePost coursePost){
+        this.coursePosts.remove(coursePost);
+        coursePost.setUser(null);
     }
 
 }

@@ -30,7 +30,7 @@ public class PlaceDetailResponseDto {
 
 
 
-    // 캐시 -> reponseDto
+    // Cache Entity -> reponseDto
     public static PlaceDetailResponseDto createFromCache(CachePlaceDetail cachePlacedetail){
         return PlaceDetailResponseDto.builder()
                 .googlePlacesIdentifier(cachePlacedetail.getGooglePlacesIdentifier())

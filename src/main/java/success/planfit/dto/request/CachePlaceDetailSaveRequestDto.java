@@ -38,7 +38,7 @@ public class CachePlaceDetailSaveRequestDto {
                 .build();
     }
 
-
+    // mappingDto -> saveDto
     public static CachePlaceDetailSaveRequestDto createSaveDtoFromMapper(PlaceDetailMappingDto mapper){
         return CachePlaceDetailSaveRequestDto.builder()
                 .googlePlacesIdentifier(mapper.getGooglePlacesIdentifier())

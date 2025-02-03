@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.domain.course.SpaceType;
+import lombok.Setter;
+import success.planfit.domain.course.Timetable;
+import success.planfit.domain.embeddable.SpaceInformation;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class SpacePost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne (fetch = FetchType.LAZY)
     private CoursePost coursePost;
@@ -22,37 +25,26 @@ public class SpacePost {
     @Column(nullable = false)
     private Integer sequence;
 
-    @Column(nullable = false)
-    private String spaceName;
-
-    @Column(nullable = false)
-    private String location;
-
-    private SpaceType spaceTag;
-
-    @Column(nullable = false)
-    private String link;
-
-    private Double latitude;
-
-    private Double longitude;
-
-    private byte[] spacePhoto;
+    @Setter
+    @Embedded
+    private SpaceInformation spaceInformation;
 
     @Builder
     private SpacePost(CoursePost coursePost, Integer sequence
-            , String spaceName, String location, SpaceType spaceTag
-            , String link, Double latitude, Double longitude
-                      ,byte[] spacePhoto
+            , SpaceInformation spaceInformation
     ) {
         this.coursePost = coursePost;
         this.sequence = sequence;
-        this.spaceName = spaceName;
-        this.location = location;
-        this.spaceTag = spaceTag;
-        this.link = link;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.spacePhoto = spacePhoto;
+        this.spaceInformation = spaceInformation;
+    }
+
+    /**
+     * Timetable을 통해 SpacePost 생성하는 정적 팩터리 메서드
+     */
+    public static SpacePost from(Timetable timetable){
+        return SpacePost.builder()
+                .sequence(timetable.getSequence())
+                .spaceInformation(timetable.getSpaceInformation())
+                .build();
     }
 }
