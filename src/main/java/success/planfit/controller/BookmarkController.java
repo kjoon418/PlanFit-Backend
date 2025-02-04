@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
+import success.planfit.controller.utils.PlanfitExceptionHandler;
 import success.planfit.dto.request.CourseBookmarkUpdateSpaceRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateTitleRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
@@ -24,6 +25,7 @@ public class BookmarkController {
 
     private final BookmarkService bookmarkService;
     private final ControllerUtil util;
+    private final PlanfitExceptionHandler exceptionHandler;
 
     /**
      * 장소 좋아요 등록
@@ -163,5 +165,12 @@ public class BookmarkController {
         bookmarkService.deleteCourseBookmark(userId, courseBookmarkId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("BookmarkController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 }

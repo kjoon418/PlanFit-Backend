@@ -10,7 +10,7 @@ import success.planfit.photo.PhotoType;
 import java.time.LocalDate;
 
 @Getter
-public class PlanFitUserSignUpRequestDto {
+public class PlanfitUserSignUpRequestDto {
 
     private String name;
     private String loginId;
@@ -24,6 +24,8 @@ public class PlanFitUserSignUpRequestDto {
     private PhotoType photoType;
 
     public PlanfitUser toEntity() {
+
+        photoType = photoType == null ? PhotoType.NULL : photoType;
 
         byte[] photo = switch (photoType) {
             case URL -> PhotoProvider.getImageFromUrl(profilePhoto);

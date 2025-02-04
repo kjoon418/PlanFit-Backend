@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import success.planfit.domain.embeddable.SpaceInformation;
 
-import java.time.LocalTime;
-
 @Getter
 @NoArgsConstructor
 @Entity
-
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "timetable_uq_calendar_id_sequence", columnNames = {"calendar_id", "sequence"})
+})
 public class Timetable {
 
     @Id

@@ -10,13 +10,14 @@ import success.planfit.domain.bookmark.CourseBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.bookmark.TimetableBookmark;
 import success.planfit.domain.course.Calendar;
-import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.domain.user.User;
 import success.planfit.dto.request.CourseBookmarkUpdateSpaceRequestDto;
 import success.planfit.dto.request.CourseBookmarkUpdateTitleRequestDto;
 import success.planfit.dto.request.SpaceBookmarkRegistrationRequestDto;
 import success.planfit.dto.response.CourseBookmarkInfoResponseDto;
 import success.planfit.dto.response.SpaceBookmarkInfoResponseDto;
+import success.planfit.exception.EntityNotFoundException;
+import success.planfit.exception.IllegalRequestException;
 import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 
@@ -37,7 +38,7 @@ public class BookmarkService {
 
         // 엔티티 조회 및 생성
         User user = userRepository.findByIdWithSpaceBookmark(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         SpaceBookmark spaceBookmark = requestDto.toEntity();
 
         // 연관관계 편의 메서드 사용
@@ -49,11 +50,11 @@ public class BookmarkService {
 
         // 엔티티 조회
         User user = userRepository.findByIdWithSpaceBookmark(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         SpaceBookmark spaceBookmark = user.getSpaceBookmarks().stream()
                 .filter(spacebookmark -> spacebookmark.getGooglePlacesIdentifier().equals(googlePlacesIdentifier))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("좋아요에 등록된 장소 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("좋아요에 등록된 장소 조회 실패"));
 
         // 연관관계 편의 메서드 사용
         user.removeSpaceBookmark(spaceBookmark);
@@ -78,13 +79,13 @@ public class BookmarkService {
 
         // 엔티티 조회
         User user = userRepository.findByIdWithCalendar(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
         // User를 통해 Date에 맞는 Calendar 조회
         Calendar calendar = user.getCalendars().stream()
                 .filter(streamCalendar -> streamCalendar.getDate().equals(date))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 날짜에 코스가 존재하지 않음"));
+                .orElseThrow(() -> new EntityNotFoundException("해당 날짜에 코스가 존재하지 않음"));
 
         // 해당 Calendar의 연관 Timetable 엔티티를 통해 TimetableBookmark 엔티티 생성
         List<TimetableBookmark> timetableBookmarks = calendar.getTimetables().stream()
@@ -111,11 +112,11 @@ public class BookmarkService {
 
         // 엔티티 조회
         User user = userRepository.findByIdWithCourseBookmark(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
                 .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("코스 좋아요 조회 실패"));
 
         // 엔티티 수정
         updateIfNotNull(courseBookmark::setTitle, requestDto.getTitle());
@@ -130,21 +131,21 @@ public class BookmarkService {
 
         // 엔티티 조회
         User user = userRepository.findByIdWithCourseBookmark(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
                 .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("코스 좋아요 조회 실패"));
         TimetableBookmark timetableBookmark = courseBookmark.getTimetableBookmarks().stream()
                 .filter(timetablebookmark -> timetablebookmark.getId().equals(timetableBookmarkId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("장소 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("장소 조회 실패"));
 
         // 엔티티 수정
         updateIfNotNull(timetableBookmark::setMemo, requestDto.getMemo());
-        SpaceInformation existsSpaceInfo = timetableBookmark.getSpaceInformation();
-        SpaceInformation newSpaceInfo = existsSpaceInfo.copyNotNulls(requestDto.getSpaceInformation());
-        timetableBookmark.setSpaceInformation(newSpaceInfo);
+        timetableBookmark.setSpaceInformation(timetableBookmark
+                .getSpaceInformation() // 기존의 SpaceInformation
+                .copyNotNulls(requestDto.getSpaceInformation())); // RequestDto의 SpaceInformation 정보 반영
     }
 
     public void updateCourseBookmarkSpaceSequence(Long userId, Long courseBookmarkId, List<Long> spaceIds) {
@@ -152,11 +153,11 @@ public class BookmarkService {
 
         // 엔티티 조회
         User user = userRepository.findByIdWithCourseBookmark(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         CourseBookmark courseBookmark = user.getCourseBookmarks().stream()
                 .filter(coursebookmark -> coursebookmark.getId().equals(courseBookmarkId))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("코스 좋아요 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("코스 좋아요 조회 실패"));
 
         // 로직에 사용하기 위해 List<TimetableBookmark>를 Map<Long, TimetableBookmark>로 매핑
         HashMap<Long, TimetableBookmark> timetableBookmarks = new HashMap<>();
@@ -166,7 +167,7 @@ public class BookmarkService {
 
         // 유효성 검사
         if (isIllegalSequenceUpdateRequest(timetableBookmarks, spaceIds)) {
-            throw new IllegalArgumentException("장소 ID 부적절");
+            throw new IllegalRequestException("장소 ID 부적절");
         }
 
         // 요청의 순서대로 엔티티의 sequence 값 변경
