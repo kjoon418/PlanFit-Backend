@@ -1,6 +1,7 @@
 package success.planfit.domain.user;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class GoogleUser extends User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(nullable = false, unique = true)
     private String googleIdentifier;
