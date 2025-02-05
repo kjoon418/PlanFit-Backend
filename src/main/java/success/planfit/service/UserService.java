@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.domain.user.PlanfitUser;
 import success.planfit.domain.user.User;
-import success.planfit.domain.user.UserUpdateDto;
+import success.planfit.dto.User.UserUpdateDto;
 import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
-import success.planfit.domain.user.UserUpdateDto;
+import success.planfit.dto.User.UserUpdateDto;
 import success.planfit.service.UserService;
 
 import java.security.Principal;

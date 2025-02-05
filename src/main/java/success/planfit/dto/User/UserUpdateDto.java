@@ -1,8 +1,10 @@
-package success.planfit.domain.user;
+package success.planfit.dto.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import success.planfit.domain.user.IdentityType;
+import success.planfit.domain.user.User;
 import success.planfit.photo.PhotoProvider;
 
 import java.time.LocalDate;
