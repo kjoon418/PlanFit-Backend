@@ -1,4 +1,4 @@
-package success.planfit.dto.User;
+package success.planfit.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
