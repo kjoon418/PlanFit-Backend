@@ -10,7 +10,6 @@ import success.planfit.domain.user.User;
 import success.planfit.dto.request.TimetableCreationRequestDto;
 import success.planfit.dto.request.TimetableUpdateRequestDto;
 import success.planfit.dto.response.TimetableInfoResponseDto;
-import success.planfit.repository.TimetableRepository;
 import success.planfit.repository.UserRepository;
 
 import java.time.LocalDate;
@@ -20,10 +19,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TimetableService {
-    private final TimetableRepository timetableRepository;
+
     private final UserRepository userRepository;
 
-    @Transactional
     public void addTimetable(Long userId, TimetableCreationRequestDto requestDto, LocalDate date ) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
         Calendar calendar = user.getCalendars().stream().filter(cal -> cal.getDate().equals(date)).findFirst().orElseGet(() -> Calendar.builder().date(date).title(date.toString()).build());
@@ -32,15 +30,13 @@ public class TimetableService {
         calendar.addTimetable(timetable);
     }
 
-    @Transactional
     public void removeTimetable(Long userId, LocalDate date, Long timetableId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("유저 조회 실패"));
-        Calendar calendar = user.getCalendars().stream().filter(cal -> cal.getDate().equals(date)).findFirst().orElseThrow(() -> new RuntimeException("Calendar not found"));
-        Timetable timetable = calendar.getTimetables().stream().filter(timetb -> timetb.getId().equals(timetableId)).findFirst().orElseThrow(() -> new RuntimeException("Timetable not found"));
+        Calendar calendar = user.getCalendars().stream().filter(cal -> cal.getDate().equals(date)).findFirst().orElseThrow(() -> new RuntimeException("캘린더 조회 실패"));
+        Timetable timetable = calendar.getTimetables().stream().filter(timetb -> timetb.getId().equals(timetableId)).findFirst().orElseThrow(() -> new RuntimeException("타임 테이블 조회 실패"));
         calendar.removeTimetable(timetable);
     }
 
-    @Transactional
     public TimetableInfoResponseDto updateTimetable(Long userId, LocalDate date, Long timetableId, TimetableUpdateRequestDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
         Calendar calendar = user.getCalendars().stream()
@@ -60,7 +56,6 @@ public class TimetableService {
         return TimetableInfoResponseDto.from(timetable);
     }
 
-    @Transactional
     public List<TimetableInfoResponseDto> getTimetables(Long userId, LocalDate date) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
 
