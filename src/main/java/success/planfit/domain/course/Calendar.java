@@ -15,6 +15,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "calendar_uq_user_id_date", columnNames = {"user_id", "date"})
+})
 public class Calendar {
 
     @Id
@@ -35,6 +38,7 @@ public class Calendar {
     @Column(nullable = false)
     private LocalDate date;
 
+    @Column(unique = true)
     private String shareSerial;
 
     @Builder
@@ -45,14 +49,20 @@ public class Calendar {
         this.shareSerial = shareSerial;
     }
 
+    /**
+     * Calendar - Timetable 연관관계 편의 메서드(생성)
+     */
     public void addTimetable(Timetable timetable) {
         this.timetables.add(timetable);
         timetable.setCalendar(this);
     }
 
+    /**
+     * Calendar - Timetable 연관관계 편의 메서드(삭제)
+     */
     public void removeTimetable(Timetable timetable) {
         this.timetables.remove(timetable);
         timetable.setCalendar(null);
     }
-
+  
 }

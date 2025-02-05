@@ -1,9 +1,11 @@
 package success.planfit.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
+import success.planfit.controller.utils.PlanfitExceptionHandler;
 import success.planfit.dto.request.TimetableCreationRequestDto;
 import success.planfit.dto.request.TimetableUpdateRequestDto;
 import success.planfit.dto.response.TimetableInfoResponseDto;
@@ -14,6 +16,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/timetable")
@@ -21,7 +24,7 @@ public class TimetableController {
 
     private final ControllerUtil controllerUtil;
     private final TimetableService timetableService;
-
+    private final PlanfitExceptionHandler exceptionHandler;
 
     // 날짜를 기준으로 시간표 등록
     @PostMapping("/{date}")
@@ -51,5 +54,12 @@ public class TimetableController {
     public ResponseEntity<List<TimetableInfoResponseDto>> getTimetables(@PathVariable LocalDate date, Principal principal) {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         return ResponseEntity.ok(timetableService.getTimetables(userId, date));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("TimetableController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 }

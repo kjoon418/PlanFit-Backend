@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import success.planfit.domain.user.User;
 
 @Getter
@@ -16,10 +17,12 @@ public class UserPreference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Preference preference;

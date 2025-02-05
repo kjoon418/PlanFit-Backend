@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PlanFitApplication {
+public class PlanfitApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(PlanFitApplication.class, args);
+        SpringApplication.run(PlanfitApplication.class, args);
     }
 
 }

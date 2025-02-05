@@ -75,14 +75,20 @@ public abstract class User {
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 
-    public void addCalendar(Calendar calendar){
-        calendars.add(calendar);
-        calendar.setUser(this);
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(생성)
+     */
+    public void addCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.add(courseBookmark);
+        courseBookmark.setUser(this);
     }
 
-    public void removeCalendar(Calendar calendar){
-        calendars.remove(calendar);
-        calendar.setUser(null);
+    /**
+     * User - CourseBookmark 연관관계 편의 메서드(삭제)
+     */
+    public void removeCourseBookmark(CourseBookmark courseBookmark) {
+        this.courseBookmarks.remove(courseBookmark);
+        courseBookmark.setUser(null);
     }
 
     /**
@@ -100,4 +106,37 @@ public abstract class User {
         this.spaceBookmarks.remove(spaceBookmark);
         spaceBookmark.setUser(null);
     }
+
+    /**
+     * User - Calendar 연관관계 편의 메서드(생성)
+     */
+    public void addCalendar(Calendar calendar) {
+        this.calendars.add(calendar);
+        calendar.setUser(this);
+    }
+
+    /**
+     * User - Calendar 연관관계 편의 메서드(삭제)
+     */
+    public void removeCalendar(Calendar calendar) {
+        this.calendars.remove(calendar);
+        calendar.setUser(null);
+    }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(생성)
+     */
+    public void addUserPreference(UserPreference userPreference) {
+        this.userPreferences.add(userPreference);
+        userPreference.setUser(this);
+    }
+
+    /**
+     * User - UserPreference 연관관계 편의 메서드(삭제)
+     */
+    public void removeUserPreference(UserPreference userPreference) {
+        this.userPreferences.remove(userPreference);
+        userPreference.setUser(null);
+    }
+
 }

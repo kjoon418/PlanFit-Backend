@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import success.planfit.domain.embeddable.SpaceInformation;
 
-import java.time.LocalTime;
-
 @Getter
 @NoArgsConstructor
 @Entity
-
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "timetable_uq_calendar_id_sequence", columnNames = {"calendar_id", "sequence"})
+})
 public class Timetable {
 
     @Id
@@ -25,6 +25,7 @@ public class Timetable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Calendar calendar;
 
+    @Column(nullable = false)
     @Setter
     private Integer sequence;
 
@@ -36,7 +37,7 @@ public class Timetable {
     private SpaceInformation spaceInformation;
 
     @Builder
-    private Timetable(Calendar calendar, String memo, SpaceInformation spaceInformation, Integer sequence) {
+    private Timetable(Calendar calendar, Integer sequence, String memo, SpaceInformation spaceInformation) {
         this.calendar = calendar;
         this.sequence = sequence;
         this.memo = memo;
