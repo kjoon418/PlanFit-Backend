@@ -348,4 +348,11 @@ public class AuthorizationService {
                 .accessToken(tokenProvider.createToken(user, TokenType.ACCESS))
                 .build();
     }
+
+    public boolean isDuplicatedLoginId(String loginId) {
+        log.info("AuthorizationService.isDuplicatedLoginId() called");
+
+        return userRepository.findByLoginId(loginId)
+                .isPresent();
+    }
 }

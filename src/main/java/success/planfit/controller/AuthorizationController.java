@@ -18,6 +18,8 @@ import success.planfit.service.AuthorizationService;
 
 import java.security.Principal;
 
+import static org.springframework.http.HttpStatus.*;
+
 /**
  * 회원가입/로그인과 관련된 API를 처리하는 컨트롤러
  */
@@ -36,7 +38,7 @@ public class AuthorizationController {
 
         TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        return ResponseEntity.status(CREATED).body(responseDto);
     }
 
     @GetMapping("/authorization/planfit")
@@ -68,7 +70,7 @@ public class AuthorizationController {
     public ResponseEntity<Void> googleRedirect() {
         log.info("UserController.googleRedirect() called");
 
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+        return ResponseEntity.status(SEE_OTHER)
                 .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
                 .build();
     }
@@ -93,7 +95,7 @@ public class AuthorizationController {
     public ResponseEntity<Void> kakaoRedirect() {
         log.info("UserController.kakaoRedirect() called");
 
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+        return ResponseEntity.status(SEE_OTHER)
                 .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
                 .build();
     }
@@ -135,6 +137,20 @@ public class AuthorizationController {
         AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    /**
+     * 아이디 중복 여부 확인
+     */
+    @GetMapping("/authorization/duplication/{id}")
+    public ResponseEntity<String> idDuplicationCheck(@PathVariable(name = "id") String loginId) {
+        log.info("UserController.idDuplicateCheck() called");
+
+        if (authorizationService.isDuplicatedLoginId(loginId)) {
+            return ResponseEntity.status(CONFLICT).body("해당 아이디가 이미 존재합니다.");
+        }
+
+        return ResponseEntity.ok("아직 사용되지 않은 아이디입니다.");
     }
 
     @ExceptionHandler(Exception.class)
