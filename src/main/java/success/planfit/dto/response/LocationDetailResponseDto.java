@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.domain.user.UserDto;
 import success.planfit.dto.request.PlaceDetailRequestDto;
+import success.planfit.dto.user.UserUpdateDto;
 
 
 @NoArgsConstructor
@@ -14,7 +14,7 @@ import success.planfit.dto.request.PlaceDetailRequestDto;
 @Builder
 public class LocationDetailResponseDto {
     // AI에게 전달하는 정보 - 유저 정보, 위치 정보
-    private UserDto userDto;
+    private UserUpdateDto userUpdateDto;
     private PlaceDetailRequestDto placeDetailRequestDto;
 
 

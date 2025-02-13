@@ -8,13 +8,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import success.planfit.domain.CachePlaceDetail;
-import success.planfit.domain.user.UserDto;
 import success.planfit.dto.PlaceDetailMappingDto;
 import success.planfit.dto.request.CachePlaceDetailSaveRequestDto;
 import success.planfit.dto.request.PlaceDetailRequestDto;
 import success.planfit.dto.request.PlaceRelevanceDetail;
 import success.planfit.dto.response.LocationDetailResponseDto;
 import success.planfit.dto.response.PlaceDetailResponseDto;
+import success.planfit.dto.user.UserUpdateDto;
 import success.planfit.repository.CachePlaceDetailRepository;
 import success.planfit.repository.UserRepository;
 
@@ -30,7 +30,7 @@ public class PlaceDetailService {
     // AI에게 좌표값과 유저 정보 전달
     public LocationDetailResponseDto passPlaceDetail(Long id, PlaceDetailRequestDto placeDetailRequestDto){
         return LocationDetailResponseDto.builder()
-                .userDto(UserDto.from(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"))))
+                .userUpdateDto(UserUpdateDto.from(userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"))))
                 .placeDetailRequestDto(placeDetailRequestDto)
                 .build();
     }
