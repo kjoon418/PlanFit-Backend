@@ -320,7 +320,7 @@ public class AuthorizationService {
     }
 
     public void deleteUser(Long userId) {
-        log.info("AuthorizationService.removeUser() called");
+        log.info("AuthorizationService.deleteUser() called");
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"));
@@ -347,5 +347,12 @@ public class AuthorizationService {
         return AccessTokenResponseDto.builder()
                 .accessToken(tokenProvider.createToken(user, TokenType.ACCESS))
                 .build();
+    }
+
+    public boolean isDuplicatedLoginId(String loginId) {
+        log.info("AuthorizationService.isDuplicatedLoginId() called");
+
+        return userRepository.findByLoginId(loginId)
+                .isPresent();
     }
 }

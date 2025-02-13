@@ -55,6 +55,10 @@ dependencies {
 
     //json
     implementation group: 'org.json', name: 'json', version: '20090211'
+
+    // Bean Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
 
 tasks.named('test') {

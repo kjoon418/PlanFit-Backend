@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.domain.user.PlanfitUser;
 import success.planfit.domain.user.User;
-import success.planfit.domain.user.UserDto;
+import success.planfit.dto.user.UserUpdateDto;
 import success.planfit.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
 
@@ -26,16 +26,17 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 id로 회원이 조회되지 않음."));
     }
     // 회원 정보 조회 (기본키로 조회)
-    public UserDto getUserInfo(Long userId) {  // 회원 기본키 (userId)를 파라미터로 받음
+    public UserUpdateDto getUserInfo(Long userId) {  // 회원 기본키 (userId)를 파라미터로 받음
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("회원 정보 조회 실패"));
 
-        return UserDto.from(user);  // UserDto로 변환하여 반환
+        return UserUpdateDto.from(user);  // UserDto로 변환하여 반환
     }
 
     // 회원 정보 수정
     @Transactional
-    public void updateUserInfo(Long userId, UserDto userDto) {
+    public void updateUserInfo(Long userId, UserUpdateDto userDto) {
         User user = userRepository.findById(userId)  // ID로 조회
                 .orElseThrow(() -> new RuntimeException("회원 정보 조회 실패"));
 
@@ -57,12 +58,8 @@ public class UserService {
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
         }
-        if (userDto.getPassword() != null) {
-            if (user instanceof PlanfitUser) {
-                PlanfitUser planfitUser = (PlanfitUser) user;
-                planfitUser.setPassword(userDto.getPassword());
-            }
-
+        if (userDto.getPassword() != null && user instanceof PlanfitUser planfitUser) {
+            planfitUser.setPassword(userDto.getPassword());
         }
 
         userRepository.save(user);
