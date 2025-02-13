@@ -1,63 +1,61 @@
 package success.planfit.dto.response;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import success.planfit.domain.CachePlaceDetail;
 import success.planfit.domain.course.SpaceType;
+import success.planfit.dto.PlaceDetailMappingDto;
+import success.planfit.photo.PhotoProvider;
 
 @ToString
 @Setter
 @Getter
+@Builder
 public class PlaceDetailResponseDto {
 
-    @JsonProperty("id")
     private String googlePlacesIdentifier;
-
-    // 내부 클래스로 구현
-    @JsonProperty("displayName")
-    private DisplayName spaceName;
+    private String spaceName;
 
     // 형식화된 위치 이름
-    @JsonProperty("formattedAddress")
     private String location;
 
     // 타입 저장하는 방식
-    private SpaceType spaceType;
-
-    @JsonProperty("googleMapsUri")
+    private SpaceType spaceTag;
     private String link;
-
-    // 내부 클래스로 분리 - 위도 경도
-    @JsonProperty("location")
-    private Location locations;
-
-    // 내부 클래스로 구현
-    private GoogleMapLinks googleMapLinks;
+    private Double lat;
+    private Double lng;
+    private String googleMapLinks;
+    private String  spacePhoto;
 
 
 
-    @Getter
-    @NoArgsConstructor
-    public static class DisplayName{
-        @JsonProperty("text")
-        private String displayName;
+    // 캐시 -> reponseDto
+    public static PlaceDetailResponseDto createFromCache(CachePlaceDetail cachePlacedetail){
+        return PlaceDetailResponseDto.builder()
+                .googlePlacesIdentifier(cachePlacedetail.getGooglePlacesIdentifier())
+                .spaceName(cachePlacedetail.getSpaceInformation().getSpaceName())
+                .location(cachePlacedetail.getSpaceInformation().getLocation())
+                .spaceTag(cachePlacedetail.getSpaceInformation().getSpaceTag())
+                .link(cachePlacedetail.getSpaceInformation().getLink())
+                .lat(cachePlacedetail.getSpaceInformation().getLatitude())
+                .lng(cachePlacedetail.getSpaceInformation().getLongitude())
+                .spacePhoto(PhotoProvider.encode(cachePlacedetail.getSpaceInformation().getSpacePhoto()))
+                .build();
     }
 
-    @Getter
-    @NoArgsConstructor
-    public static class Location {
-        private Double latitude;
-        private Double longitude;
+    // mappingDto -> responseDto
+    public static PlaceDetailResponseDto createFromMapper(PlaceDetailMappingDto mapper){
+        return PlaceDetailResponseDto.builder()
+                .googlePlacesIdentifier(mapper.getGooglePlacesIdentifier())
+                .spaceName(mapper.getSpaceName())
+                .location(mapper.getLocation())
+                .spaceTag(mapper.getSpaceTag())
+                .link(mapper.getLink())
+                .lat(mapper.getLat())
+                .lng(mapper.getLng())
+                .spacePhoto(mapper.getSpacePhoto())
+                .build();
     }
-
-    @Getter
-    @NoArgsConstructor
-    public static class GoogleMapLinks{
-        private String photosUri;
-    }
-
-
 
 }

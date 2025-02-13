@@ -320,7 +320,7 @@ public class AuthorizationService {
     }
 
     public void deleteUser(Long userId) {
-        log.info("AuthorizationService.removeUser() called");
+        log.info("AuthorizationService.deleteUser() called");
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("ID를 통해 유저 조회 실패"));
