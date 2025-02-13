@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query("select u from PlanfitUser u where u.loginId = :loginId")
+    Optional<User> findByLoginId(@Param("loginId") String loginId);
+
     @Query("select u from PlanfitUser u where u.loginId = :loginId and u.password = :password")
     Optional<User> findByLoginIdAndPassword(@Param("loginId") String loginId, @Param("password") String password);
 
