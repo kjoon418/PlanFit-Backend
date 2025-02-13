@@ -5,6 +5,9 @@ import lombok.*;
 import org.springframework.util.StringUtils;
 import success.planfit.domain.course.SpaceType;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -55,4 +58,22 @@ public class SpaceInformation {
         return !(value instanceof String) || !StringUtils.hasText((String) value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpaceInformation other = (SpaceInformation) o;
+        return Objects.equals(spaceName, other.spaceName) &&
+                Objects.equals(location, other.location) &&
+                spaceTag == other.spaceTag &&
+                Objects.equals(link, other.link) &&
+                Objects.equals(latitude, other.latitude) &&
+                Objects.equals(longitude, other.longitude) &&
+                Objects.deepEquals(spacePhoto, other.spacePhoto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(spaceName, location, spaceTag, link, latitude, longitude, Arrays.hashCode(spacePhoto));
+    }
 }
