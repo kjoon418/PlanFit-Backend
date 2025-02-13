@@ -1,11 +1,15 @@
 package success.planfit.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.course.SpaceType;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.photo.PhotoProvider;
 
+@Builder
+@AllArgsConstructor
 @Getter
 public class SpaceBookmarkRegistrationRequestDto {
 

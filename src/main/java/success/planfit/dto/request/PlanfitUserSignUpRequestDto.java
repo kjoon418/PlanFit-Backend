@@ -1,5 +1,7 @@
 package success.planfit.dto.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import success.planfit.domain.user.IdentityType;
@@ -9,6 +11,8 @@ import success.planfit.photo.PhotoType;
 
 import java.time.LocalDate;
 
+@Builder
+@AllArgsConstructor
 @Getter
 public class PlanfitUserSignUpRequestDto {
 
