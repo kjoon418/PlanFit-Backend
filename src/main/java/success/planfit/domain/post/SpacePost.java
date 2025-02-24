@@ -28,6 +28,7 @@ public class SpacePost {
     @Column(nullable = false)
     private String location;
 
+    @Enumerated(EnumType.STRING)
     private SpaceType spaceTag;
 
     @Column(nullable = false)
