@@ -1,5 +1,6 @@
 package success.planfit.controller;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class BookmarkController {
      * 장소 좋아요 등록
      */
     @PostMapping("/space/bookmark")
-    public ResponseEntity<Void> registerSpace(Principal principal, @RequestBody SpaceBookmarkRegistrationRequestDto requestDto) {
+    public ResponseEntity<Void> registerSpace(Principal principal, @Valid @RequestBody SpaceBookmarkRegistrationRequestDto requestDto) {
         log.info("BookmarkController.registerSpace() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
@@ -86,7 +87,7 @@ public class BookmarkController {
     public ResponseEntity<Void> updateCourseTitleInfo(
             Principal principal,
             @PathVariable("courseId") Long courseBookmarkId,
-            @RequestBody CourseBookmarkUpdateTitleRequestDto requestDto) {
+            @Valid @RequestBody CourseBookmarkUpdateTitleRequestDto requestDto) {
         log.info("BookmarkController.updateCourseTitleInfo() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
@@ -103,7 +104,7 @@ public class BookmarkController {
             Principal principal,
             @PathVariable("courseId") Long courseBookmarkId,
             @PathVariable("spaceId") Long timetableBookmarkId,
-            @RequestBody CourseBookmarkUpdateSpaceRequestDto requestDto) {
+            @Valid @RequestBody CourseBookmarkUpdateSpaceRequestDto requestDto) {
         log.info("BookmarkController.updateCourseSpaceInfo() called");
 
         Long userId = util.findUserIdByPrincipal(principal);

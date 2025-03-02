@@ -28,6 +28,23 @@ public class SpacePost {
     @Setter
     @Embedded
     private SpaceInformation spaceInformation;
+    @Column(nullable = false)
+    private String spaceName;
+
+    @Column(nullable = false)
+    private String location;
+
+    @Enumerated(EnumType.STRING)
+    private SpaceType spaceTag;
+
+    @Column(nullable = false)
+    private String link;
+
+    private Double latitude;
+
+    private Double longitude;
+
+    private byte[] spacePhoto;
 
     @Builder
     private SpacePost(CoursePost coursePost, Integer sequence
