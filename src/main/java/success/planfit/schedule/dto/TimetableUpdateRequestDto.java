@@ -1,4 +1,4 @@
-package success.planfit.dto.request;
+package success.planfit.schedule.dto;
 
 import lombok.Getter;
 import success.planfit.entity.space.SpaceType;

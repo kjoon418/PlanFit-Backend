@@ -10,7 +10,7 @@ import success.planfit.repository.UserRepository;
 @Service
 public class PostService {
 
-    // 리포지토리를 가져오려고 하는데 그 기준을 잘 모르겠는 그런..
+
     private final UserRepository userRepository;
 
 //    public Long addCoursePost(){
