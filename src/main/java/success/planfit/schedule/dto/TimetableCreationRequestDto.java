@@ -1,10 +1,11 @@
-package success.planfit.dto.request;
+package success.planfit.schedule.dto;
 
 import lombok.Getter;
-import success.planfit.domain.course.SpaceType;
-import success.planfit.domain.course.Timetable;
-import success.planfit.domain.embeddable.SpaceInformation;
-import success.planfit.photo.PhotoProvider;
+import success.planfit.entity.course.SpaceInformation;
+import success.planfit.entity.space.SpaceType;
+import success.planfit.entity.course.Timetable;
+import success.planfit.global.photo.PhotoProvider;
+
 
 @Getter
 public class TimetableCreationRequestDto {
