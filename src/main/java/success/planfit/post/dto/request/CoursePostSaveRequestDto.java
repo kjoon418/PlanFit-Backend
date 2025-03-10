@@ -1,0 +1,16 @@
+package success.planfit.post.dto.request;
+
+
+import lombok.Getter;
+
+@Getter
+public class CoursePostSaveRequestDto {
+
+    private String title;
+    private String location;
+    private String titlePhoto;
+
+
+
+
+}
