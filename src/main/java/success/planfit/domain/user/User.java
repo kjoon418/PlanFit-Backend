@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import success.planfit.domain.RefreshToken;
 import success.planfit.domain.bookmark.CourseBookmark;
+import success.planfit.domain.bookmark.CoursePostBookmark;
 import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.course.Calendar;
 import success.planfit.domain.post.CoursePost;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
+@Table(name = "users")
 public abstract class User {
 
     @Id
@@ -47,8 +49,8 @@ public abstract class User {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private final List<CoursePost> coursePosts = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
-    private final List<CoursePost> coursePostBookmarks = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private final List<CoursePostBookmark> coursePostBookmark = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)

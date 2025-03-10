@@ -5,15 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import success.planfit.domain.BaseEntity;
 import success.planfit.domain.user.User;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class CoursePost {
+public class CoursePost extends BaseEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -25,21 +30,18 @@ public class CoursePost {
     @JoinColumn(nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "spacePosts")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "coursePost")
     private List<SpacePost> spacePosts = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(name = "course_post_bookmark"
-            , joinColumns = @JoinColumn(name = "course_post_id")
-            , inverseJoinColumns = @JoinColumn(name = "id"))
-    private List<User> users = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String location;
 
+    @Column(nullable = false)
     private byte[] titlePhoto;
+
 
     @Builder
     private CoursePost(User user, String title, String location, byte[] titlePhoto) {
@@ -66,20 +68,20 @@ public class CoursePost {
         spacePost.setCoursePost(null);
     }
 
-    /**
-     * CoursePost - CoursePostBookmark 연관관계 편의 메서드(삭제)
-     */
-    public void addUsers(User user) {
-        users.add(user);
-        user.getCoursePostBookmarks().add(this);
-    }
-
-    /**
-     *  CoursePost - CoursePostBookmark 연관관계 편의 메서드(삭제)
-     */
-    public void removeUsers(User user) {
-        users.remove(user);
-        user.getCoursePostBookmarks().remove(this);
-    }
+//    /**
+//     * CoursePost - CoursePostBookmark 연관관계 편의 메서드(삭제)
+//     */
+//    public void addUsers(User user) {
+//        users.add(user);
+//        user.getCoursePostBookmarks().add(this);
+//    }
+//
+//    /**
+//     *  CoursePost - CoursePostBookmark 연관관계 편의 메서드(삭제)
+//     */
+//    public void removeUsers(User user) {
+//        users.remove(user);
+//        user.getCoursePostBookmarks().remove(this);
+//    }
 
 }

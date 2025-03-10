@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import success.planfit.domain.course.SpaceType;
 import success.planfit.domain.course.Timetable;
 import success.planfit.domain.embeddable.SpaceInformation;
 
@@ -28,23 +29,7 @@ public class SpacePost {
     @Setter
     @Embedded
     private SpaceInformation spaceInformation;
-    @Column(nullable = false)
-    private String spaceName;
 
-    @Column(nullable = false)
-    private String location;
-
-    @Enumerated(EnumType.STRING)
-    private SpaceType spaceTag;
-
-    @Column(nullable = false)
-    private String link;
-
-    private Double latitude;
-
-    private Double longitude;
-
-    private byte[] spacePhoto;
 
     @Builder
     private SpacePost(CoursePost coursePost, Integer sequence

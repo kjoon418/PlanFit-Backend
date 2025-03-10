@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.controller.utils.ControllerUtil;
 import success.planfit.controller.utils.PlanfitExceptionHandler;
+import success.planfit.dto.request.CalendarSaveRequestDto;
 import success.planfit.dto.request.TimetableCreationRequestDto;
 import success.planfit.dto.request.TimetableUpdateRequestDto;
 import success.planfit.dto.response.TimetableInfoResponseDto;
@@ -31,6 +32,22 @@ public class TimetableController {
     public ResponseEntity<Void> addTimetable(@PathVariable LocalDate date, @RequestBody TimetableCreationRequestDto requestDto, Principal principal) {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         timetableService.addTimetable(userId,requestDto,date);
+        return ResponseEntity.ok().build();
+    }
+
+    // 포스트로부터 코스 가져와서 시간표에 등록
+    @PostMapping("/{postId}")
+    public ResponseEntity<Void> addTimetableFromPost(@PathVariable Long postId, @RequestBody CalendarSaveRequestDto requestDto, Principal principal) {
+        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        timetableService.addTimetableFromPost(userId, postId, requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 즐겨찾기에 있는 포스트로부터 코스 가져와서 시간표에 등록
+    @PostMapping("/{courPostBookmarkId}")
+    public ResponseEntity<Void> addTimetableFromBookmark(@PathVariable Long courPostBookmarkId, @RequestBody CalendarSaveRequestDto requestDto, Principal principal) {
+        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        timetableService.addTimetableFromBookmark(userId, courPostBookmarkId, requestDto);
         return ResponseEntity.ok().build();
     }
 

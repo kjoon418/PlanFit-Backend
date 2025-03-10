@@ -5,6 +5,7 @@ import success.planfit.domain.bookmark.SpaceBookmark;
 import success.planfit.domain.course.SpaceType;
 import success.planfit.domain.embeddable.SpaceInformation;
 import success.planfit.photo.PhotoProvider;
+import success.planfit.validation.NotEmptyAndNotBlank;
 
 @Getter
 public class SpaceBookmarkRegistrationRequestDto {
