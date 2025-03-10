@@ -1,11 +1,11 @@
-package success.planfit.dto.response;
+package success.planfit.space.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.dto.request.PlaceDetailRequestDto;
-import success.planfit.dto.user.UserUpdateDto;
+import success.planfit.space.dto.request.PlaceDetailRequestDto;
+import success.planfit.user.dto.UserUpdateDto;
 
 
 @NoArgsConstructor

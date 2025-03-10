@@ -1,13 +1,13 @@
-package success.planfit.controller;
+package success.planfit.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import success.planfit.controller.utils.ControllerUtil;
-import success.planfit.dto.user.UserUpdateDto;
-import success.planfit.controller.utils.PlanfitExceptionHandler;
-import success.planfit.service.UserService;
+import success.planfit.global.controller.ControllerUtil;
+import success.planfit.global.controller.PlanfitExceptionHandler;
+import success.planfit.user.dto.UserUpdateDto;
+import success.planfit.user.service.UserService;
 
 import java.security.Principal;
 

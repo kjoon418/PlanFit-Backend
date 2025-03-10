@@ -1,10 +1,8 @@
-package success.planfit.dto.request;
+package success.planfit.space.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import success.planfit.domain.bookmark.SpaceBookmark;
 
 @Setter
 @NoArgsConstructor
