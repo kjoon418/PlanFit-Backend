@@ -3,14 +3,14 @@ package success.planfit.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import success.planfit.domain.CachePlaceDetail;
+import success.planfit.entity.space.SpaceDetail;
 
 import java.util.Optional;
 
 
-public interface CachePlaceDetailRepository extends JpaRepository<CachePlaceDetail, Long> {
+public interface CachePlaceDetailRepository extends JpaRepository<SpaceDetail, Long> {
 
-    @Query(value = "select p from CachePlaceDetail p where p.googlePlacesIdentifier = :placeId")
-    Optional<CachePlaceDetail> findByGooglePlacesIdentifier(@Param("placeId") String placeId);
+    @Query(value = "select p from SpaceDetail p where p.googlePlacesIdentifier = :placeId")
+    Optional<SpaceDetail> findByGooglePlacesIdentifier(@Param("placeId") String placeId);
 
 }
