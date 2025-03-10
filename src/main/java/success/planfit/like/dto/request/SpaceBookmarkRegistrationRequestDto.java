@@ -18,6 +18,7 @@ public class SpaceBookmarkRegistrationRequestDto {
 
     @NotEmptyAndNotBlank(value = "location")
     private String location;
+    private SpaceType spaceTag;
 
     @NotEmptyAndNotBlank(value = "spaceType")
     private SpaceType spaceType;
@@ -40,7 +41,7 @@ public class SpaceBookmarkRegistrationRequestDto {
                 .spaceInformation(SpaceInformation.builder()
                         .spaceName(spaceName)
                         .location(location)
-                        .spaceTag(spaceType)
+                        .spaceTag(spaceTag)
                         .link(link)
                         .latitude(latitude)
                         .longitude(longitude)

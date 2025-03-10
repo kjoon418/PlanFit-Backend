@@ -40,7 +40,7 @@ public class AuthorizationController {
         return ResponseEntity.status(CREATED).body(responseDto);
     }
 
-    @GetMapping("/authorization/planfit")
+    @PostMapping("/authorization/planfit/signIn")
     public ResponseEntity<TokenResponseDto> planfitSignIn(@Valid @RequestBody PlanfitUserSignInRequestDto requestDto) {
         log.info("UserController.planfitSignIn() called");
 

@@ -30,7 +30,7 @@ public class PlanfitExceptionHandler {
             return ResponseEntity.status(BAD_REQUEST).body(fieldError.getDefaultMessage());
         }
         if (e instanceof EntityNotFoundException ||
-                e instanceof IllegalRequestException) {
+                e instanceof IllegalArgumentException) {
             return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
         }
         if (e instanceof SQLIntegrityConstraintViolationException ||
