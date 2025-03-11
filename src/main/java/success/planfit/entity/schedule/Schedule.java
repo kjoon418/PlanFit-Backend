@@ -45,7 +45,7 @@ public class Schedule {
     private LocalTime startTime;
 
     @Column(nullable = false)
-    private Integer sequence;
+    private Integer currentSequence;
 
     @Builder
     private Schedule(
@@ -62,6 +62,7 @@ public class Schedule {
         this.date = date;
         this.shareSerial = shareSerial;
         this.startTime = startTime;
+        this.currentSequence = 0;
     }
 
 }

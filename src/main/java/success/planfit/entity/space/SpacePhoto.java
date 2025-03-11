@@ -1,38 +1,37 @@
-package success.planfit.entity.post;
+package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class PostPhoto {
+public class SpacePhoto {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false)
     @ManyToOne(fetch = LAZY)
-    private Post post;
+    private SpaceDetail spaceDetail;
 
-    @Column(nullable = false)
     @Lob
-    private byte[] photo;
+    @Column(nullable = false)
+    private byte[] value;
 
     @Builder
-    private PostPhoto(
-            Post post,
-            byte[] photo
+    private SpacePhoto(
+            SpaceDetail spaceDetail,
+            byte[] value
     ) {
-        this.post = post;
-        this.photo = photo;
+        this.spaceDetail = spaceDetail;
+        this.value = value;
     }
 
 }

@@ -15,6 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +31,19 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Long likeCount;
+
     @Builder
-    private Comment(Post post, User user, LocalDateTime createdAt){
+    private Comment(
+            Post post,
+            User user,
+            LocalDateTime createdAt
+    ){
         this.post = post;
         this.user = user;
         this.createdAt = createdAt;
+        this.likeCount = 0L;
     }
 
 }
