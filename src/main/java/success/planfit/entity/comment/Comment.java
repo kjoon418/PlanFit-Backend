@@ -29,6 +29,9 @@ public class Comment {
     private User user;
 
     @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -38,10 +41,12 @@ public class Comment {
     private Comment(
             Post post,
             User user,
+            String content,
             LocalDateTime createdAt
     ){
         this.post = post;
         this.user = user;
+        this.content = content;
         this.createdAt = createdAt;
         this.likeCount = 0L;
     }
