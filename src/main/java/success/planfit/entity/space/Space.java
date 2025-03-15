@@ -28,13 +28,20 @@ public class Space {
     @JoinColumn(nullable = false)
     private SpaceDetail spaceDetail;
 
+    private Integer sequence;
+
+    private Long likeCount;
+
     @Builder
     private Space(
         Course course,
-        SpaceDetail spaceDetail
+        SpaceDetail spaceDetail,
+        Integer sequence
     ) {
         this.course = course;
         this.spaceDetail = spaceDetail;
+        this.sequence = sequence;
+        this.likeCount = 0L;
     }
 
 }

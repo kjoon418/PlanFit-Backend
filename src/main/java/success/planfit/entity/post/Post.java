@@ -51,18 +51,27 @@ public class Post {
     List<Comment> comments = new ArrayList<>();
 
 
+    @Column(nullable = false)
+    private Boolean isPublic;
+
+    @Column(nullable = false)
+    private Long likeCount;
+
     @Builder
     private Post(
             Course course,
             User user,
             String content,
-            String title
+            String title,
+            LocalDateTime createdAt,
+            Boolean isPublic
     ) {
         this.course = course;
         this.user = user;
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDateTime.now();
+        this.isPublic = isPublic;
+        this.likeCount = 0L;
     }
 
     public void addComment(Comment comment){

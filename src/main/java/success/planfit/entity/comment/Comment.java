@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
 
@@ -16,6 +17,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,15 +35,23 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Long likeCount;
+
     @Builder
-    private Comment(Post post, User user, String content, LocalDateTime createdAt){
+    private Comment(
+            Post post,
+            User user,
+            String content
+    ){
         this.post = post;
         this.user = user;
         this.content = content;
-        this.createdAt = createdAt;
+        this.likeCount = 0L;
     }
 
 }
