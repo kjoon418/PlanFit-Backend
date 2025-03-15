@@ -39,19 +39,28 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Boolean isPublic;
+
+    @Column(nullable = false)
+    private Long likeCount;
+
     @Builder
     private Post(
             Course course,
             User user,
             String content,
             String title,
-            LocalDateTime createdAt
+            LocalDateTime createdAt,
+            Boolean isPublic
     ) {
         this.course = course;
         this.user = user;
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+        this.isPublic = isPublic;
+        this.likeCount = 0L;
     }
 
 }

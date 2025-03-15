@@ -3,6 +3,8 @@ package success.planfit.entity.space;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,8 +36,8 @@ public class SpaceDetail {
 
     private Double longitude;
 
-    @Lob
-    private byte[] spacePhoto;
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     @Builder
     private SpaceDetail(
@@ -55,7 +57,7 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.spacePhoto = spacePhoto;
+        this.updatedAt = LocalDateTime.now();
     }
 
 }
