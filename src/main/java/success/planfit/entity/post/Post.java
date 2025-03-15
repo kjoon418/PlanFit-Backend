@@ -63,7 +63,6 @@ public class Post {
             User user,
             String content,
             String title,
-            LocalDateTime createdAt,
             Boolean isPublic
     ) {
         this.course = course;

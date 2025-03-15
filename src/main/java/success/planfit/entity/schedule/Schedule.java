@@ -47,6 +47,8 @@ public class Schedule {
     @Column(nullable = false)
     private Integer currentSequence;
 
+    private String content;
+
     @Builder
     private Schedule(
             Course course,

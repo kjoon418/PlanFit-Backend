@@ -2,7 +2,6 @@ package success.planfit.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.comment.dto.CommentSaveRequestDto;
@@ -28,8 +27,7 @@ public class CommentService {
 
     public void registerComment(Long userId, Long postId, CommentSaveRequestDto requestDto){
         // 유저 조회
-        User user = userRepository.findByIdWithComment(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
 
         // Post 조회
         Post post = postRepository.findById(postId)
