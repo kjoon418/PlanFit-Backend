@@ -103,4 +103,14 @@ public abstract class User {
         userPreference.setUser(null);
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setUser(this);
+    }
+
+    public void removeComment(Comment comment) {
+        this.comments.remove(comment);
+        comment.setUser(null);
+    }
+
 }

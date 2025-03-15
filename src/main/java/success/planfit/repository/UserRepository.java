@@ -21,14 +21,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from KakaoUser u where u.kakaoIdentifier = :identifier")
     Optional<User> findByKakaoIdentifier(@Param("identifier") Long identifier);
 
-    @Query("select u from User u left join fetch u.spaceBookmarks where u.id = :userId")
-    Optional<User> findByIdWithSpaceBookmark(@Param("userId") Long userId);
+    @Query("select u from User u left join fetch u.comments where u.id = :userId")
+    Optional<User> findByIdWithComment(@Param("userId") Long userId);
 
-    @Query("select u from User u left join fetch u.calendars where u.id = :userId")
-    Optional<User> findByIdWithCalendar(@Param("userId") Long userId);
+    @Query("select u from User u left join fetch u.posts where u.id = :userId")
+    Optional<User> findByIdWithPost(@Param("userId") Long userId);
 
-    @Query("select u from User u left join fetch u.courseBookmarks where u.id = :userId")
-    Optional<User> findByIdWithCourseBookmark(@Param("userId") Long userId);
+    @Query("select u from User u left join fetch u.schedules where u.id = :userId")
+    Optional<User> findByIdWithSchedule(@Param("userId") Long userId);
 
     @Query("select u from User u left join fetch u.coursePosts where u.id = :userId")
     Optional<User> findByIdWithCoursePost(@Param("userId") Long userId);
