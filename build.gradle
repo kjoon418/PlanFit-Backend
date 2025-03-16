@@ -60,6 +60,8 @@ dependencies {
     // Bean Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Apache Common Lang
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
 }
 
 tasks.named('test') {

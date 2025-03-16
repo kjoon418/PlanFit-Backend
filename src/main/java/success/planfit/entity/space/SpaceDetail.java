@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Embeddable
 @Getter
@@ -16,6 +20,9 @@ public class SpaceDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
+    private List<SpacePhoto> spacePhotos = new ArrayList<>();
 
     @Column(nullable = false)
     private String googlePlacesIdentifier;
