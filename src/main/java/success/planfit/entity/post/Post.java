@@ -63,12 +63,14 @@ public class Post {
             User user,
             String content,
             String title,
+            LocalDateTime createdAt,
             Boolean isPublic
     ) {
         this.course = course;
         this.user = user;
         this.title = title;
         this.content = content;
+        this.createdAt = createdAt;
         this.isPublic = isPublic;
         this.likeCount = 0L;
     }
@@ -83,4 +85,13 @@ public class Post {
         comment.setPost(null);
     }
 
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
 }

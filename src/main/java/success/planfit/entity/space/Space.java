@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ManyToAny;
 import success.planfit.entity.course.Course;
 
@@ -20,6 +21,7 @@ public class Space {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToAny(fetch = LAZY)
     @JoinColumn(nullable = false)
     private Course course;
@@ -34,14 +36,19 @@ public class Space {
 
     @Builder
     private Space(
-        Course course,
         SpaceDetail spaceDetail,
         Integer sequence
     ) {
-        this.course = course;
         this.spaceDetail = spaceDetail;
         this.sequence = sequence;
         this.likeCount = 0L;
+    }
+
+    public static Space copyOf(Space original) {
+        return Space.builder()
+                .spaceDetail(original.spaceDetail)
+                .sequence(original.sequence)
+                .build();
     }
 
 }

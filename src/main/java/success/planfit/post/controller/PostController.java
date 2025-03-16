@@ -1,18 +1,17 @@
-package success.planfit.controller;
+package success.planfit.post.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import success.planfit.controller.utils.ControllerUtil;
+import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.dto.request.CoursePostsSaveByCalendarRequestDto;
 import success.planfit.dto.request.CoursePostsSaveRequestDto;
-import success.planfit.dto.request.TimetableCreationRequestDto;
-import success.planfit.service.PostService;
+import success.planfit.global.controller.ControllerUtil;
+import success.planfit.post.service.PostService;
 
 import java.security.Principal;
-import java.time.LocalDate;
 
 @Slf4j
 @RestController
@@ -48,9 +47,16 @@ public class PostController {
         return ResponseEntity.ok("Deleted successfully");
     }
 
+    /**
+     * 포스트 속 코스 정보 조회
+     */
+    @GetMapping("/{postId}")
+    public ResponseEntity<CourseResponseDto> findCourseInPublicPost(@PathVariable Long postId) {
+        log.info("PostController.findCourseInPost()");
 
+        CourseResponseDto responseDto = postService.findCourseInPublicPost(postId);
 
-
-
+        return ResponseEntity.ok(responseDto);
+    }
 
 }
