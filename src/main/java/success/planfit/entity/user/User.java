@@ -103,4 +103,20 @@ public abstract class User {
         userPreference.setUser(null);
     }
 
+    /**
+     * User - Schedule 연관관계 편의 메서드(생성)
+     */
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+        schedule.setUser(this);
+    }
+
+    /**
+     * User - Schedule 연관관계 편의 메서드(삭제)
+     */
+    public void removeSchedule(Schedule schedule) {
+        this.schedules.remove(schedule);
+        schedule.setUser(null);
+    }
+
 }
