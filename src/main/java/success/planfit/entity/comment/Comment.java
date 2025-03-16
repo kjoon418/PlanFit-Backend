@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
 
@@ -20,10 +22,12 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    @Setter
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -31,6 +35,7 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -41,13 +46,11 @@ public class Comment {
     private Comment(
             Post post,
             User user,
-            String content,
-            LocalDateTime createdAt
+            String content
     ){
         this.post = post;
         this.user = user;
         this.content = content;
-        this.createdAt = createdAt;
         this.likeCount = 0L;
     }
 

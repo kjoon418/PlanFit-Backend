@@ -3,7 +3,7 @@ package success.planfit.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import success.planfit.domain.bookmark.CoursePostBookmark;
-import success.planfit.domain.course.Calendar;
+
 
 import java.util.Optional;
 

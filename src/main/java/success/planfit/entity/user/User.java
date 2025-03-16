@@ -103,6 +103,16 @@ public abstract class User {
         userPreference.setUser(null);
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setUser(this);
+    }
+
+    public void removeComment(Comment comment) {
+        this.comments.remove(comment);
+        comment.setUser(null);
+    }
+
     /**
      * User - Schedule 연관관계 편의 메서드(생성)
      */
