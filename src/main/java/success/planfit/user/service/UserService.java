@@ -25,6 +25,7 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 id로 회원이 조회되지 않음."));
     }
+
     // 회원 정보 조회 (기본키로 조회)
     public UserUpdateDto getUserInfo(Long userId) {  // 회원 기본키 (userId)를 파라미터로 받음
 
@@ -64,4 +65,5 @@ public class UserService {
 
         userRepository.save(user);
     }
+
 }

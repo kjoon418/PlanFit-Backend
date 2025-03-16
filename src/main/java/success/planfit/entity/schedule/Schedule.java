@@ -56,8 +56,6 @@ public class Schedule implements Comparable<Schedule> {
     @Column(nullable = false)
     private Integer currentSequence;
 
-    private String content;
-
     @Builder
     private Schedule(
             User user,

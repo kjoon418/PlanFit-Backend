@@ -57,4 +57,5 @@ public class PlanfitUserSignUpRequestDto {
                 .profilePhoto(photo)
                 .build();
     }
+
 }

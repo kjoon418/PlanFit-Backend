@@ -13,6 +13,7 @@ import success.planfit.repository.CommentRepository;
 import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
 
+import java.util.List;
 
 
 @Slf4j
