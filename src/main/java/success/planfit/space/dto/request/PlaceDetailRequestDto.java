@@ -10,5 +10,4 @@ import lombok.Setter;
 public class PlaceDetailRequestDto {
     private Double latitude;
     private Double longitude;
-    private Integer radius;
 }

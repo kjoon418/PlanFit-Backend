@@ -12,6 +12,9 @@ import success.planfit.space.dto.request.PlaceDetailRequestDto;
 
 @Component
 public class OpenGooglePlaceApi {
+
+    private static final int DEFAULT_RADIUS = 2_000;
+
     private final RestTemplate restTemplate;
     private final String apiKey;
 
@@ -20,7 +23,7 @@ public class OpenGooglePlaceApi {
         this.apiKey = apiKey;
     }
 
-    public String fetchPlaceDetailsByplaceId(String placeId){
+    public String fetchPlaceDetailsByPlaceId(String placeId){
         String fields = null;
         String url = String.format( "https://places.googleapis.com/v1/places/%s?fields=%s&key=%s",
                 placeId, fields, apiKey);
@@ -39,7 +42,7 @@ public class OpenGooglePlaceApi {
         // 요청 본문 생성 (JSON 형식)
         String requestBody = String.format(
                 "{\"locationRestriction\": {\"circle\": {\"center\": {\"latitude\": %f,\"longitude\": %f}, \"radius\": %d}}}",
-                requestDto.getLatitude(), requestDto.getLongitude(), requestDto.getRadius()
+                requestDto.getLatitude(), requestDto.getLongitude(), DEFAULT_RADIUS
         );
 
         // HTTP 헤더 설정

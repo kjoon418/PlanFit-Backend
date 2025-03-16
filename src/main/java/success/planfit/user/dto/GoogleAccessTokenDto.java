@@ -12,4 +12,5 @@ public class GoogleAccessTokenDto {
 
     @SerializedName("access_token")
     private String accessToken;
+
 }

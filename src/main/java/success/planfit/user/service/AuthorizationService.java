@@ -355,4 +355,5 @@ public class AuthorizationService {
         return userRepository.findByLoginId(loginId)
                 .isPresent();
     }
+
 }
