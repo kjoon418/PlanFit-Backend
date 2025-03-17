@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ManyToAny;
 import success.planfit.entity.course.Course;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -22,7 +21,7 @@ public class Space {
     private Long id;
 
     @Setter
-    @ManyToAny(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(nullable = false)
     private Course course;
 

@@ -9,7 +9,6 @@ import success.planfit.entity.comment.Comment;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.like.*;
-import success.planfit.entity.preference.UserPreference;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;
@@ -33,9 +32,6 @@ public abstract class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn
     private RefreshToken refreshToken;
-
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
-    private final List<UserPreference> userPreferences = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<Post> posts = new ArrayList<>();
@@ -85,22 +81,6 @@ public abstract class User {
         this.email = email;
         this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
-    }
-
-    /**
-     * User - UserPreference 연관관계 편의 메서드(생성)
-     */
-    public void addUserPreference(UserPreference userPreference) {
-        this.userPreferences.add(userPreference);
-        userPreference.setUser(this);
-    }
-
-    /**
-     * User - UserPreference 연관관계 편의 메서드(삭제)
-     */
-    public void removeUserPreference(UserPreference userPreference) {
-        this.userPreferences.remove(userPreference);
-        userPreference.setUser(null);
     }
 
     public void addComment(Comment comment) {

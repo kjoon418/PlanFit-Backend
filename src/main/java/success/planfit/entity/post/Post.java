@@ -50,7 +50,6 @@ public class Post {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "post")
     List<Comment> comments = new ArrayList<>();
 
-
     @Column(nullable = false)
     private Boolean isPublic;
 
@@ -63,14 +62,12 @@ public class Post {
             User user,
             String content,
             String title,
-            LocalDateTime createdAt,
             Boolean isPublic
     ) {
         this.course = course;
         this.user = user;
         this.title = title;
         this.content = content;
-        this.createdAt = createdAt;
         this.isPublic = isPublic;
         this.likeCount = 0L;
     }
@@ -94,4 +91,5 @@ public class Post {
             this.likeCount--;
         }
     }
+
 }
