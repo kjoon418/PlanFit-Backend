@@ -56,7 +56,7 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
 
         // 삭제하려는 회원이 댓글 작성자인 경우만 삭제가능
-        if (userId == comment.getUser().getId()) {
+        if (userId.equals(comment.getUser().getId())) {
             user.removeComment(comment);
             post.removeComment(comment);
         }
