@@ -1,7 +1,10 @@
 package success.planfit.rating.dto;
 
+import lombok.Getter;
+
+@Getter
 public record RatingRecordRequestDto(
-        String googlePlacesIdentifier,
-        int rating
+        Integer ratingValue,
+        Long courseId
 ) {
 }

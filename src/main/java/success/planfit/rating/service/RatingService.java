@@ -3,14 +3,17 @@ package success.planfit.rating.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import success.planfit.entity.course.Course;
+import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.Rating;
+import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
 import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.rating.dto.RatingRecordRequestDto;
-import success.planfit.repository.SpaceDetailRepository;
 import success.planfit.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -19,25 +22,28 @@ import java.util.function.Supplier;
 public class RatingService {
 
     private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 통해 유저를 조회할 수 없습니다.");
-    private static final Supplier<EntityNotFoundException> SPACE_DETAIL_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 Google places identifier로 장소를 조회할 수 없습니다.");
+    private static final Supplier<EntityNotFoundException> COURSE_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 통해 코스를 조회할 수 없습니다.");
 
     private final UserRepository userRepository;
-    private final SpaceDetailRepository spaceDetailRepository;
 
     @Transactional
     public void recordRating(Long userId, RatingRecordRequestDto requestDto) {
         User user = getUser(userId);
-        SpaceDetail spaceDetail = getSpaceDetail(requestDto.googlePlacesIdentifier());
+        Course course = getCourse(user, requestDto.courseId());
+        List<SpaceDetail> spaceDetails = getSpaceDetails(course);
 
-        Optional<Rating> existsRating = getExistsRating(user, spaceDetail);
+        for (SpaceDetail spaceDetail : spaceDetails) {
+            Optional<Rating> existsRating = getExistsRating(user, spaceDetail);
 
-        if (existsRating.isPresent()) {
-            updateRating(existsRating.get(), requestDto);
-            return;
+            if (existsRating.isPresent()) {
+                Rating rating = existsRating.get();
+                updateRating(rating, requestDto);
+                continue;
+            }
+
+            Rating rating = createRating(user, spaceDetail, requestDto);
+            connectEntities(user, spaceDetail, rating);
         }
-
-        Rating rating = createRating(user, spaceDetail, requestDto.rating());
-        connectEntities(user, spaceDetail, rating);
     }
 
     private User getUser(Long userId) {
@@ -45,9 +51,18 @@ public class RatingService {
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
     }
 
-    private SpaceDetail getSpaceDetail(String googlePlacesIdentifier) {
-        return spaceDetailRepository.findByGooglePlacesIdentifier(googlePlacesIdentifier)
-                .orElseThrow(SPACE_DETAIL_NOT_FOUND_EXCEPTION);
+    private Course getCourse(User user, Long courseId) {
+        return user.getSchedules().stream()
+                .map(Schedule::getCourse)
+                .filter(course -> course.getId().equals(courseId))
+                .findAny()
+                .orElseThrow(COURSE_NOT_FOUND_EXCEPTION);
+    }
+
+    private List<SpaceDetail> getSpaceDetails(Course course) {
+        return course.getSpaces().stream()
+                .map(Space::getSpaceDetail)
+                .toList();
     }
 
     private Optional<Rating> getExistsRating(User user, SpaceDetail spaceDetail) {
@@ -57,18 +72,16 @@ public class RatingService {
                 .findAny();
     }
 
-    private Rating createRating(User user, SpaceDetail spaceDetail, Integer value) {
+    private void updateRating(Rating rating, RatingRecordRequestDto requestDto) {
+        rating.setValue(requestDto.ratingValue());
+    }
+
+    private Rating createRating(User user, SpaceDetail spaceDetail, RatingRecordRequestDto requestDto) {
         return Rating.builder()
                 .user(user)
                 .spaceDetail(spaceDetail)
-                .value(value)
+                .value(requestDto.ratingValue())
                 .build();
-    }
-
-    private void updateRating(Rating rating, RatingRecordRequestDto requestDto) {
-        int value = requestDto.rating();
-
-        rating.setValue(value);
     }
 
     private void connectEntities(User user, SpaceDetail spaceDetail, Rating rating) {
