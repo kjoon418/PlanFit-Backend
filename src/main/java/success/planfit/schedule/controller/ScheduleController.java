@@ -143,11 +143,6 @@ public class ScheduleController {
         return ResponseEntity.ok(responseDto);
     }
 
-    /**
-     * 다른 사람의 포스트 속 일정 정보 조회
-     */
-    @GetMapping
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
         log.info("UserController.handleException() called");
