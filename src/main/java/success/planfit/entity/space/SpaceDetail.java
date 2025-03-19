@@ -24,6 +24,9 @@ public class SpaceDetail {
     @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
     private List<SpacePhoto> spacePhotos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
+    private List<Rating> ratings = new ArrayList<>();
+
     @Column(nullable = false)
     private String googlePlacesIdentifier;
 
@@ -65,6 +68,14 @@ public class SpaceDetail {
         this.latitude = latitude;
         this.longitude = longitude;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * SpaceDetail - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.setSpaceDetail(this);
     }
 
 }
