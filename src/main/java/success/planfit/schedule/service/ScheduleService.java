@@ -135,7 +135,7 @@ public class ScheduleService {
     }
 
     private User findUserWithSchedules(Long userId) {
-        return userRepository.findByIdWithSchedules(userId)
+        return userRepository.findByIdWithSchedule(userId)
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
     }
 
