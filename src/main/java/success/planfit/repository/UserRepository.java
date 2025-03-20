@@ -31,6 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdWithSchedule(@Param("userId") Long userId);
 
     @Query("select u from User u left join fetch u.ratings where u.id = :userId")
-    Optional<User> findByIdWithRatings(@Param("userId") Long userId);
+    Optional<User> findByIdWithRating(@Param("userId") Long userId);
 
 }

@@ -56,6 +56,10 @@ public class Schedule implements Comparable<Schedule> {
     @Column(nullable = false)
     private Integer currentSequence;
 
+    @Setter
+    @Column(nullable = false)
+    private Boolean ratingRequested;
+
     @Builder
     private Schedule(
             User user,
@@ -70,6 +74,7 @@ public class Schedule implements Comparable<Schedule> {
         this.shareSerial = shareSerial;
         this.startTime = startTime;
         this.currentSequence = 0;
+        this.ratingRequested = false;
     }
 
     @Override
