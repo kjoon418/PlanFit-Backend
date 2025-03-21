@@ -1,5 +1,6 @@
 package success.planfit.rating.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,6 @@ import success.planfit.entity.space.Rating;
 import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
-import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.rating.dto.RatingRecordRequestDto;
 import success.planfit.repository.UserRepository;
 import success.planfit.schedule.dto.response.ScheduleResponseDto;
@@ -54,14 +54,16 @@ public class RatingService {
     public ScheduleResponseDto getRatingRequestAvailableSchedule(Long userId, LocalDate date) {
         User user = getUserWithSchedule(userId);
 
-        Schedule ratingRequestCapableSchedules = user.getSchedules().stream()
+        Schedule ratingRequestAvailableSchedules = user.getSchedules().stream()
                 .filter(isOutdated(date))
-                .filter(isNotRequested())
+                .filter(hasNotRequested())
                 .sorted() // 가장 옛날 코스를 가져오도록 함(의논 필요)
                 .findFirst()
                 .orElseThrow(RATING_REQUEST_AVAILABLE_SCHEDULE_NOT_FOUND_EXCEPTION);
 
-        return ScheduleResponseDto.from(ratingRequestCapableSchedules);
+        ratingRequestAvailableSchedules.recordRatingRequest();
+
+        return ScheduleResponseDto.from(ratingRequestAvailableSchedules);
     }
 
     private User getUserWithRating(Long userId) {
@@ -116,7 +118,7 @@ public class RatingService {
         return schedule -> schedule.getDate().isBefore(date);
     }
 
-    private Predicate<Schedule> isNotRequested() {
+    private Predicate<Schedule> hasNotRequested() {
         return schedule -> !schedule.getRatingRequested();
     }
 
