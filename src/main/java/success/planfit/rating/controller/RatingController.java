@@ -25,7 +25,7 @@ public class RatingController {
 
     @PostMapping
     public ResponseEntity<Void> recordRating(Principal principal, RatingRecordRequestDto requestDto) {
-        log.info("RatingController.recordRating()");
+        log.info("RatingController.recordRating() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
         ratingService.recordRating(userId, requestDto);
@@ -35,7 +35,7 @@ public class RatingController {
 
     @GetMapping
     public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, LocalDate date) {
-        log.info("RatingController.findRatingCapableCourse()");
+        log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
         ScheduleResponseDto responseDto = ratingService.getRatingRequestAvailableSchedule(userId, date);
