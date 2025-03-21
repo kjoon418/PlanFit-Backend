@@ -62,16 +62,12 @@ public class Schedule implements Comparable<Schedule> {
 
     @Builder
     private Schedule(
-            User user,
             String title,
             LocalDate date,
-            String shareSerial,
             LocalTime startTime
     ) {
-        this.user = user;
         this.title = title;
         this.date = date;
-        this.shareSerial = shareSerial;
         this.startTime = startTime;
         this.currentSequence = 0;
         this.ratingRequested = false;
