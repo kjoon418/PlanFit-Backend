@@ -19,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScheduleResponseDto {
 
+    private final Long scheduleId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
@@ -31,6 +32,7 @@ public class ScheduleResponseDto {
 
     public static ScheduleResponseDto from(Schedule schedule) {
         return ScheduleResponseDto.builder()
+                .scheduleId(schedule.getId())
                 .date(schedule.getDate())
                 .startTime(schedule.getStartTime())
                 .title(schedule.getTitle())
