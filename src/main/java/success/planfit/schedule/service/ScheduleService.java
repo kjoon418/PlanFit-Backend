@@ -219,6 +219,7 @@ public class ScheduleService {
     private Set<String> getExistsShareSerials() {
         return scheduleRepository.findAll().stream()
                 .map(Schedule::getShareSerial)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
     }
 

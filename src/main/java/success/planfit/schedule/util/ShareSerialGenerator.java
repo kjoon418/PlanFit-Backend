@@ -19,7 +19,7 @@ public class ShareSerialGenerator {
     public String generateUniqueSerial(Set<String> existsSerials) {
         String randomSerial = generateRandomSerial();
 
-        while (!existsSerials.contains(randomSerial)) {
+        while (existsSerials.contains(randomSerial)) {
             randomSerial = generateRandomSerial();
         }
 
