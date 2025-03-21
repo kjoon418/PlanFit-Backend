@@ -7,10 +7,15 @@ import java.time.LocalTime;
 
 public enum ScheduleFixture {
 
-    BASIC(
-            "BASIC_TITLE",
+    SCHEDULE_A(
+            "scheduleA_TITLE",
             LocalDate.of(2024, 12, 25),
             LocalTime.of(11, 30)
+    ),
+    SCHEDULE_B(
+            "scheduleB_TITLE",
+            LocalDate.of(2025, 1, 1),
+            LocalTime.of(6, 30)
     );
 
     private final String title;

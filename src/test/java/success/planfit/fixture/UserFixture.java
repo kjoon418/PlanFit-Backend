@@ -8,14 +8,23 @@ import java.time.LocalDate;
 
 public enum UserFixture {
 
-    BASIC_USER(
-            "BASIC_ID",
-            "BASIC_PASSWORD",
-            "BASIC_USER_NAME",
+    USER_A(
+            "userA_ID",
+            "userA_PASSWORD",
+            "userA_USER_NAME",
             "01012345678",
             LocalDate.of(2001, 4, 18),
             IdentityType.STUDENT,
-            "BASIC@email.com"
+            "userA@email.com"
+    ),
+    USER_B(
+            "userB_ID",
+            "userB_PASSWORD",
+            "userB_USER_NAME",
+            "01012345678",
+            LocalDate.of(2011, 11, 22),
+            IdentityType.STUDENT,
+            "userB@email.com" 
     );
 
     private final String loginId;

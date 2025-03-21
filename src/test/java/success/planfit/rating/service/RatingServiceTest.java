@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.Rating;
-import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
 import success.planfit.fixture.CourseFixture;
@@ -59,9 +58,9 @@ class RatingServiceTest {
 
     @BeforeEach
     void initialize() {
-        user = UserFixture.BASIC_USER.createInstance();
-        schedule = ScheduleFixture.BASIC.createInstance();
-        course = CourseFixture.BASIC.createInstance();
+        user = UserFixture.USER_A.createInstance();
+        schedule = ScheduleFixture.SCHEDULE_A.createInstance();
+        course = CourseFixture.COURSE_A.createInstance();
         spaceDetails = SpaceDetailFixture.createInstances();
 
         util.connectEntities(user, schedule, course, spaceDetails);
