@@ -1,0 +1,58 @@
+package success.planfit.fixture;
+
+import success.planfit.entity.user.IdentityType;
+import success.planfit.entity.user.PlanfitUser;
+import success.planfit.entity.user.User;
+
+import java.time.LocalDate;
+
+public enum UserFixture {
+
+    BASIC_USER(
+            "BASIC_ID",
+            "BASIC_PASSWORD",
+            "BASIC_USER_NAME",
+            "01012345678",
+            LocalDate.of(2001, 4, 18),
+            IdentityType.STUDENT,
+            "BASIC@email.com"
+    );
+
+    private final String loginId;
+    private final String password;
+    private final String name;
+    private final String phoneNumber;
+    private final LocalDate birthOfDate;
+    private final IdentityType identity;
+    private final String email;
+
+    UserFixture(
+            String loginId,
+            String password,
+            String name,
+            String phoneNumber,
+            LocalDate birthOfDate,
+            IdentityType identity,
+            String email
+    ) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.birthOfDate = birthOfDate;
+        this.identity = identity;
+        this.email = email;
+    }
+
+    public User createInstance() {
+         return PlanfitUser.builder()
+                .loginId(loginId)
+                .password(password)
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .birthOfDate(birthOfDate)
+                .identity(identity)
+                .email(email)
+                .build();
+    }
+}
