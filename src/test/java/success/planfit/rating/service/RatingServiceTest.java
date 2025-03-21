@@ -27,8 +27,6 @@ import success.planfit.schedule.dto.response.ScheduleResponseDto;
 import success.planfit.util.TestUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -174,25 +172,11 @@ class RatingServiceTest {
     }
 
     private void connectEntities(User user, Schedule schedule, Course course, List<SpaceDetail> spaceDetails) {
-        List<Space> spaces = createSpaces(spaceDetails);
+        List<Space> spaces = util.createSpaces(spaceDetails);
 
         user.addSchedule(schedule);
         schedule.setCourse(course);
         course.addSpaces(spaces);
-    }
-
-    private List<Space> createSpaces(List<SpaceDetail> spaceDetails) {
-        List<Space> spaces = new ArrayList<>();
-
-        for (int sequence = 0; sequence < spaceDetails.size(); sequence++) {
-            spaces.add(Space.builder()
-                    .spaceDetail(spaceDetails.get(sequence))
-                    .sequence(sequence)
-                    .build()
-            );
-        }
-
-        return Collections.unmodifiableList(spaces);
     }
 
     private void saveEntities(User user, List<SpaceDetail> spaceDetails) {
