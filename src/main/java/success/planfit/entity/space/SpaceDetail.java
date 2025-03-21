@@ -3,17 +3,15 @@ package success.planfit.entity.space;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @Entity
 public class SpaceDetail {
 
@@ -46,9 +44,6 @@ public class SpaceDetail {
 
     private Double longitude;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
     @Builder
     private SpaceDetail(
             String googlePlacesIdentifier,
@@ -57,8 +52,7 @@ public class SpaceDetail {
             SpaceType spaceType,
             String link,
             Double latitude,
-            Double longitude,
-            byte[] spacePhoto
+            Double longitude
     ) {
         this.googlePlacesIdentifier = googlePlacesIdentifier;
         this.spaceName = spaceName;
@@ -67,7 +61,6 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.updatedAt = LocalDateTime.now();
     }
 
     /**
