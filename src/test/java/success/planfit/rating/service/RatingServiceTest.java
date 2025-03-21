@@ -64,7 +64,7 @@ class RatingServiceTest {
         course = CourseFixture.BASIC.createInstance();
         spaceDetails = SpaceDetailFixture.createInstances();
 
-        connectEntities(user, schedule, course, spaceDetails);
+        util.connectEntities(user, schedule, course, spaceDetails);
         saveEntities(user, spaceDetails);
     }
 
@@ -169,14 +169,6 @@ class RatingServiceTest {
         return ratingRepository.findAll().stream()
                 .filter(rating -> spaceDetails.contains(rating.getSpaceDetail()))
                 .toList();
-    }
-
-    private void connectEntities(User user, Schedule schedule, Course course, List<SpaceDetail> spaceDetails) {
-        List<Space> spaces = util.createSpaces(spaceDetails);
-
-        user.addSchedule(schedule);
-        schedule.setCourse(course);
-        course.addSpaces(spaces);
     }
 
     private void saveEntities(User user, List<SpaceDetail> spaceDetails) {
