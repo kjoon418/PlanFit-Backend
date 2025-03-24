@@ -2,12 +2,9 @@ package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 @Embeddable
 @Getter
@@ -44,7 +41,7 @@ public class SpaceDetail {
     private Double longitude;
 
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    private Long likeCount;
 
     @Builder
     private SpaceDetail(
@@ -64,7 +61,17 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.updatedAt = LocalDateTime.now();
+        this.likeCount = 0L;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 
 }
