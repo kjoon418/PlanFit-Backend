@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import success.planfit.entity.space.Space;
+import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -19,15 +19,15 @@ public class SpaceLike {
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Space space;
+    private SpaceDetail spaceDetail;
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Builder
-    private SpaceLike(Space space, User user){
-        this.space = space;
+    private SpaceLike(SpaceDetail spaceDetail, User user){
+        this.spaceDetail = spaceDetail;
         this.user = user;
     }
 
