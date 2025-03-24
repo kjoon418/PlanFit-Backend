@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import success.planfit.entity.course.Course;
+import success.planfit.entity.like.SpaceLike;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -31,8 +32,6 @@ public class Space {
 
     private Integer sequence;
 
-    private Long likeCount;
-
     @Builder
     private Space(
         SpaceDetail spaceDetail,
@@ -40,7 +39,6 @@ public class Space {
     ) {
         this.spaceDetail = spaceDetail;
         this.sequence = sequence;
-        this.likeCount = 0L;
     }
 
     public static Space copyOf(Space original) {
