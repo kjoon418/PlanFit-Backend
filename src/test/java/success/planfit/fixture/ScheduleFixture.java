@@ -10,26 +10,31 @@ public enum ScheduleFixture {
     SCHEDULE_A(
             "scheduleA_TITLE",
             LocalDate.of(2024, 12, 25),
-            LocalTime.of(11, 30)
+            LocalTime.of(11, 30),
+            "scheduleA_CONTENT"
     ),
     SCHEDULE_B(
             "scheduleB_TITLE",
             LocalDate.of(2025, 1, 1),
-            LocalTime.of(6, 30)
+            LocalTime.of(6, 30),
+            "scheduleB_CONTENT"
     );
 
     private final String title;
     private final LocalDate date;
     private final LocalTime startTime;
+    private final String content;
 
     ScheduleFixture(
             String title,
             LocalDate date,
-            LocalTime startTime
+            LocalTime startTime,
+            String content
     ) {
         this.title = title;
         this.date = date;
         this.startTime = startTime;
+        this.content = content;
     }
 
     public Schedule createInstance() {
@@ -37,6 +42,7 @@ public enum ScheduleFixture {
                 .title(title)
                 .date(date)
                 .startTime(startTime)
+                .content(content)
                 .build();
     }
 

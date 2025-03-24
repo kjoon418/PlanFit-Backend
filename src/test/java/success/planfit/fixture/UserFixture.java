@@ -21,10 +21,19 @@ public enum UserFixture {
             "userB_ID",
             "userB_PASSWORD",
             "userB_USER_NAME",
-            "01012345678",
+            "01098765432",
             LocalDate.of(2011, 11, 22),
             IdentityType.STUDENT,
-            "userB@email.com" 
+            "userB@email.com"
+    ),
+    USER_C(
+            "userC_ID",
+            "userC_PASSWORD",
+            "userC_USER_NAME",
+            "01011112222",
+            LocalDate.of(2015, 11, 22),
+            IdentityType.STUDENT,
+            "userC@email.com"
     );
 
     private final String loginId;
@@ -54,7 +63,7 @@ public enum UserFixture {
     }
 
     public User createInstance() {
-         return PlanfitUser.builder()
+        return PlanfitUser.builder()
                 .loginId(loginId)
                 .password(password)
                 .name(name)
@@ -64,4 +73,5 @@ public enum UserFixture {
                 .email(email)
                 .build();
     }
+
 }
