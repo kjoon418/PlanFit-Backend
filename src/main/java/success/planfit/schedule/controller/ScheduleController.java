@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
 import success.planfit.schedule.dto.ShareSerialDto;
+import success.planfit.schedule.dto.request.ScheduleCurrentSequenceUpdateRequestDto;
 import success.planfit.schedule.dto.request.ScheduleRequestDto;
-import success.planfit.schedule.dto.request.ScheduleVisitRequestDto;
 import success.planfit.schedule.dto.response.ScheduleResponseDto;
 import success.planfit.schedule.dto.response.ScheduleTitleInfoResponseDto;
 import success.planfit.schedule.service.ScheduleService;
@@ -109,11 +109,11 @@ public class ScheduleController {
      * 일정 장소 방문
      */
     @PatchMapping("/visit")
-    public ResponseEntity<Void> visitScheduleSpace(Principal principal, ScheduleVisitRequestDto requestDto) {
+    public ResponseEntity<Void> visitScheduleSpace(Principal principal, ScheduleCurrentSequenceUpdateRequestDto requestDto) {
         log.info("ScheduleController.visitScheduleSpace() called");
 
         Long userId = util.findUserIdByPrincipal(principal);
-        scheduleService.visitScheduleSpace(userId, requestDto);
+        scheduleService.updateCurrentSequence(userId, requestDto);
 
         return ResponseEntity.ok().build();
     }
