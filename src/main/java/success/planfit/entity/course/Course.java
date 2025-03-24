@@ -37,7 +37,7 @@ public class Course {
                 .build();
         copy.addSpaces(original.spaces);
 
-         return copy;
+        return copy;
     }
 
     /**
@@ -61,7 +61,5 @@ public class Course {
 
         spaces.clear();
     }
-
-
 
 }
