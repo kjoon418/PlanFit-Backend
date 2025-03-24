@@ -63,10 +63,12 @@ public class Schedule implements Comparable<Schedule> {
     private Schedule(
             String title,
             LocalDate date,
+            String content,
             LocalTime startTime
     ) {
         this.title = title;
         this.date = date;
+        this.content = content;
         this.startTime = startTime;
         this.currentSequence = 0;
         this.ratingRequested = false;
