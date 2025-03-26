@@ -109,4 +109,20 @@ public abstract class User {
         schedule.setUser(null);
     }
 
+    /**
+     * User - Post 연관관계 편의 메서드(생성)
+     */
+    public void addPost(Post post) {
+        this.posts.add(post);
+        post.setUser(this);
+    }
+
+    /**
+     * User -Post 연관관계 편의 메서드(삭제)
+     */
+    public void removePost(Post post) {
+        this.posts.remove(post);
+        post.setUser(null);
+    }
+
 }

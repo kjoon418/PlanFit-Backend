@@ -1,19 +1,17 @@
 package success.planfit.post.dto.request;
 
-
 import lombok.Getter;
 import success.planfit.course.dto.SpaceResponseDto;
 
 import java.util.List;
 
 @Getter
-public class PostSaveRequestDtoByUser {
-
-    private List<String> postPhotoList;
+public class PostUpdateDto {
+    private List<String> photoList;
     private String title;
     private String location;
+    private String titlePhoto;
     private String content;
     private Boolean isPublic;
     private List<SpaceResponseDto> spaceList;
-
 }

@@ -24,7 +24,6 @@ public class CommentService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
 
     public void registerComment(Long userId, Long postId, CommentSaveRequestDto requestDto){
         // 유저 조회
@@ -52,14 +51,13 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
 
-        // Comment 조회
-        Comment comment = commentRepository.findById(commentId)
+        // 유저의 댓글 가져오기
+        Comment comment = user.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findAny()
                 .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
 
-        // 삭제하려는 회원이 댓글 작성자인 경우만 삭제가능
-        if (userId.equals(comment.getUser().getId())) {
-            user.removeComment(comment);
-            post.removeComment(comment);
-        }
+        user.removeComment(comment);
+        post.removeComment(comment);
     }
 }

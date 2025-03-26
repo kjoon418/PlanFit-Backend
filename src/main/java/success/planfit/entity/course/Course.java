@@ -62,6 +62,14 @@ public class Course {
         spaces.clear();
     }
 
+    /**
+     * Course - Space 연관관계 편의 메서드(생성)
+     */
+    public void addSpace(Space space) {
+        this.spaces.add(space);
+        space.setCourse(this);
+    }
+
 
 
 }

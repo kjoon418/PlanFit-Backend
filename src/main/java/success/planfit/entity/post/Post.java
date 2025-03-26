@@ -8,6 +8,7 @@ import static lombok.AccessLevel.PROTECTED;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import success.planfit.entity.comment.Comment;
@@ -33,6 +34,7 @@ public class Post {
     @JoinColumn(nullable = false)
     private Course course;
 
+    @Setter
     @ManyToOne(fetch = LAZY)
     @JoinColumn(nullable = false)
     private User user;
@@ -55,6 +57,9 @@ public class Post {
 
     @Column(nullable = false)
     private Long likeCount;
+
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "post")
+    List<PostPhoto> postPhotoList = new ArrayList<>();
 
     @Builder
     private Post(
@@ -90,6 +95,11 @@ public class Post {
         if (this.likeCount > 0) {
             this.likeCount--;
         }
+    }
+
+    public void addPostPhoto(PostPhoto postPhoto){
+        postPhotoList.add(postPhoto);
+        postPhoto.setPost(this);
     }
 
 }
