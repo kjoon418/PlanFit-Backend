@@ -52,7 +52,7 @@ public class PostInfoDto {
 
         // List<Comment> -> List<CommentDto>
         for (Comment comment : post.getComments()) {
-            CommentInfoDto dto = CommentInfoDto.toDto(user, comment);
+            CommentInfoDto dto = CommentInfoDto.toDto(comment);
             postInfoDto.commentList.add(dto);
         }
         return postInfoDto;
