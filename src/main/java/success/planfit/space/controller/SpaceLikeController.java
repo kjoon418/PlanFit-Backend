@@ -36,7 +36,7 @@ public class SpaceLikeController {
     /**
      * 장소 좋아요 취소
      */
-    @DeleteMapping("/unlike")
+    @DeleteMapping("/like")
     public ResponseEntity<Void> unlikeSpace(@RequestBody SpaceLikeRequestDto requestDto) {
         spaceLikeService.unlikeSpace(requestDto.getGooglePlacesIdentifier(), requestDto.getUserId());
         return ResponseEntity.ok().build();
