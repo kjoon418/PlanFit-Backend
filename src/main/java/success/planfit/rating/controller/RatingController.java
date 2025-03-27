@@ -27,7 +27,7 @@ public class RatingController {
     public ResponseEntity<Void> recordRating(Principal principal, RatingRecordRequestDto requestDto) {
         log.info("RatingController.recordRating() called");
 
-        Long userId = util.findUserIdByPrincipal(principal);
+        long userId = util.findUserIdByPrincipal(principal);
         ratingService.recordRating(userId, requestDto);
 
         return ResponseEntity.ok().build();
@@ -37,7 +37,7 @@ public class RatingController {
     public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, LocalDate date) {
         log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
-        Long userId = util.findUserIdByPrincipal(principal);
+        long userId = util.findUserIdByPrincipal(principal);
         ScheduleResponseDto responseDto = ratingService.getRatingRequestAvailableSchedule(userId, date);
 
         return ResponseEntity.ok(responseDto);

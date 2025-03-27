@@ -31,7 +31,7 @@ public class RatingService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void recordRating(Long userId, RatingRecordRequestDto requestDto) {
+    public void recordRating(long userId, RatingRecordRequestDto requestDto) {
         User user = getUserWithRating(userId);
         Course course = getCourse(user, requestDto.courseId());
         List<SpaceDetail> spaceDetails = getSpaceDetails(course);
@@ -51,7 +51,7 @@ public class RatingService {
     }
 
     @Transactional(readOnly = true)
-    public ScheduleResponseDto getRatingRequestAvailableSchedule(Long userId, LocalDate date) {
+    public ScheduleResponseDto getRatingRequestAvailableSchedule(long userId, LocalDate date) {
         User user = getUserWithSchedule(userId);
 
         Schedule ratingRequestAvailableSchedules = user.getSchedules().stream()
@@ -66,17 +66,17 @@ public class RatingService {
         return ScheduleResponseDto.from(ratingRequestAvailableSchedules);
     }
 
-    private User getUserWithRating(Long userId) {
+    private User getUserWithRating(long userId) {
         return userRepository.findByIdWithRating(userId)
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
     }
 
-    private User getUserWithSchedule(Long userId) {
+    private User getUserWithSchedule(long userId) {
         return userRepository.findByIdWithSchedule(userId)
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
     }
 
-    private Course getCourse(User user, Long courseId) {
+    private Course getCourse(User user, long courseId) {
         return user.getSchedules().stream()
                 .map(Schedule::getCourse)
                 .filter(course -> course.getId().equals(courseId))
