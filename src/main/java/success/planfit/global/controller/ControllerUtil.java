@@ -15,7 +15,7 @@ public class ControllerUtil {
 
     private final TokenProvider tokenProvider;
 
-    public Long findUserIdByPrincipal(Principal principal) {
+    public long findUserIdByPrincipal(Principal principal) {
         log.info("ControllerUtil.findUserByPrincipal()");
 
         return Long.parseLong(principal.getName());
