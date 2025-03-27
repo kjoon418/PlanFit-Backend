@@ -66,7 +66,6 @@ public class SpaceLikeService {
 
         spaceLikeRepository.delete(spaceLike);
         spaceDetail.decreaseLikeCount();
-        spaceDetailRepository.save(spaceDetail);
     }
 
 }
