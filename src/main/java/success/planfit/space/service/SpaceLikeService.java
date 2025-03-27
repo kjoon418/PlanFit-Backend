@@ -53,7 +53,6 @@ public class SpaceLikeService {
                 .toList();
 
         return spaceLikeResponseDtos;
-
     }
 
     public void unlikeSpace(String googlePlacesIdentifier, Long userId) {
