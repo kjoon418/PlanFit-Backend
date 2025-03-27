@@ -17,10 +17,10 @@ public class CommentInfoDto {
     private LocalDateTime createdAt;
     private Long likeCount;
 
-    public static CommentInfoDto toDto(User user, Comment comment) {
+    public static CommentInfoDto toDto(Comment comment) {
         return CommentInfoDto.builder()
-                .username(user.getName())
-                .userPhoto(PhotoProvider.encode(user.getProfilePhoto()))
+                .username(comment.getUser().getName())
+                .userPhoto(PhotoProvider.encode(comment.getUser().getProfilePhoto()))
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .likeCount(comment.getLikeCount())

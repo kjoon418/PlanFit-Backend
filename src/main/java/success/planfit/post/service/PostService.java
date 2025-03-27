@@ -25,7 +25,10 @@ import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
+
+
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
@@ -161,7 +164,27 @@ public class PostService {
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("스케줄 조회 실패"));
 
-        return PostInfoDto.of(user, post);
+        return PostInfoDto.from(post);
+    }
+
+    // 포스트 3건 조회 - 최신순
+    public List<PostInfoDto> findTop3PostOrderByCreatedAt() {
+        Optional<List<Post>> postList = postRepository.findTop3ByOrderByCreatedAtDesc();
+
+        List<PostInfoDto> postInfoDtoList = postList.get().stream()
+                .map(PostInfoDto::from)
+                .toList();
+
+        return postInfoDtoList;
+    }
+
+    // 모든 포스트 최신순 조회
+    public List<PostInfoDto> findAllOrderByCreatedAtDesc(){
+        Optional<List<Post>> postList = postRepository.findAllOrderByCreatedAtDesc();
+        List<PostInfoDto> postInfoDtoList = postList.get().stream()
+                .map(PostInfoDto::from)
+                .toList();
+        return postInfoDtoList;
     }
 
 

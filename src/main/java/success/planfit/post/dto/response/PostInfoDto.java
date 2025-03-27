@@ -6,9 +6,6 @@ import success.planfit.comment.dto.CommentInfoDto;
 import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.entity.comment.Comment;
 import success.planfit.entity.post.Post;
-import success.planfit.entity.post.PostPhoto;
-import success.planfit.entity.space.Space;
-import success.planfit.entity.user.User;
 import success.planfit.global.photo.PhotoProvider;
 
 import java.time.LocalDateTime;
@@ -30,7 +27,7 @@ public class PostInfoDto {
 
 
     // 여기서는 진짜 post -> dto space -> spacedto
-    public static PostInfoDto of(User user, Post post) {
+    public static PostInfoDto from(Post post) {
         // List<Space> -> List<SpaceResponseDto>
         List<SpaceResponseDto> spaceList = post.getCourse().getSpaces().stream()
                 .map(SpaceResponseDto::from)
@@ -42,8 +39,8 @@ public class PostInfoDto {
                 .toList();
 
         PostInfoDto postInfoDto = PostInfoDto.builder()
-                .username(user.getName())
-                .userTitlePhoto(PhotoProvider.encode(user.getProfilePhoto()))
+                .username(post.getUser().getName())
+                .userTitlePhoto(PhotoProvider.encode(post.getUser().getProfilePhoto()))
                 .title(post.getTitle())
                 .location(post.getCourse().getLocation())
                 .content(post.getContent())

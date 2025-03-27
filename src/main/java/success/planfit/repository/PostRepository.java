@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("select p from Post p where p.user.id  = :userId order by p.createdAt desc")
-    Optional<List<Post>> findByUserIdOrderByCreatedAtDesc(Long userId);
+    Optional<List<Post>> findAllOrderByCreatedAtDesc();
+
+    Optional<List<Post>> findTop3ByOrderByCreatedAtDesc();
+
+
 
 }

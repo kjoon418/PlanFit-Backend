@@ -9,10 +9,12 @@ import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.post.dto.request.PostSaveRequestDtoByUser;
 import success.planfit.post.dto.request.PostSaveRequestFromSchedule;
+import success.planfit.post.dto.request.PostUpdateDto;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.post.service.PostService;
 
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -62,23 +64,39 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
+    /**
+     * 포스트 최신순 3건 조회
+     */
+    @GetMapping
+    public ResponseEntity<List<PostInfoDto>> findTop3PostOrderByCreatedAt(){
+        List<PostInfoDto> postInfoDtoList = postService.findTop3PostOrderByCreatedAt();
+        return ResponseEntity.ok(postInfoDtoList);
+    }
+
+    /**
+     * 포스트 최신순 전체 조회
+     */
+    @GetMapping
+    public ResponseEntity<List<PostInfoDto>> findAllOrderByCreatedAt(){
+        List<PostInfoDto> postInfoDtoList = postService.findAllOrderByCreatedAtDesc();
+        return ResponseEntity.ok(postInfoDtoList);
+    }
 
 
-
-//    @PatchMapping
-//    public ResponseEntity<Void> updatePost(Principal principal, PostUpdateDto requestDto){
-//        Long userId = controllerUtil.findUserIdByPrincipal(principal);
-//        postService.updatePost(userId, requestDto);
-//        return ResponseEntity.ok().build();
-//    }
-
-
-
-
+    /**
+     * 포스트 수정
+     */
+    @PatchMapping
+    public ResponseEntity<Void> updatePost(Principal principal, PostUpdateDto requestDto){
+        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        postService.updatePost(userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
 
 
-
-
+    /**
+     * 포스트 삭제
+     */
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(Principal principal, @PathVariable Long postId) {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
