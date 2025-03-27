@@ -38,8 +38,6 @@ public class SpaceLikeService {
                 .user(user)
                 .build();
 
-        spaceLikeRepository.save(spaceLike);
-
         spaceDetail.increaseLikeCount();
     }
 
