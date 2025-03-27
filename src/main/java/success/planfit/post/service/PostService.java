@@ -189,6 +189,8 @@ public class PostService {
 
 
 
+
+
     // 포스트 수정
     public void updatePost(Long userId, PostUpdateDto requestDto) {
         // 유저 조회

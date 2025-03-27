@@ -68,6 +68,10 @@ public class SpaceDetail {
         this.updatedAt = LocalDateTime.now();
     }
 
+    /**
+     *
+     *  장소 사진
+     */
     public void addSpacePhoto(SpacePhoto spacePhoto){
         spacePhotos.add(spacePhoto);
         spacePhoto.setSpaceDetail(this);

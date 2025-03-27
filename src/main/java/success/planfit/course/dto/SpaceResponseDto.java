@@ -16,7 +16,7 @@ import static lombok.AccessLevel.*;
 @Getter
 @Builder
 @AllArgsConstructor(access = PRIVATE)
-public class SpaceResponseDto {
+public class SpaceResponseDto implements Comparable<SpaceResponseDto>{
 
     private final int sequence;
     private final String googlePlacesIdentifier;
@@ -46,6 +46,17 @@ public class SpaceResponseDto {
                 .longitude(spaceDetail.getLongitude())
                 .spacePhotos(spacePhotos)
                 .build();
+    }
+
+
+    @Override
+    public int compareTo(SpaceResponseDto requestDto) {
+        if (this.sequence > requestDto.sequence)
+            return 1;
+        else if (this.sequence == requestDto.sequence)
+            return 0;
+        else
+            return -1;
     }
 
 }
