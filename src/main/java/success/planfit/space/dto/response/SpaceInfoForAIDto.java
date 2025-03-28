@@ -3,7 +3,6 @@ package success.planfit.space.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 import success.planfit.course.dto.SpaceResponseDto;
-import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.space.dto.request.SpaceDetailRequestDto;
@@ -24,7 +23,7 @@ public class SpaceInfoForAIDto {
     // TODO: 사용자의 리뷰 추가 필요
 
     // DTO로 만들어주는 메소드가 필요함
-    public static SpaceInfoForAIDto toDto(User user, SpaceDetailRequestDto requestDto){
+    public static SpaceInfoForAIDto of(User user, SpaceDetailRequestDto requestDto){
         return SpaceInfoForAIDto.builder()
                 .latitude(requestDto.getLatitude())
                 .longitude(requestDto.getLongitude())

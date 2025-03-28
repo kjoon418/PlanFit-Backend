@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import success.planfit.course.dto.SpaceRequestDto;
 import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.post.Post;
@@ -22,6 +23,7 @@ import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.global.exception.IllegalRequestException;
 import success.planfit.repository.PostRepository;
+import success.planfit.repository.SpaceDetailRepository;
 import success.planfit.repository.UserRepository;
 
 import java.util.List;
@@ -38,44 +40,25 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final SpaceDetailRepository spaceDetailRepository;
 
     // 사용자가 코스 생성해서 포스팅
     public void registerPostByUser(Long userId, PostSaveRequestDtoByUser requestDto) {
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
         // 코스 생성
         Course course = Course.builder().location(requestDto.getLocation()).build();
-
-        // 장소리스트로 돌기
-        for (SpaceResponseDto spaceResponseDto : requestDto.getSpaceList()) {
-
-            // 1. SpaceDetail에 저장 - 캐시저장
-            SpaceDetail spaceDetail = SpaceDetail.builder()
-                    .googlePlacesIdentifier(spaceResponseDto.getGooglePlacesIdentifier())
-                    .spaceName(spaceResponseDto.getName())
-                    .location(spaceResponseDto.getLocation())
-                    .spaceType(spaceResponseDto.getSpaceType())
-                    .link(spaceResponseDto.getLink())
-                    .latitude(spaceResponseDto.getLatitude())
-                    .longitude(spaceResponseDto.getLongitude())
-                    .build();
-
-            // 장소 사진 디코드
-            List<byte[]> spacePhotoList = spaceResponseDto.getSpacePhotos().stream()
-                    .map(PhotoProvider::decode)
-                    .toList();
-
-            // 디코드된 사진 리스트로 SpacePhoto 생성
-            for (byte[] sp : spacePhotoList) {
-                SpacePhoto spacePhoto = SpacePhoto.builder().value(sp).build();
-                // SpaceDetail과 연결
-                spaceDetail.addSpacePhoto(spacePhoto);
-            }
+        // 장소리스트로 돌기 -> SpaceDetail로 space를 만들고 코슬 ㄹ만들어야함 그리고 그 포스트를 저장
+        for (SpaceRequestDto spaceRequestDto : requestDto.getSpaceList()) {
+            // 1. googleIdentifier로 spaceDetail 가져오기
+            SpaceDetail spaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceRequestDto.getGooglePlacesIdentifier())
+                    .orElseThrow(() -> new EntityNotFoundException("장소 조회 실패"));
 
             // 2. Space 생성
             Space space = Space.builder()
                     .spaceDetail(spaceDetail)
+                    .sequence(spaceRequestDto.getSequence())
                     .build();
             // 3. Course와 Space 연결
             course.addSpace(space);
@@ -94,9 +77,9 @@ public class PostService {
                 .isPublic(requestDto.getIsPublic())
                 .build();
 
-        for (byte[] p : postPhotoList) {
+        for (byte[] photos : postPhotoList) {
             PostPhoto postPhoto = PostPhoto.builder()
-                    .photo(p)
+                    .photo(photos)
                     .build();
             // 포스트와 포스트 사진 리스트 연결
             post.addPostPhoto(postPhoto);
@@ -107,14 +90,14 @@ public class PostService {
     }
 
     // 사용자의 스케줄에서 불러와서 포스팅
-    public void registerPostByPostId(Long userId, PostSaveRequestFromSchedule requestDto) {
+    public void registerPostByScheduleId(Long userId, PostSaveRequestFromSchedule requestDto) {
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         // 스케줄 반환
         Schedule schedule = user.getSchedules().stream()
                 .filter(sc -> sc.getId().equals(requestDto.getScheduleId()))
                 .findAny()
-                .orElseThrow(() -> new RuntimeException("스케줄 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("스케줄 조회 실패"));
 
         List<byte[]> postPhotoList = requestDto.getPostPhotoList().stream()
                 .map(PhotoProvider::decode)
@@ -128,9 +111,9 @@ public class PostService {
                 .isPublic(requestDto.getIsPublic())
                 .build();
 
-        for (byte[] p : postPhotoList) {
+        for (byte[] photo : postPhotoList) {
             PostPhoto postPhoto = PostPhoto.builder()
-                    .photo(p)
+                    .photo(photo)
                     .build();
             // 포스트와 포스트 사진 리스트 연결
             post.addPostPhoto(postPhoto);
@@ -156,20 +139,18 @@ public class PostService {
     }
 
     // 포스트 단건 조회
-    public PostInfoDto findPost(Long userId, Long postId) {
-        // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
-        Post post = user.getPosts().stream()
-                .filter(p -> p.getId().equals(postId))
+    public PostInfoDto findPost(Long postId) {
+        Post post = postRepository.findById(postId).stream()
+                .filter(photo -> photo.getId().equals(postId))
                 .findAny()
-                .orElseThrow(() -> new RuntimeException("스케줄 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("스케줄 조회 실패"));
 
         return PostInfoDto.from(post);
     }
 
     // 포스트 3건 조회 - 최신순
-    public List<PostInfoDto> findTop3PostOrderByCreatedAt() {
-        Optional<List<Post>> postList = postRepository.findTop3ByOrderByCreatedAtDesc();
+    public List<PostInfoDto> findTopNPostOrderByCreatedAt(int n) {
+        Optional<List<Post>> postList = postRepository.findTop3ByOrderByCreatedAtDesc(n);
 
         List<PostInfoDto> postInfoDtoList = postList.get().stream()
                 .map(PostInfoDto::from)
@@ -187,14 +168,10 @@ public class PostService {
         return postInfoDtoList;
     }
 
-
-
-
-
     // 포스트 수정
     public void updatePost(Long userId, PostUpdateDto requestDto) {
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
         // 코스 생성
         Course course = Course.builder().location(requestDto.getLocation()).build();
@@ -238,11 +215,11 @@ public class PostService {
     // 포스트 삭제
     public void deletePost(Long userId, Long postId) {
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         Post post = user.getPosts().stream()
                 .filter(p -> p.getId().equals(postId))
                 .findAny()
-                .orElseThrow(() -> new RuntimeException("포스트 조회 실패"));
+                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
         user.removePost(post);
     }
 }

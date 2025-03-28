@@ -118,7 +118,7 @@ public abstract class User {
     }
 
     /**
-     * User -Post 연관관계 편의 메서드(삭제)
+     * User - Post 연관관계 편의 메서드(삭제)
      */
     public void removePost(Post post) {
         this.posts.remove(post);

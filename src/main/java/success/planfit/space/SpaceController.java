@@ -43,8 +43,4 @@ public class SpaceController {
         List<SpaceResponseDto> spaceResponseDtoList = spaceService.responseToFE(requestDtoList);
         return ResponseEntity.ok(spaceResponseDtoList);
     }
-
-
-
-
 }

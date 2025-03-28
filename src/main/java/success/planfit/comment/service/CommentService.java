@@ -27,7 +27,7 @@ public class CommentService {
 
     public void registerComment(Long userId, Long postId, CommentSaveRequestDto requestDto){
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저 조회 실패"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
         // Post 조회
         Post post = postRepository.findById(postId)
@@ -52,12 +52,20 @@ public class CommentService {
                 .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
 
         // 유저의 댓글 가져오기
-        Comment comment = user.getComments().stream()
-                .filter(c -> c.getId().equals(commentId))
-                .findAny()
-                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
+        Comment comment = findCommentsById(user, commentId);
 
         user.removeComment(comment);
         post.removeComment(comment);
     }
+
+    private Comment findCommentsById(User user, Long commentId){
+        return user.getComments().stream()
+                .filter(comment -> comment.getId().equals(commentId))
+                .findAny()
+                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
+    }
+
+
+
+
 }

@@ -22,7 +22,6 @@ public class PostInfoDto {
     private List<SpaceResponseDto> spaceList;
     private List<String> postPhotoList;
     private LocalDateTime createdAt;
-    @Setter
     private List<CommentInfoDto> commentList;
 
 
@@ -56,7 +55,6 @@ public class PostInfoDto {
             postInfoDto.commentList.add(dto);
         }
         return postInfoDto;
-
     }
 
 }

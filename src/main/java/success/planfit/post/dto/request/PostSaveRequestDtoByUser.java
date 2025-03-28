@@ -2,7 +2,7 @@ package success.planfit.post.dto.request;
 
 
 import lombok.Getter;
-import success.planfit.course.dto.SpaceResponseDto;
+import success.planfit.course.dto.SpaceRequestDto;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public class PostSaveRequestDtoByUser {
     private String location;
     private String content;
     private Boolean isPublic;
-    private List<SpaceResponseDto> spaceList;
+    private List<SpaceRequestDto> spaceList;
 
 }

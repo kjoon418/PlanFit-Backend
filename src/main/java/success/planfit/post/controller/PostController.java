@@ -38,7 +38,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Void> registerPostBySchedule(Principal principal, PostSaveRequestFromSchedule requestDto){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        postService.registerPostByPostId(userId, requestDto);
+        postService.registerPostByScheduleId(userId, requestDto);
         return ResponseEntity.ok().build();
     }
 
@@ -58,9 +58,8 @@ public class PostController {
      * 포스트 단건 조회
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<PostInfoDto> findPostById(Principal principal, @PathVariable Long postId){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        PostInfoDto post = postService.findPost(userId, postId);
+    public ResponseEntity<PostInfoDto> findPostById(@PathVariable Long postId){
+        PostInfoDto post = postService.findPost(postId);
         return ResponseEntity.ok(post);
     }
 
@@ -68,8 +67,8 @@ public class PostController {
      * 포스트 최신순 3건 조회
      */
     @GetMapping
-    public ResponseEntity<List<PostInfoDto>> findTop3PostOrderByCreatedAt(){
-        List<PostInfoDto> postInfoDtoList = postService.findTop3PostOrderByCreatedAt();
+    public ResponseEntity<List<PostInfoDto>> findTopNPostOrderByCreatedAt(int n){
+        List<PostInfoDto> postInfoDtoList = postService.findTopNPostOrderByCreatedAt(n);
         return ResponseEntity.ok(postInfoDtoList);
     }
 

@@ -48,7 +48,6 @@ public class SpaceDetail {
 
     @Builder
     private SpaceDetail(
-            List<SpacePhoto> spacePhotos,
             String googlePlacesIdentifier,
             String spaceName,
             String location,
@@ -57,7 +56,6 @@ public class SpaceDetail {
             Double latitude,
             Double longitude
     ) {
-        this.spacePhotos = spacePhotos;
         this.googlePlacesIdentifier = googlePlacesIdentifier;
         this.spaceName = spaceName;
         this.location = location;
@@ -68,10 +66,6 @@ public class SpaceDetail {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     *
-     *  장소 사진
-     */
     public void addSpacePhoto(SpacePhoto spacePhoto){
         spacePhotos.add(spacePhoto);
         spacePhoto.setSpaceDetail(this);

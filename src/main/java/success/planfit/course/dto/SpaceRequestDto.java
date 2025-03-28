@@ -11,4 +11,5 @@ public class SpaceRequestDto {
     @NotEmptyAndNotBlank("googlePlacesIdentifier")
     private final String googlePlacesIdentifier;
 
+    private int sequence;
 }

@@ -11,7 +11,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<List<Post>> findAllOrderByCreatedAtDesc();
 
-    Optional<List<Post>> findTop3ByOrderByCreatedAtDesc();
+
+    @Query("select p from Post p order by p.createdAt desc limit :n offset 0")
+    Optional<List<Post>> findTop3ByOrderByCreatedAtDesc(int n);
 
 
 

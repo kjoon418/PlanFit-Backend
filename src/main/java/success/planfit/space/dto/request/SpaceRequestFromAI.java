@@ -19,10 +19,4 @@ public class SpaceRequestFromAI {
     private String name;
     private Double longitude;
     private List<String> spacePhotos;
-
-
-
-
-
-
 }
