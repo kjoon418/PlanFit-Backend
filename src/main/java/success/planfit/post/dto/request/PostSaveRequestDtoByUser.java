@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 public class PostSaveRequestDtoByUser {
 
-    private List<String> postPhotoList;
+    private List<String> postPhotos;
     private String title;
     private String location;
     private String content;
     private Boolean isPublic;
-    private List<SpaceRequestDto> spaceList;
+    private List<SpaceRequestDto> spaces;
 
 }

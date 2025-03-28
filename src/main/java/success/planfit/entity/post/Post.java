@@ -59,7 +59,7 @@ public class Post {
     private Long likeCount;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "post")
-    List<PostPhoto> postPhotoList = new ArrayList<>();
+    List<PostPhoto> postPhotos = new ArrayList<>();
 
     @Builder
     private Post(
@@ -98,7 +98,7 @@ public class Post {
     }
 
     public void addPostPhoto(PostPhoto postPhoto){
-        postPhotoList.add(postPhoto);
+        postPhotos.add(postPhoto);
         postPhoto.setPost(this);
     }
 

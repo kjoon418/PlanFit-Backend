@@ -50,7 +50,7 @@ public class PostService {
         // 코스 생성
         Course course = Course.builder().location(requestDto.getLocation()).build();
         // 장소리스트로 돌기 -> SpaceDetail로 space를 만들고 코슬 ㄹ만들어야함 그리고 그 포스트를 저장
-        for (SpaceRequestDto spaceRequestDto : requestDto.getSpaceList()) {
+        for (SpaceRequestDto spaceRequestDto : requestDto.getSpaces()) {
             // 1. googleIdentifier로 spaceDetail 가져오기
             SpaceDetail spaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceRequestDto.getGooglePlacesIdentifier())
                     .orElseThrow(() -> new EntityNotFoundException("장소 조회 실패"));
@@ -64,8 +64,8 @@ public class PostService {
             course.addSpace(space);
         }
 
-        // dto -> 디코드한 postPhotoList
-        List<byte[]> postPhotoList = requestDto.getPostPhotoList().stream()
+        // dto -> 디코드한 postPhotos
+        List<byte[]> postPhotos = requestDto.getPostPhotos().stream()
                 .map(PhotoProvider::decode)
                 .toList();
 
@@ -77,7 +77,7 @@ public class PostService {
                 .isPublic(requestDto.getIsPublic())
                 .build();
 
-        for (byte[] photos : postPhotoList) {
+        for (byte[] photos : postPhotos) {
             PostPhoto postPhoto = PostPhoto.builder()
                     .photo(photos)
                     .build();
@@ -99,7 +99,7 @@ public class PostService {
                 .findAny()
                 .orElseThrow(() -> new EntityNotFoundException("스케줄 조회 실패"));
 
-        List<byte[]> postPhotoList = requestDto.getPostPhotoList().stream()
+        List<byte[]> postPhotos = requestDto.getPostPhotos().stream()
                 .map(PhotoProvider::decode)
                 .toList();
 
@@ -111,7 +111,7 @@ public class PostService {
                 .isPublic(requestDto.getIsPublic())
                 .build();
 
-        for (byte[] photo : postPhotoList) {
+        for (byte[] photo : postPhotos) {
             PostPhoto postPhoto = PostPhoto.builder()
                     .photo(photo)
                     .build();
@@ -150,22 +150,22 @@ public class PostService {
 
     // 포스트 3건 조회 - 최신순
     public List<PostInfoDto> findTopNPostOrderByCreatedAt(int n) {
-        Optional<List<Post>> postList = postRepository.findTop3ByOrderByCreatedAtDesc(n);
+        Optional<List<Post>> posts = postRepository.findTop3ByOrderByCreatedAtDesc(n);
 
-        List<PostInfoDto> postInfoDtoList = postList.get().stream()
+        List<PostInfoDto> postInfoDtos = posts.get().stream()
                 .map(PostInfoDto::from)
                 .toList();
 
-        return postInfoDtoList;
+        return postInfoDtos;
     }
 
     // 모든 포스트 최신순 조회
     public List<PostInfoDto> findAllOrderByCreatedAtDesc(){
-        Optional<List<Post>> postList = postRepository.findAllOrderByCreatedAtDesc();
-        List<PostInfoDto> postInfoDtoList = postList.get().stream()
+        Optional<List<Post>> posts = postRepository.findAllOrderByCreatedAtDesc();
+        List<PostInfoDto> postInfoDtos = posts.get().stream()
                 .map(PostInfoDto::from)
                 .toList();
-        return postInfoDtoList;
+        return postInfoDtos;
     }
 
     // 포스트 수정
@@ -177,7 +177,7 @@ public class PostService {
         Course course = Course.builder().location(requestDto.getLocation()).build();
 
         // 장소리스트로 돌기
-        for (SpaceResponseDto spaceResponseDto : requestDto.getSpaceList()) {
+        for (SpaceResponseDto spaceResponseDto : requestDto.getSpaces()) {
 
             // 1. SpaceDetail에 저장 - 캐시저장
             SpaceDetail spaceDetail = SpaceDetail.builder()
@@ -191,12 +191,12 @@ public class PostService {
                     .build();
 
             // 장소 사진 디코드
-            List<byte[]> spacePhotoList = spaceResponseDto.getSpacePhotos().stream()
+            List<byte[]> spacePhotos = spaceResponseDto.getSpacePhotos().stream()
                     .map(PhotoProvider::decode)
                     .toList();
 
             // 디코드된 사진 리스트로 SpacePhoto 생성
-            for (byte[] sp : spacePhotoList) {
+            for (byte[] sp : spacePhotos) {
                 SpacePhoto spacePhoto = SpacePhoto.builder().value(sp).build();
                 // SpaceDetail과 연결
                 spaceDetail.addSpacePhoto(spacePhoto);

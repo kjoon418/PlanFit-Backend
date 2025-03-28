@@ -1,7 +1,6 @@
 package success.planfit.post.dto.response;
 
 import lombok.Builder;
-import lombok.Setter;
 import success.planfit.comment.dto.CommentInfoDto;
 import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.entity.comment.Comment;
@@ -19,21 +18,21 @@ public class PostInfoDto {
     private String location;
     private String content;
     private Boolean isPublic;
-    private List<SpaceResponseDto> spaceList;
-    private List<String> postPhotoList;
+    private List<SpaceResponseDto> spaces;
+    private List<String> postPhotos;
     private LocalDateTime createdAt;
-    private List<CommentInfoDto> commentList;
+    private List<CommentInfoDto> comments;
 
 
     // 여기서는 진짜 post -> dto space -> spacedto
     public static PostInfoDto from(Post post) {
         // List<Space> -> List<SpaceResponseDto>
-        List<SpaceResponseDto> spaceList = post.getCourse().getSpaces().stream()
+        List<SpaceResponseDto> spaces = post.getCourse().getSpaces().stream()
                 .map(SpaceResponseDto::from)
                 .toList();
 
         // List<PostPhoto> -> List<String>
-        List<String> postPhotoList = post.getPostPhotoList().stream()
+        List<String> postPhotos = post.getPostPhotos().stream()
                 .map(postPhoto -> PhotoProvider.encode(postPhoto.getPhoto()))
                 .toList();
 
@@ -44,15 +43,15 @@ public class PostInfoDto {
                 .location(post.getCourse().getLocation())
                 .content(post.getContent())
                 .isPublic(post.getIsPublic())
-                .spaceList(spaceList)
-                .postPhotoList(postPhotoList)
+                .spaces(spaces)
+                .postPhotos(postPhotos)
                 .createdAt(post.getCreatedAt())
                 .build();
 
         // List<Comment> -> List<CommentDto>
         for (Comment comment : post.getComments()) {
             CommentInfoDto dto = CommentInfoDto.toDto(comment);
-            postInfoDto.commentList.add(dto);
+            postInfoDto.comments.add(dto);
         }
         return postInfoDto;
     }

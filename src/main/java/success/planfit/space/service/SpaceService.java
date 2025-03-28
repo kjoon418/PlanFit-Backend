@@ -40,10 +40,10 @@ public class SpaceService {
     }
 
     // AI에게 장소 받아서 캐싱, 정렬 후, 프론트 장소 리스트에게 전달
-    public List<SpaceResponseDto> responseToFE(List<SpaceRequestFromAI> requestDtoList){
-        List<Space> spaceList= new ArrayList<>();
+    public List<SpaceResponseDto> responseToFE(List<SpaceRequestFromAI> requestDtos){
+        List<Space> spaces= new ArrayList<>();
         List<SpaceResponseDto> spaceResponseDtos = new ArrayList<>();
-        for (SpaceRequestFromAI spaceRequestFromAI : requestDtoList) {
+        for (SpaceRequestFromAI spaceRequestFromAI : requestDtos) {
             SpaceDetail spaceDetail = SpaceDetail.builder()
                     .googlePlacesIdentifier(spaceRequestFromAI.getGooglePlacesIdentifier())
                     .spaceName(spaceRequestFromAI.getName())
@@ -54,11 +54,11 @@ public class SpaceService {
                     .link(spaceRequestFromAI.getLink())
                     .build();
 
-            List<byte[]> spacePhotoList = spaceRequestFromAI.getSpacePhotos().stream()
+            List<byte[]> spacePhotos = spaceRequestFromAI.getSpacePhotos().stream()
                     .map(PhotoProvider::decode)
                     .toList();
 
-            for (byte[] sp : spacePhotoList) {
+            for (byte[] sp : spacePhotos) {
                 SpacePhoto spacePhoto = SpacePhoto.builder()
                         .spaceDetail(spaceDetail)
                         .value(sp)
@@ -68,11 +68,11 @@ public class SpaceService {
                         .spaceDetail(spaceDetail)
                         .sequence(spaceRequestFromAI.getSimilarityOrder())
                         .build();
-                spaceList.add(space);
+                spaces.add(space);
             }
             // SpaceDetail 테이블에 캐싱
             spaceDetailRepository.save(spaceDetail);
-            spaceResponseDtos = spaceList.stream()
+            spaceResponseDtos = spaces.stream()
                     .map(SpaceResponseDto::from)
                     .toList();
         }
