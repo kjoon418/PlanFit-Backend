@@ -106,7 +106,7 @@ public class AuthorizationController {
     public ResponseEntity<Void> logout(Principal principal) {
         log.info("UserController.logout() called");
 
-        Long userId = util.findUserIdByPrincipal(principal);
+        long userId = util.findUserIdByPrincipal(principal);
         authorizationService.invalidateRefreshToken(userId);
 
         return ResponseEntity.ok().build();
@@ -119,7 +119,7 @@ public class AuthorizationController {
     public ResponseEntity<Void> withdraw(Principal principal) {
         log.info("UserController.withdraw() called");
 
-        Long userId = util.findUserIdByPrincipal(principal);
+        long userId = util.findUserIdByPrincipal(principal);
         authorizationService.deleteUser(userId);
 
         return ResponseEntity.ok().build();

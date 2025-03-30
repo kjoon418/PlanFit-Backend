@@ -311,7 +311,7 @@ public class AuthorizationService {
         throw new RuntimeException("카카오 유저 정보 획득 실패");
     }
 
-    public void invalidateRefreshToken(Long userId) {
+    public void invalidateRefreshToken(long userId) {
         log.info("AuthorizationService.invalidateRefreshToken() called");
 
         User user = userRepository.findById(userId)
@@ -319,7 +319,7 @@ public class AuthorizationService {
         user.getRefreshToken().setTokenValue(null);
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(long userId) {
         log.info("AuthorizationService.deleteUser() called");
 
         User user = userRepository.findById(userId)
