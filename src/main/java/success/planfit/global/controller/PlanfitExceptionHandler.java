@@ -1,6 +1,7 @@
 package success.planfit.global.controller;
 
 import io.jsonwebtoken.MalformedJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +9,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import success.planfit.global.exception.EntityNotFoundException;
-import success.planfit.global.exception.IllegalRequestException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -47,4 +46,5 @@ public class PlanfitExceptionHandler {
         log.error("Unhandled error occurred", e);
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("예상하지 못한 예외가 발생했습니다: " + e.getMessage());
     }
+
 }
