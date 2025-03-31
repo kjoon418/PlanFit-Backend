@@ -38,7 +38,9 @@ public class SpaceLikeService {
                 .user(user)
                 .build();
 
+        user.addSpaceLike(spaceLike);
         spaceDetail.increaseLikeCount();
+
     }
 
     @Transactional(readOnly = true)
@@ -64,7 +66,7 @@ public class SpaceLikeService {
         SpaceLike spaceLike = spaceLikeRepository.findByUserAndSpaceDetail(user, spaceDetail)
                 .orElseThrow(() -> new EntityNotFoundException("좋아요를 찾을 수 없습니다."));
 
-        spaceLikeRepository.delete(spaceLike);
+        user.removeSpaceLike(spaceLike);
         spaceDetail.decreaseLikeCount();
     }
 
