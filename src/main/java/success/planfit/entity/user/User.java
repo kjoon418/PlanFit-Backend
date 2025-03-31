@@ -109,4 +109,19 @@ public abstract class User {
         schedule.setUser(null);
     }
 
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.add(spaceLike);
+    }
+
+
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.remove(spaceLike);
+    }
+
 }
