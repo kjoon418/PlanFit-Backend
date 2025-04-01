@@ -39,7 +39,7 @@ public abstract class User {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<Schedule> schedules = new ArrayList<>();
 
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
@@ -85,12 +85,12 @@ public abstract class User {
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
-        comment.setUser(this);
+        comment.getPost().getComments().add(comment);
     }
 
     public void removeComment(Comment comment) {
         this.comments.remove(comment);
-        comment.setUser(null);
+        comment.getPost().getComments().remove(comment);
     }
 
     /**

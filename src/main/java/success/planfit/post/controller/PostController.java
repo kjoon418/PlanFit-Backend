@@ -67,8 +67,8 @@ public class PostController {
      * 포스트 최신순 3건 조회
      */
     @GetMapping
-    public ResponseEntity<List<PostInfoDto>> findTopNPostOrderByCreatedAt(int n){
-        List<PostInfoDto> postInfoDtoList = postService.findTopNPostOrderByCreatedAt(n);
+    public ResponseEntity<List<PostInfoDto>> findRecentPosts(int n){
+        List<PostInfoDto> postInfoDtoList = postService.findRecentPosts(n);
         return ResponseEntity.ok(postInfoDtoList);
     }
 

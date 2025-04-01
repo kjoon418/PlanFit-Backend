@@ -149,7 +149,7 @@ public class PostService {
     }
 
     // 포스트 3건 조회 - 최신순
-    public List<PostInfoDto> findTopNPostOrderByCreatedAt(int n) {
+    public List<PostInfoDto> findRecentPosts(int n) {
         Optional<List<Post>> posts = postRepository.findTop3ByOrderByCreatedAtDesc(n);
 
         List<PostInfoDto> postInfoDtos = posts.get().stream()
