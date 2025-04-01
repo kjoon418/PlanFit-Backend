@@ -3,16 +3,15 @@ package success.planfit.rating.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
 import success.planfit.rating.dto.RatingRecordRequestDto;
 import success.planfit.rating.service.RatingService;
+import success.planfit.schedule.dto.response.ScheduleResponseDto;
 
 import java.security.Principal;
+import java.time.LocalDate;
 
 @Slf4j
 @RestController
@@ -26,12 +25,22 @@ public class RatingController {
 
     @PostMapping
     public ResponseEntity<Void> recordRating(Principal principal, RatingRecordRequestDto requestDto) {
-        log.info("RatingController.recordRating()");
+        log.info("RatingController.recordRating() called");
 
-        Long userId = util.findUserIdByPrincipal(principal);
+        long userId = util.findUserIdByPrincipal(principal);
         ratingService.recordRating(userId, requestDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, LocalDate date) {
+        log.info("RatingController.findRatingRequestAvailableSchedule() called");
+
+        long userId = util.findUserIdByPrincipal(principal);
+        ScheduleResponseDto responseDto = ratingService.getRatingRequestAvailableSchedule(userId, date);
+
+        return ResponseEntity.ok(responseDto);
     }
 
     @ExceptionHandler(Exception.class)

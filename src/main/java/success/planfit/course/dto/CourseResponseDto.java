@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CourseResponseDto {
 
+    private final Long courseId;
     private final String location;
     private final List<SpaceResponseDto> spaces;
 
@@ -21,6 +22,7 @@ public class CourseResponseDto {
                 .toList();
 
         return CourseResponseDto.builder()
+                .courseId(course.getId())
                 .location(course.getLocation())
                 .spaces(spaces)
                 .build();
