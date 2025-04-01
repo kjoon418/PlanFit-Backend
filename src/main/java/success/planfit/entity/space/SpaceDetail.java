@@ -13,7 +13,6 @@ import static jakarta.persistence.CascadeType.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @Entity
 public class SpaceDetail {
 
