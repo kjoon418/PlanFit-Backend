@@ -9,16 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
-import success.planfit.user.dto.PlanfitUserSignInRequestDto;
-import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
 import success.planfit.global.jwt.dto.AccessTokenResponseDto;
 import success.planfit.global.jwt.dto.TokenResponseDto;
-import success.planfit.user.service.KaKaoAuthorizationService;
+import success.planfit.user.dto.PlanfitUserSignInRequestDto;
+import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
 import success.planfit.user.service.GoogleAuthorizationService;
+import success.planfit.user.service.KaKaoAuthorizationService;
 import success.planfit.user.service.PlanfitAuthorizationService;
 import success.planfit.user.service.UserService;
-
-import java.security.Principal;
 
 import static org.springframework.http.HttpStatus.*;
 
