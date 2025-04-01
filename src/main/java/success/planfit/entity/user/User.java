@@ -116,12 +116,25 @@ public abstract class User {
         this.spaceLikes.add(spaceLike);
     }
 
-
     /**
      * User - SpaceLike 연관관계 편의 메서드(삭제)
      */
     public void removeSpaceLike(SpaceLike spaceLike) {
         this.spaceLikes.remove(spaceLike);
+    }
+
+    /**
+     * User - PostLike 연관관계 편의 메서드(생성)
+     */
+    public void addPostLike(PostLike postLike) {
+        this.postLikes.add(postLike);
+    }
+
+    /**
+     * User - PostLike 연관관계 편의 메서드(삭제)
+     */
+    public void removePostLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
     }
 
 }
