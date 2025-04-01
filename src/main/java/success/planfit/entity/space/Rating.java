@@ -9,6 +9,9 @@ import success.planfit.entity.user.User;
 @Getter
 public class Rating {
 
+    private static final int MINIMUM_VALUE = 1;
+    private static final int MAXIMUM_VALUE = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +33,23 @@ public class Rating {
     private Rating(
             User user,
             SpaceDetail spaceDetail,
-            Integer value
+            int value
     ) {
+        validateValue(value);
+
         this.user = user;
         this.spaceDetail = spaceDetail;
         this.value = value;
+    }
+
+    private void validateValue(int value) {
+        if (isOutOfRange(value)) {
+            throw new IllegalArgumentException("별점은 " + MINIMUM_VALUE + " ~ " + MAXIMUM_VALUE + "사이의 값이어야 합니다. 전달된 값: " + value);
+        }
+    }
+
+    private boolean isOutOfRange(int value) {
+        return MAXIMUM_VALUE < value || value < MINIMUM_VALUE;
     }
 
 }
