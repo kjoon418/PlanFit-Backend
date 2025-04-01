@@ -26,4 +26,5 @@ public class RefreshToken {
     private RefreshToken(String tokenValue) {
         this.tokenValue = tokenValue;
     }
+
 }
