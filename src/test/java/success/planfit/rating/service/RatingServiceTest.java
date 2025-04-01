@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.Rating;
-import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
 import success.planfit.fixture.CourseFixture;
@@ -27,8 +26,6 @@ import success.planfit.schedule.dto.response.ScheduleResponseDto;
 import success.planfit.util.TestUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,12 +58,12 @@ class RatingServiceTest {
 
     @BeforeEach
     void initialize() {
-        user = UserFixture.BASIC_USER.createInstance();
-        schedule = ScheduleFixture.BASIC.createInstance();
-        course = CourseFixture.BASIC.createInstance();
+        user = UserFixture.USER_A.createInstance();
+        schedule = ScheduleFixture.SCHEDULE_A.createInstance();
+        course = CourseFixture.COURSE_A.createInstance();
         spaceDetails = SpaceDetailFixture.createInstances();
 
-        connectEntities(user, schedule, course, spaceDetails);
+        util.connectEntities(user, schedule, course, spaceDetails);
         saveEntities(user, spaceDetails);
     }
 
@@ -171,28 +168,6 @@ class RatingServiceTest {
         return ratingRepository.findAll().stream()
                 .filter(rating -> spaceDetails.contains(rating.getSpaceDetail()))
                 .toList();
-    }
-
-    private void connectEntities(User user, Schedule schedule, Course course, List<SpaceDetail> spaceDetails) {
-        List<Space> spaces = createSpaces(spaceDetails);
-
-        user.addSchedule(schedule);
-        schedule.setCourse(course);
-        course.addSpaces(spaces);
-    }
-
-    private List<Space> createSpaces(List<SpaceDetail> spaceDetails) {
-        List<Space> spaces = new ArrayList<>();
-
-        for (int sequence = 0; sequence < spaceDetails.size(); sequence++) {
-            spaces.add(Space.builder()
-                    .spaceDetail(spaceDetails.get(sequence))
-                    .sequence(sequence)
-                    .build()
-            );
-        }
-
-        return Collections.unmodifiableList(spaces);
     }
 
     private void saveEntities(User user, List<SpaceDetail> spaceDetails) {

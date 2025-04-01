@@ -68,6 +68,12 @@ public enum SpaceDetailFixture {
                 .toList();
     }
 
+    public static List<SpaceDetail> createInstancesWith(String suffixValue) {
+        return Arrays.stream(values())
+                .map(spaceDetailFixture -> spaceDetailFixture.createInstanceWith(suffixValue))
+                .toList();
+    }
+
     public SpaceDetail createInstance() {
         return SpaceDetail.builder()
                 .googlePlacesIdentifier(googlePlacesIdentifier)
@@ -75,6 +81,18 @@ public enum SpaceDetailFixture {
                 .location(location)
                 .spaceType(spaceType)
                 .link(link)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
+
+    public SpaceDetail createInstanceWith(String suffixValue) {
+        return SpaceDetail.builder()
+                .googlePlacesIdentifier(googlePlacesIdentifier + suffixValue)
+                .spaceName(spaceName + suffixValue)
+                .location(location + suffixValue)
+                .spaceType(spaceType)
+                .link(link + suffixValue)
                 .latitude(latitude)
                 .longitude(longitude)
                 .build();

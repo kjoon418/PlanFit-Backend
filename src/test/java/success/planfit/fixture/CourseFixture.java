@@ -4,7 +4,8 @@ import success.planfit.entity.course.Course;
 
 public enum CourseFixture {
 
-    BASIC("BASIC_LOCATION");
+    COURSE_A("courseA_LOCATION"),
+    COURSE_B("courseB_LOCATION");
 
     private final String location;
 
