@@ -2,6 +2,7 @@ package success.planfit.user.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.user.PlanfitUser;
@@ -26,6 +27,10 @@ public class PlanfitAuthorizationService {
 
     @Transactional
     public TokenResponseDto planfitSignUp(PlanfitUserSignUpRequestDto requestDto) {
+        if (isDuplicatedLoginId(requestDto.getLoginId())) {
+            throw new DataIntegrityViolationException("다른 회원이 이미 사용하고 있는 아이디입니다.");
+        }
+
         PlanfitUser user = requestDto.toEntity();
         userRepository.save(user);
 
