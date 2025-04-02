@@ -26,7 +26,7 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<UserUpdateDto> getUserInfo(Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         UserUpdateDto userInfo = userService.getUserInfo(userId);
         return ResponseEntity.ok(userInfo);
     }
@@ -36,7 +36,7 @@ public class UserController {
      */
     @PatchMapping("/update")
     public ResponseEntity<Void> updateUserInfo(Principal principal, @RequestBody UserUpdateDto userDto) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         userService.updateUserInfo(userId, userDto);
         return ResponseEntity.ok().build();
     }
