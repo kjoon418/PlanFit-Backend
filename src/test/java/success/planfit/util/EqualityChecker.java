@@ -10,10 +10,12 @@ import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.space.SpacePhoto;
+import success.planfit.entity.user.PlanfitUser;
 import success.planfit.global.photo.PhotoProvider;
 import success.planfit.schedule.dto.request.ScheduleRequestDto;
 import success.planfit.schedule.dto.response.ScheduleResponseDto;
 import success.planfit.schedule.dto.response.ScheduleTitleInfoResponseDto;
+import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
 
 import java.util.List;
 
@@ -79,6 +81,20 @@ public class EqualityChecker {
                 spacePhotos.equals(spaceDto.getSpacePhotos());
     }
 
+    public boolean check(PlanfitUser user, PlanfitUserSignUpRequestDto requestDto) {
+        if (!isEqualPhotos(user.getProfilePhoto(), requestDto.getProfilePhoto())) {
+            return false;
+        }
+
+        return user.getName().equals(requestDto.getName()) &&
+                user.getLoginId().equals(requestDto.getLoginId()) &&
+                user.getPassword().equals(requestDto.getPassword()) &&
+                user.getEmail().equals(requestDto.getEmail()) &&
+                user.getPhoneNumber().equals(requestDto.getPhoneNumber()) &&
+                user.getBirthOfDate().equals(requestDto.getBirthOfDate()) &&
+                user.getIdentity() == requestDto.getIdentity();
+    }
+
     private boolean checkSpacesWithSpaceRequestDtos(List<Space> spaces, List<SpaceRequestDto> spaceDtos) {
         if (spaces.size() != spaceDtos.size()) {
             return false;
@@ -112,6 +128,19 @@ public class EqualityChecker {
                 .map(SpacePhoto::getValue)
                 .map(PhotoProvider::encode)
                 .toList();
+    }
+
+    private boolean isEqualPhotos(byte[] photo1, String photo2) {
+        if (photo1 == null && photo2 == null) {
+            return true;
+        }
+
+        if (photo1 != null) {
+            String encodedPhoto1 = PhotoProvider.encode(photo1);
+            return encodedPhoto1.equals(photo2);
+        }
+
+        return false;
     }
 
 }
