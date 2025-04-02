@@ -1,11 +1,11 @@
 package success.planfit.user.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.user.PlanfitUser;
 import success.planfit.entity.user.User;
-import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.global.exception.IllegalRequestException;
 import success.planfit.global.jwt.TokenProvider;
 import success.planfit.global.jwt.TokenType;
