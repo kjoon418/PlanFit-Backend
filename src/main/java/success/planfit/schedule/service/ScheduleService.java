@@ -5,21 +5,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.course.dto.CourseRequestDto;
+import success.planfit.course.dto.SpaceRequestDto;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
+import success.planfit.global.exception.IllegalRequestException;
 import success.planfit.repository.ScheduleRepository;
 import success.planfit.repository.SpaceDetailRepository;
 import success.planfit.repository.UserRepository;
 import success.planfit.schedule.dto.ShareSerialDto;
+import success.planfit.schedule.dto.request.ScheduleCurrentSequenceUpdateRequestDto;
 import success.planfit.schedule.dto.request.ScheduleRequestDto;
-import success.planfit.schedule.dto.request.ScheduleVisitRequestDto;
 import success.planfit.schedule.dto.response.ScheduleResponseDto;
 import success.planfit.schedule.dto.response.ScheduleTitleInfoResponseDto;
 import success.planfit.schedule.util.ShareSerialGenerator;
-import success.planfit.course.dto.SpaceRequestDto;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -41,7 +42,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Transactional
-    public void registerSchedule(Long userId, ScheduleRequestDto requestDto) {
+    public void registerSchedule(long userId, ScheduleRequestDto requestDto) {
         User user = findUserWithSchedules(userId);
 
         Schedule schedule = createSchedule(requestDto);
@@ -52,7 +53,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(Long userId, Long scheduleId) {
+    public void deleteSchedule(long userId, long scheduleId) {
         User user = findUserWithSchedules(userId);
         Schedule schedule = findScheduleById(user, scheduleId);
 
@@ -60,10 +61,10 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleTitleInfoResponseDto> findPastSchedules(Long userId, LocalDate criteriaDate) {
+    public List<ScheduleTitleInfoResponseDto> findPastSchedules(long userId, LocalDate referenceDate) {
         User user = findUserWithSchedules(userId);
 
-        List<Schedule> pastSchedules = getPastSchedules(user, criteriaDate);
+        List<Schedule> pastSchedules = getPastSchedules(user, referenceDate);
 
         return pastSchedules.stream()
                 .sorted(Comparator.reverseOrder())
@@ -72,19 +73,19 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleTitleInfoResponseDto> findUpcomingSchedules(Long userId, LocalDate criteriaDate) {
+    public List<ScheduleTitleInfoResponseDto> findUpcomingSchedules(long userId, LocalDate referenceDate) {
         User user = findUserWithSchedules(userId);
 
-        List<Schedule> notPassedSchedules = getUpcomingSchedules(user, criteriaDate);
+        List<Schedule> upcomingSchedules = getUpcomingSchedules(user, referenceDate);
 
-        return notPassedSchedules.stream()
+        return upcomingSchedules.stream()
                 .sorted()
                 .map(ScheduleTitleInfoResponseDto::from)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public ScheduleResponseDto findScheduleDetail(Long userId, Long scheduleId) {
+    public ScheduleResponseDto findScheduleDetail(long userId, long scheduleId) {
         User user = findUserWithSchedules(userId);
         Schedule schedule = findScheduleById(user, scheduleId);
 
@@ -92,7 +93,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(Long userId, Long scheduleId, ScheduleRequestDto requestDto) {
+    public void update(long userId, long scheduleId, ScheduleRequestDto requestDto) {
         User user = findUserWithSchedules(userId);
         Schedule schedule = findScheduleById(user, scheduleId);
         Course course = schedule.getCourse();
@@ -104,15 +105,17 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void visitScheduleSpace(Long userId, ScheduleVisitRequestDto requestDto) {
+    public void updateCurrentSequence(long userId, ScheduleCurrentSequenceUpdateRequestDto requestDto) {
         User user = findUserWithSchedules(userId);
         Schedule schedule = findScheduleById(user, requestDto.getScheduleId());
+
+        validateCurrentSequence(schedule, requestDto.getSequence());
 
         schedule.setCurrentSequence(requestDto.getSequence());
     }
 
     @Transactional
-    public ShareSerialDto createShareSerial(Long userId, Long scheduleId) {
+    public ShareSerialDto createShareSerial(long userId, long scheduleId) {
         User user = findUserWithSchedules(userId);
         Schedule schedule = findScheduleById(user, scheduleId);
 
@@ -134,8 +137,8 @@ public class ScheduleService {
         return ScheduleResponseDto.from(schedule);
     }
 
-    private User findUserWithSchedules(Long userId) {
-        return userRepository.findByIdWithSchedules(userId)
+    private User findUserWithSchedules(long userId) {
+        return userRepository.findByIdWithSchedule(userId)
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
     }
 
@@ -171,6 +174,7 @@ public class ScheduleService {
         return Schedule.builder()
                 .title(requestDto.getTitle())
                 .date(requestDto.getDate())
+                .content(requestDto.getContent())
                 .startTime(requestDto.getStartTime())
                 .build();
     }
@@ -181,7 +185,7 @@ public class ScheduleService {
         course.addSpaces(spaces);
     }
 
-    private Schedule findScheduleById(User user, Long scheduleId) {
+    private Schedule findScheduleById(User user, long scheduleId) {
         return user.getSchedules().stream()
                 .filter(schedule -> schedule.getId().equals(scheduleId))
                 .findAny()
@@ -205,6 +209,7 @@ public class ScheduleService {
         schedule.setDate(requestDto.getDate());
         schedule.setStartTime(requestDto.getStartTime());
         schedule.setContent(requestDto.getContent());
+        schedule.setCurrentSequence(0);
     }
 
     private void updateCourse(Course course, CourseRequestDto requestDto) {
@@ -216,9 +221,20 @@ public class ScheduleService {
         course.addSpaces(spaces);
     }
 
+    private void validateCurrentSequence(Schedule schedule, int currentSequence) {
+        int spacesSize = schedule.getCourse()
+                .getSpaces()
+                .size();
+
+        if (currentSequence > spacesSize) {
+            throw new IllegalRequestException("일정의 순서는 장소 개수보다 클 수 없습니다.");
+        }
+    }
+
     private Set<String> getExistsShareSerials() {
         return scheduleRepository.findAll().stream()
                 .map(Schedule::getShareSerial)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toUnmodifiableSet());
     }
 

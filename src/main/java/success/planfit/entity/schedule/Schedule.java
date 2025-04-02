@@ -25,7 +25,7 @@ public class Schedule implements Comparable<Schedule> {
     private Long id;
 
     @Setter
-    @OneToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(nullable = false)
     private Course course;
 
@@ -56,20 +56,26 @@ public class Schedule implements Comparable<Schedule> {
     @Column(nullable = false)
     private Integer currentSequence;
 
+    @Column(nullable = false)
+    private Boolean ratingRequested;
+
     @Builder
     private Schedule(
-            User user,
             String title,
             LocalDate date,
-            String shareSerial,
+            String content,
             LocalTime startTime
     ) {
-        this.user = user;
         this.title = title;
         this.date = date;
-        this.shareSerial = shareSerial;
+        this.content = content;
         this.startTime = startTime;
         this.currentSequence = 0;
+        this.ratingRequested = false;
+    }
+
+    public void recordRatingRequest() {
+        this.ratingRequested = true;
     }
 
     @Override

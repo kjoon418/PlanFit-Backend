@@ -9,6 +9,7 @@ import success.planfit.entity.comment.Comment;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.like.*;
+import success.planfit.entity.space.Rating;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;
@@ -50,6 +51,9 @@ public abstract class User {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<PostLike> postLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private final List<Rating> ratings = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)
@@ -122,6 +126,22 @@ public abstract class User {
      */
     public void removeSpaceLike(SpaceLike spaceLike) {
         this.spaceLikes.remove(spaceLike);
+    }
+  
+    /**
+     * User - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.setUser(this);
+    }
+
+    public void disconnectWithRatings() {
+        for (Rating rating : ratings) {
+            rating.setUser(null);
+    }
+
+        ratings.clear();
     }
 
 }
