@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.ALL;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @Entity
 public class SpaceDetail {
 
@@ -20,6 +20,9 @@ public class SpaceDetail {
 
     @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
     private List<SpacePhoto> spacePhotos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
+    private List<Rating> ratings = new ArrayList<>();
 
     @Column(nullable = false)
     private String googlePlacesIdentifier;
@@ -51,8 +54,7 @@ public class SpaceDetail {
             SpaceType spaceType,
             String link,
             Double latitude,
-            Double longitude,
-            byte[] spacePhoto
+            Double longitude
     ) {
         this.googlePlacesIdentifier = googlePlacesIdentifier;
         this.spaceName = spaceName;
@@ -61,6 +63,7 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
+
         this.likeCount = 0L;
     }
 
@@ -72,6 +75,15 @@ public class SpaceDetail {
         if (this.likeCount > 0) {
             this.likeCount--;
         }
+
+    }
+
+    /**
+     * SpaceDetail - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.setSpaceDetail(this);
     }
 
 }
