@@ -76,12 +76,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public AccessTokenResponseDto reissueAccessToken(String refreshToken) {
-        long userId = findUserIdFromToken(refreshToken);
-        User user = findUserById(userId);
-
         if (!tokenProvider.validateToken(refreshToken, TokenType.REFRESH)) {
             throw new IllegalRequestException("부적절한 리프레쉬 토큰입니다.");
         }
+
+        long userId = findUserIdFromToken(refreshToken);
+        User user = findUserById(userId);
 
         if (!isEqualWithSavedToken(user, refreshToken)) {
             throw new IllegalRequestException("만료된 리프레쉬 토큰입니다.");
