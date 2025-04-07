@@ -3,17 +3,15 @@ package success.planfit.entity.space;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @Entity
 public class SpaceDetail {
 
@@ -23,6 +21,9 @@ public class SpaceDetail {
 
     @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
     private List<SpacePhoto> spacePhotos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "spaceDetail", orphanRemoval = true, cascade = ALL)
+    private List<Rating> ratings = new ArrayList<>();
 
     @Column(nullable = false)
     private String googlePlacesIdentifier;
@@ -43,9 +44,6 @@ public class SpaceDetail {
 
     private Double longitude;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
     @Builder
     private SpaceDetail(
             String googlePlacesIdentifier,
@@ -63,7 +61,14 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * SpaceDetail - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.setSpaceDetail(this);
     }
 
     public void addSpacePhoto(SpacePhoto spacePhoto){

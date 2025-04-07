@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.global.controller.ControllerUtil;
+import success.planfit.global.controller.PlanfitExceptionHandler;
 import success.planfit.post.dto.request.PostSaveRequestDtoByUser;
 import success.planfit.post.dto.request.PostSaveRequestFromSchedule;
 import success.planfit.post.dto.request.PostUpdateDto;
@@ -23,6 +24,7 @@ import java.util.List;
 public class PostController {
 
     private final ControllerUtil controllerUtil;
+    private final PlanfitExceptionHandler exceptionHandler;
     private final PostService postService;
 
     // 사용자가 코스 생성해서 포스팅
@@ -52,6 +54,13 @@ public class PostController {
         CourseResponseDto responseDto = postService.findCourseInPublicPost(postId);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("PostController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 
     /**

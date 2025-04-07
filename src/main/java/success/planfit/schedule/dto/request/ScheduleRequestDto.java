@@ -2,6 +2,7 @@ package success.planfit.schedule.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import success.planfit.course.dto.CourseRequestDto;
 import success.planfit.global.validation.NotEmptyAndNotBlank;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
+@Builder
 @AllArgsConstructor
 public class ScheduleRequestDto {
 
