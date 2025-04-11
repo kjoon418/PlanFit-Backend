@@ -1,7 +1,8 @@
-package success.planfit.entity.space;
+package success.planfit.entity.rating;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
 
 @Entity

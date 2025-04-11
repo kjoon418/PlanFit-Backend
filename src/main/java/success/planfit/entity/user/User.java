@@ -9,7 +9,7 @@ import success.planfit.entity.comment.Comment;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.like.*;
-import success.planfit.entity.space.Rating;
+import success.planfit.entity.rating.Rating;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;

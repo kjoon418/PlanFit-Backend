@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
-import success.planfit.entity.space.Rating;
+import success.planfit.entity.rating.Rating;
 import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;

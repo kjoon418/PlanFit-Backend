@@ -2,6 +2,7 @@ package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.entity.rating.Rating;
 
 import java.util.ArrayList;
 import java.util.List;
