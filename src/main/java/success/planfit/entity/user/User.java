@@ -52,9 +52,6 @@ public abstract class User {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<PostLike> postLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private final List<Rating> ratings = new ArrayList<>();
-
     @Setter
     @Column(nullable = false)
     private String name;
@@ -111,22 +108,6 @@ public abstract class User {
     public void removeSchedule(Schedule schedule) {
         this.schedules.remove(schedule);
         schedule.setUser(null);
-    }
-
-    /**
-     * User - Rating 연관관계 편의 메서드(생성)
-     */
-    public void addRating(Rating rating) {
-        this.ratings.add(rating);
-        rating.setUser(this);
-    }
-
-    public void disconnectWithRatings() {
-        for (Rating rating : ratings) {
-            rating.setUser(null);
-        }
-
-        ratings.clear();
     }
 
 }

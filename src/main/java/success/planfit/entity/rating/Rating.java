@@ -2,12 +2,15 @@ package success.planfit.entity.rating;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.SpaceDetail;
-import success.planfit.entity.user.User;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "rating_uq_schedule_id_space_detail_id", columnNames = {"schedule_id", "space_detail_id"})
+})
 public class Rating {
 
     private static final int MINIMUM_VALUE = 1;
@@ -19,7 +22,8 @@ public class Rating {
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @JoinColumn(nullable = false)
+    private Schedule schedule;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,13 +36,13 @@ public class Rating {
 
     @Builder
     private Rating(
-            User user,
+            Schedule schedule,
             SpaceDetail spaceDetail,
             int value
     ) {
         validateValue(value);
 
-        this.user = user;
+        this.schedule = schedule;
         this.spaceDetail = spaceDetail;
         this.value = value;
     }

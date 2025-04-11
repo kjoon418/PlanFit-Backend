@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
+import success.planfit.rating.dto.RatingInfoResponseDto;
 import success.planfit.rating.dto.RatingRecordRequestDto;
 import success.planfit.rating.service.RatingService;
 import success.planfit.schedule.dto.response.ScheduleResponseDto;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,10 +32,10 @@ public class RatingController {
         long userId = util.findUserIdByPrincipal(principal);
         ratingService.recordRating(userId, requestDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/available")
     public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, LocalDate date) {
         log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
@@ -41,6 +43,26 @@ public class RatingController {
         ScheduleResponseDto responseDto = ratingService.getRatingRequestAvailableSchedule(userId, date);
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RatingInfoResponseDto>> findRatings(Principal principal) {
+        log.info("RatingController.findRatings() called");
+
+        long userId = util.findUserIdByPrincipal(principal);
+        List<RatingInfoResponseDto> responseDtos = ratingService.getRatings(userId);
+
+        return ResponseEntity.ok(responseDtos);
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> removeRating(Principal principal, @PathVariable(name = "scheduleId") long scheduleId) {
+        log.info("RatingController.removeRating() called");
+
+        long userId = util.findUserIdByPrincipal(principal);
+        ratingService.removeRating(userId, scheduleId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(Exception.class)
