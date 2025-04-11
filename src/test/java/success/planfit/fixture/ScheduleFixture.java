@@ -18,7 +18,20 @@ public enum ScheduleFixture {
             LocalDate.of(2025, 1, 1),
             LocalTime.of(6, 30),
             "scheduleB_CONTENT"
+    ),
+    SCHEDULE_C(
+            "scheduleC_TITLE",
+            LocalDate.of(2025, 2, 2),
+            LocalTime.of(2, 22),
+            "scheduleC_CONTENT"
+    ),
+    SCHEDULE_D(
+            "scheduleB_TITLE",
+            LocalDate.of(2025, 3, 3),
+            LocalTime.of(3, 33),
+            "scheduleD_CONTENT"
     );
+
 
     private final String title;
     private final LocalDate date;
