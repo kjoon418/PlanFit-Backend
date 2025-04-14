@@ -29,7 +29,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Void> registerPost(Principal principal,
                                              PostRequestDto requestDto) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
     }
@@ -38,7 +38,7 @@ public class PostController {
      * 포스트 속 코스 정보 조회
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<CourseResponseDto> findCourseInPublicPost(@PathVariable Long postId) {
+    public ResponseEntity<CourseResponseDto> findCourseInPublicPost(@PathVariable long postId) {
         log.info("PostController.findCourseInPost()");
 
         CourseResponseDto responseDto = postService.findCourseInPublicPost(postId);
@@ -57,7 +57,7 @@ public class PostController {
      * 포스트 단건 조회
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<PostInfoDto> findPostById(@PathVariable Long postId){
+    public ResponseEntity<PostInfoDto> findPostById(@PathVariable long postId){
         PostInfoDto post = postService.findPost(postId);
         return ResponseEntity.ok(post);
     }
@@ -87,8 +87,8 @@ public class PostController {
      * 포스트 수정
      */
     @PatchMapping("/{postId}")
-    public ResponseEntity<Void> updatePost(Principal principal, Long postId, PostRequestDto requestDto){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> updatePost(Principal principal, long postId, PostRequestDto requestDto){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.updatePost(userId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
@@ -97,11 +97,9 @@ public class PostController {
      * 포스트 삭제
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(Principal principal, @PathVariable Long postId) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> deletePost(Principal principal, @PathVariable long postId) {
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.deletePost(userId, postId);
         return ResponseEntity.ok().build();
     }
-
-
 }

@@ -15,19 +15,19 @@ public class PostLikeController {
     private final PostLikeService postLikeService;
 
     @PostMapping("/{postId}")
-    public ResponseEntity<String> likePost(@RequestParam Long userId, @PathVariable Long postId) {
+    public ResponseEntity<String> likePost(@RequestParam long userId, @PathVariable long postId) {
         postLikeService.likePost(userId, postId);
 
         return ResponseEntity.ok("포스트를 좋아요 했습니다.");
     }
 
     @GetMapping
-    public ResponseEntity<List<Long>> getLikedPosts(@RequestParam Long userId) {
+    public ResponseEntity<List<Long>> getLikedPosts(@RequestParam long userId) {
         return ResponseEntity.ok(postLikeService.getLikedPosts(userId));
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<String> unlikePost(@RequestParam Long userId, @PathVariable Long postId) {
+    public ResponseEntity<String> unlikePost(@RequestParam long userId, @PathVariable long postId) {
         postLikeService.unlikePost(userId, postId);
 
         return ResponseEntity.ok("포스트 좋아요 취소했습니다.");

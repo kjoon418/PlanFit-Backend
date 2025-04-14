@@ -1,4 +1,4 @@
-package success.planfit.space.dto.request;
+package success.planfit.space.dto.response;
 
 
 import lombok.Getter;
@@ -7,7 +7,7 @@ import success.planfit.entity.space.SpaceType;
 import java.util.List;
 
 @Getter
-public class SpaceRequestFromAI {
+public class SpaceResponseFromAI {
     // 유사도
     private int similarityOrder;
     // 장소 정보

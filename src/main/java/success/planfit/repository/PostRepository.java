@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Optional<List<Post>> findAllOrderByCreatedAtDesc();
     Page<Post> findAll(Pageable pageable);
 
     @Query("select p from Post p order by p.createdAt desc limit :n offset 0")

@@ -22,7 +22,7 @@ public class PostLikeService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void likePost(Long postId, Long userId) {
+    public void likePost(long postId, long userId) {
         User user = userRepository.findById(userId).
                 orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -42,14 +42,14 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getLikedPosts(Long userId) {
+    public List<Long> getLikedPosts(long userId) {
         return postLikeRepository.findByUserId(userId).
                 stream()
                 .map(like -> like.getPost().getId())
                 .toList();
     }
 
-    public void unlikePost(Long postId, Long userId) {
+    public void unlikePost(long postId, long userId) {
         PostLike postLike = postLikeRepository.findByUserIdAndPostId(userId, postId)
                 .orElseThrow(() -> new IllegalArgumentException("좋아요하지 않은 포스트입니다."));
 

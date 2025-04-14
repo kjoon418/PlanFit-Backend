@@ -1,11 +1,10 @@
-package success.planfit.space.dto.response;
+package success.planfit.space.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
 import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.entity.user.User;
 import success.planfit.post.dto.response.PostInfoDto;
-import success.planfit.space.dto.request.SpaceDetailRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;

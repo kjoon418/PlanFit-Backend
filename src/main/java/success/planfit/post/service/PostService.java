@@ -47,7 +47,7 @@ public class PostService {
     private final PostLikeRepository postLikeRepository;
 
     // 사용자가 코스 생성해서 포스팅
-    public void registerPost(Long userId, PostRequestDto requestDto) {
+    public void registerPost(long userId, PostRequestDto requestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
@@ -62,7 +62,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public CourseResponseDto findCourseInPublicPost(Long postId) {
+    public CourseResponseDto findCourseInPublicPost(long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
         validatePublic(post);
@@ -78,10 +78,8 @@ public class PostService {
 
     // 포스트 단건 조회
     @Transactional(readOnly = true)
-    public PostInfoDto findPost(Long postId) {
-        Post post = postRepository.findById(postId).stream()
-                .filter(postForFilter -> postForFilter.getId().equals(postId))
-                .findAny()
+    public PostInfoDto findPost(long postId) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         return PostInfoDto.from(post);
@@ -110,7 +108,7 @@ public class PostService {
     }
 
     // 포스트 수정
-    public void updatePost(Long userId, Long postId, PostRequestDto requestDto) {
+    public void updatePost(long userId, long postId, PostRequestDto requestDto) {
         Post post = postRepository.findByIdWithUserAndCourseAndComment(postId).stream()
                 .filter(postForFilter -> postForFilter.getUser().getId().equals(userId))
                 .findAny()
@@ -128,7 +126,7 @@ public class PostService {
     }
 
     // 포스트 삭제
-    public void deletePost(Long userId, Long postId) {
+    public void deletePost(long userId, long postId) {
         // 유저 조회
         User user = userRepository.findByIdWithPost(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
