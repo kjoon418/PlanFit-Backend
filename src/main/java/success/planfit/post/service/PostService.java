@@ -46,7 +46,6 @@ public class PostService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostLikeRepository postLikeRepository;
 
-    // 사용자가 코스 생성해서 포스팅
     public void registerPost(long userId, PostRequestDto requestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
@@ -76,7 +75,6 @@ public class PostService {
         }
     }
 
-    // 포스트 단건 조회
     @Transactional(readOnly = true)
     public PostInfoDto findPost(long postId) {
         Post post = postRepository.findById(postId)
@@ -85,7 +83,6 @@ public class PostService {
         return PostInfoDto.from(post);
     }
 
-    // 포스트 N건 조회 - 최신순
     @Transactional(readOnly = true)
     public List<PostInfoDto> findRecentPosts(int n) {
         List<Post> posts = postRepository.findTopNByOrderByCreatedAtDesc(n)
@@ -98,7 +95,6 @@ public class PostService {
         return postInfoDtos;
     }
 
-    // 모든 포스트 최신순 조회
     @Transactional(readOnly = true)
     public List<PostInfoDto> findAll(int pageNo, String criteria){
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE,Sort.by(Sort.Direction.DESC,criteria));
@@ -107,7 +103,6 @@ public class PostService {
         return page.getContent();
     }
 
-    // 포스트 수정
     public void updatePost(long userId, long postId, PostRequestDto requestDto) {
         Post post = postRepository.findByIdWithUserAndCourseAndComment(postId).stream()
                 .filter(postForFilter -> postForFilter.getUser().getId().equals(userId))
@@ -125,9 +120,7 @@ public class PostService {
         replacePostPhotoAndPost(post, postPhotos, postTypes);
     }
 
-    // 포스트 삭제
     public void deletePost(long userId, long postId) {
-        // 유저 조회
         User user = userRepository.findByIdWithPost(userId)
                 .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         Post post = user.getPosts().stream()

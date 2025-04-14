@@ -13,9 +13,6 @@ import success.planfit.repository.CommentLikeRepository;
 import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
 
-import java.util.List;
-
-
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class CommentService {
 
         // 댓글 가져오기
         Comment comment = post.getComments().stream()
-                .filter(c -> c.getId().equals(commentId)  && c.getUser().getId().equals(userId))
+                .filter(commentForFilter -> commentForFilter.getId().equals(commentId)  && commentForFilter.getUser().getId().equals(userId))
                 .findAny()
                 .orElseThrow(() -> new EntityNotFoundException("댓글 조회 실패"));
 

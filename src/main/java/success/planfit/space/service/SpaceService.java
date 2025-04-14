@@ -35,7 +35,9 @@ public class SpaceService {
     private final SpaceDetailRepository spaceDetailRepository;
     private final ScheduleRepository scheduleRepository;
 
-    // AI에게 장소 조회 요청
+    /**
+     * AI에게 장소 조회 요청
+     */
     public SpaceInfoForAIDto requestToAI(long userId, SpaceDetailRequestDto requestDto){
         // 유저 조회
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
@@ -76,7 +78,9 @@ public class SpaceService {
                 .toList();
     }
 
-    // 장소 상세 정보 조회
+    /**
+     * 장소 상세 정보 조회
+     */
     @Transactional(readOnly = true)
     public SpaceDetailInfoDto findSpaceDetailInfo(long spaceDetailId){
         return spaceDetailRepository.findById(spaceDetailId).stream()

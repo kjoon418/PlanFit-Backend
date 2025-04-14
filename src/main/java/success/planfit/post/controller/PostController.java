@@ -25,7 +25,9 @@ public class PostController {
     private final PlanfitExceptionHandler exceptionHandler;
     private final PostService postService;
 
-    // 사용자가 코스 생성해서 포스팅
+    /**
+     * 포스팅
+     */
     @PostMapping
     public ResponseEntity<Void> registerPost(Principal principal,
                                              PostRequestDto requestDto) {
