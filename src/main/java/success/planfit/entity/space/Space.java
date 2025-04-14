@@ -38,7 +38,6 @@ public class Space {
     ) {
         this.spaceDetail = spaceDetail;
         this.sequence = sequence;
-        this.likeCount = 0L;
     }
 
     public static Space createSpace(SpaceDetail spaceDetail, Integer sequence) {
