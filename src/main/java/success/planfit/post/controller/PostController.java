@@ -27,8 +27,8 @@ public class PostController {
 
     // 사용자가 코스 생성해서 포스팅
     @PostMapping
-    public ResponseEntity<Void> registerPos(Principal principal,
-                                                   PostRequestDto requestDto) {
+    public ResponseEntity<Void> registerPost(Principal principal,
+                                             PostRequestDto requestDto) {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
@@ -75,11 +75,13 @@ public class PostController {
      * 포스트 최신순 전체 조회
      */
     @GetMapping
-    public ResponseEntity<List<PostInfoDto>> findAllOrderByCreatedAt(){
-        List<PostInfoDto> postInfoDtoList = postService.findAllOrderByCreatedAtDesc();
-        return ResponseEntity.ok(postInfoDtoList);
+    public ResponseEntity<List<PostInfoDto>> findAllOrderByCreatedAt(
+            @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+            @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria
+    ){
+        List<PostInfoDto> postInfoDtos = postService.findAll(pageNo, criteria);
+        return ResponseEntity.ok(postInfoDtos);
     }
-
 
     /**
      * 포스트 수정
@@ -90,7 +92,6 @@ public class PostController {
         postService.updatePost(userId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
-
 
     /**
      * 포스트 삭제

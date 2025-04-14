@@ -2,6 +2,10 @@ package success.planfit.post.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.course.dto.SpaceRequestDto;
@@ -25,7 +29,6 @@ import success.planfit.repository.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -35,6 +38,7 @@ import java.util.function.Supplier;
 @Service
 public class PostService {
     private static final Supplier<EntityNotFoundException> POST_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 지닌 포스트를 찾을 수 없습니다.");
+    private static final int PAGE_SIZE = 10;
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -73,6 +77,7 @@ public class PostService {
     }
 
     // 포스트 단건 조회
+    @Transactional(readOnly = true)
     public PostInfoDto findPost(Long postId) {
         Post post = postRepository.findById(postId).stream()
                 .filter(postForFilter -> postForFilter.getId().equals(postId))
@@ -82,11 +87,13 @@ public class PostService {
         return PostInfoDto.from(post);
     }
 
-    // 포스트 3건 조회 - 최신순
+    // 포스트 N건 조회 - 최신순
+    @Transactional(readOnly = true)
     public List<PostInfoDto> findRecentPosts(int n) {
-        Optional<List<Post>> posts = postRepository.findTop3ByOrderByCreatedAtDesc(n);
+        List<Post> posts = postRepository.findTopNByOrderByCreatedAtDesc(n)
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
-        List<PostInfoDto> postInfoDtos = posts.get().stream()
+        List<PostInfoDto> postInfoDtos = posts.stream()
                 .map(PostInfoDto::from)
                 .toList();
 
@@ -94,18 +101,17 @@ public class PostService {
     }
 
     // 모든 포스트 최신순 조회
-    public List<PostInfoDto> findAllOrderByCreatedAtDesc(){
-        Optional<List<Post>> posts = postRepository.findAllOrderByCreatedAtDesc();
-        List<PostInfoDto> postInfoDtos = posts.get().stream()
-                .map(PostInfoDto::from)
-                .toList();
-        return postInfoDtos;
+    @Transactional(readOnly = true)
+    public List<PostInfoDto> findAll(int pageNo, String criteria){
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE,Sort.by(Sort.Direction.DESC,criteria));
+        Page<PostInfoDto> page = postRepository.findAll(pageable)
+                .map(PostInfoDto::from);
+        return page.getContent();
     }
 
     // 포스트 수정
     public void updatePost(Long userId, Long postId, PostRequestDto requestDto) {
-        // 나중에 get하는 거 보고 join fetch 하겠슴, course도 같이 ㄱㄱ,,
-        Post post = postRepository.findByIdWithUserAndCourse(postId).stream()
+        Post post = postRepository.findByIdWithUserAndCourseAndComment(postId).stream()
                 .filter(postForFilter -> postForFilter.getUser().getId().equals(userId))
                 .findAny()
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
