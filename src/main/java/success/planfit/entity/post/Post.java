@@ -125,9 +125,6 @@ public class Post {
      * Post - PostPhoto 연관관계 편의 메서드(전체 삭제)
      */
     public void removeEveryPostPhotos() {
-        for (PostPhoto postPhoto : postPhotos) {
-            postPhoto.setPost(null);
-        }
         postPhotos.clear();
     }
 
@@ -146,9 +143,6 @@ public class Post {
      * Post - PostType 연관관계 편의 메서드(전체 삭제)
      */
     public void removeEveryPostTypes() {
-        for (PostType postType : postTypes) {
-            postType.setPost(null);
-        }
         postTypes.clear();
     }
 }
