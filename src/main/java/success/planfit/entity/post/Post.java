@@ -60,7 +60,7 @@ public class Post {
     private Boolean isPublic;
 
     @Column(nullable = false)
-    private Long likeCount;
+    private long likeCount;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "post")
     List<PostPhoto> postPhotos = new ArrayList<>();

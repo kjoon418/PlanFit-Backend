@@ -2,10 +2,8 @@ package success.planfit.comment.dto;
 
 import lombok.Builder;
 import success.planfit.entity.comment.Comment;
-import success.planfit.entity.user.User;
 import success.planfit.global.photo.PhotoProvider;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder

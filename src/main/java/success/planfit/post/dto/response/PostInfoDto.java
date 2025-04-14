@@ -28,7 +28,7 @@ public class PostInfoDto {
     public static PostInfoDto from(Post post) {
         // List<Space> -> List<SpaceResponseDto>
         List<SpaceResponseDto> spaces = post.getCourse().getSpaces().stream()
-                .map(SpaceResponseDto::from)
+                .map(SpaceResponseDto::createSpaceDto)
                 .toList();
 
         // List<PostPhoto> -> List<String>
