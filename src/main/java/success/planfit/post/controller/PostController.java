@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
-import success.planfit.post.dto.request.PostSaveRequestDtoByUser;
-import success.planfit.post.dto.request.PostSaveRequestFromSchedule;
-import success.planfit.post.dto.request.PostUpdateDto;
+import success.planfit.post.dto.request.PostRequestDto;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.post.service.PostService;
 
@@ -29,18 +27,10 @@ public class PostController {
 
     // 사용자가 코스 생성해서 포스팅
     @PostMapping
-    public ResponseEntity<Void> registerPostByUser(Principal principal,
-                                                   PostSaveRequestDtoByUser requestDto) {
+    public ResponseEntity<Void> registerPos(Principal principal,
+                                                   PostRequestDto requestDto) {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        postService.registerPostByUser(userId, requestDto);
-        return ResponseEntity.ok().build();
-    }
-
-    // 사용자의 스케줄에서 불러와서 포스팅
-    @PostMapping
-    public ResponseEntity<Void> registerPostBySchedule(Principal principal, PostSaveRequestFromSchedule requestDto){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        postService.registerPostByScheduleId(userId, requestDto);
+        postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
     }
 
@@ -94,10 +84,10 @@ public class PostController {
     /**
      * 포스트 수정
      */
-    @PatchMapping
-    public ResponseEntity<Void> updatePost(Principal principal, PostUpdateDto requestDto){
+    @PatchMapping("/{postId}")
+    public ResponseEntity<Void> updatePost(Principal principal, Long postId, PostRequestDto requestDto){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        postService.updatePost(userId, requestDto);
+        postService.updatePost(userId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
 

@@ -5,27 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.course.dto.SpaceRequestDto;
-import success.planfit.course.dto.SpaceResponseDto;
+import success.planfit.entity.comment.Comment;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.post.PostPhoto;
-import success.planfit.entity.schedule.Schedule;
+import success.planfit.entity.post.PostType;
+import success.planfit.entity.post.PostTypeValue;
 import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
-import success.planfit.entity.space.SpacePhoto;
 import success.planfit.entity.user.User;
 import success.planfit.global.photo.PhotoProvider;
-import success.planfit.post.dto.request.PostSaveRequestDtoByUser;
-import success.planfit.post.dto.request.PostSaveRequestFromSchedule;
-import success.planfit.post.dto.request.PostUpdateDto;
+import success.planfit.post.dto.request.PostRequestDto;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.course.dto.CourseResponseDto;
 import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.global.exception.IllegalRequestException;
-import success.planfit.repository.PostRepository;
-import success.planfit.repository.SpaceDetailRepository;
-import success.planfit.repository.UserRepository;
+import success.planfit.repository.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -41,86 +39,22 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final SpaceDetailRepository spaceDetailRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final PostLikeRepository postLikeRepository;
 
     // 사용자가 코스 생성해서 포스팅
-    public void registerPostByUser(Long userId, PostSaveRequestDtoByUser requestDto) {
-        // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+    public void registerPost(Long userId, PostRequestDto requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
 
-        // 코스 생성
-        Course course = Course.builder().location(requestDto.getLocation()).build();
-        // 장소리스트로 돌기 -> SpaceDetail로 space를 만들고 코슬 ㄹ만들어야함 그리고 그 포스트를 저장
-        for (SpaceRequestDto spaceRequestDto : requestDto.getSpaces()) {
-            // 1. googleIdentifier로 spaceDetail 가져오기
-            SpaceDetail spaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceRequestDto.getGooglePlacesIdentifier())
-                    .orElseThrow(() -> new EntityNotFoundException("장소 조회 실패"));
+        Post post = createPost(requestDto);
+        Course course = createCourse(requestDto);
+        List<Space> spaces = createSpaces(requestDto.getSpaces());
+        List<PostPhoto> postPhotos = createPostPhoto(requestDto.getPostPhotos());
+        List<PostType> postTypes = createPostType(requestDto.getPostTypes());
 
-            // 2. Space 생성
-            Space space = Space.builder()
-                    .spaceDetail(spaceDetail)
-                    .sequence(spaceRequestDto.getSequence())
-                    .build();
-            // 3. Course와 Space 연결
-            course.addSpace(space);
-        }
-
-        // dto -> 디코드한 postPhotos
-        List<byte[]> postPhotos = requestDto.getPostPhotos().stream()
-                .map(PhotoProvider::decode)
-                .toList();
-
-        // post 생성
-        Post post = Post.builder()
-                .course(course)
-                .content(requestDto.getContent())
-                .title(requestDto.getTitle())
-                .isPublic(requestDto.getIsPublic())
-                .build();
-
-        for (byte[] photos : postPhotos) {
-            PostPhoto postPhoto = PostPhoto.builder()
-                    .photo(photos)
-                    .build();
-            // 포스트와 포스트 사진 리스트 연결
-            post.addPostPhoto(postPhoto);
-        }
-
-        // user와 post 연결
-        user.addPost(post);
-    }
-
-    // 사용자의 스케줄에서 불러와서 포스팅
-    public void registerPostByScheduleId(Long userId, PostSaveRequestFromSchedule requestDto) {
-        // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
-        // 스케줄 반환
-        Schedule schedule = user.getSchedules().stream()
-                .filter(sc -> sc.getId().equals(requestDto.getScheduleId()))
-                .findAny()
-                .orElseThrow(() -> new EntityNotFoundException("스케줄 조회 실패"));
-
-        List<byte[]> postPhotos = requestDto.getPostPhotos().stream()
-                .map(PhotoProvider::decode)
-                .toList();
-
-        // post 생성
-        Post post = Post.builder()
-                .course(schedule.getCourse())
-                .content(requestDto.getContent())
-                .title(requestDto.getTitle())
-                .isPublic(requestDto.getIsPublic())
-                .build();
-
-        for (byte[] photo : postPhotos) {
-            PostPhoto postPhoto = PostPhoto.builder()
-                    .photo(photo)
-                    .build();
-            // 포스트와 포스트 사진 리스트 연결
-            post.addPostPhoto(postPhoto);
-        }
-
-        // user와 post 연결
-        user.addPost(post);
+        connectEntities(user, post, course, spaces, postPhotos, postTypes);
+        postRepository.save(post);
     }
 
     @Transactional(readOnly = true)
@@ -141,9 +75,9 @@ public class PostService {
     // 포스트 단건 조회
     public PostInfoDto findPost(Long postId) {
         Post post = postRepository.findById(postId).stream()
-                .filter(photo -> photo.getId().equals(postId))
+                .filter(postForFilter -> postForFilter.getId().equals(postId))
                 .findAny()
-                .orElseThrow(() -> new EntityNotFoundException("스케줄 조회 실패"));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         return PostInfoDto.from(post);
     }
@@ -169,57 +103,110 @@ public class PostService {
     }
 
     // 포스트 수정
-    public void updatePost(Long userId, PostUpdateDto requestDto) {
-        // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+    public void updatePost(Long userId, Long postId, PostRequestDto requestDto) {
+        // 나중에 get하는 거 보고 join fetch 하겠슴, course도 같이 ㄱㄱ,,
+        Post post = postRepository.findByIdWithUserAndCourse(postId).stream()
+                .filter(postForFilter -> postForFilter.getUser().getId().equals(userId))
+                .findAny()
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
-        // 코스 생성
-        Course course = Course.builder().location(requestDto.getLocation()).build();
+        List<Space> spaces = createSpaces(requestDto.getSpaces());
+        Course course = post.getCourse();
+        List<PostPhoto> postPhotos = createPostPhoto(requestDto.getPostPhotos());
+        List<PostType> postTypes = createPostType(requestDto.getPostTypes());
 
-        // 장소리스트로 돌기
-        for (SpaceResponseDto spaceResponseDto : requestDto.getSpaces()) {
-
-            // 1. SpaceDetail에 저장 - 캐시저장
-            SpaceDetail spaceDetail = SpaceDetail.builder()
-                    .googlePlacesIdentifier(spaceResponseDto.getGooglePlacesIdentifier())
-                    .spaceName(spaceResponseDto.getName())
-                    .location(spaceResponseDto.getLocation())
-                    .spaceType(spaceResponseDto.getSpaceType())
-                    .link(spaceResponseDto.getLink())
-                    .latitude(spaceResponseDto.getLatitude())
-                    .longitude(spaceResponseDto.getLongitude())
-                    .build();
-
-            // 장소 사진 디코드
-            List<byte[]> spacePhotos = spaceResponseDto.getSpacePhotos().stream()
-                    .map(PhotoProvider::decode)
-                    .toList();
-
-            // 디코드된 사진 리스트로 SpacePhoto 생성
-            for (byte[] sp : spacePhotos) {
-                SpacePhoto spacePhoto = SpacePhoto.builder().value(sp).build();
-                // SpaceDetail과 연결
-                spaceDetail.addSpacePhoto(spacePhoto);
-            }
-
-            // 2. Space 생성
-            Space space = Space.builder()
-                    .spaceDetail(spaceDetail)
-                    .build();
-            // 3. Course와 Space 연결
-            course.addSpace(space);
-        }
-
+        course.update(requestDto.getLocation());
+        post.update(requestDto);
+        replaceSpaces(course, spaces);
+        replacePostPhotoAndPost(post, postPhotos, postTypes);
     }
 
     // 포스트 삭제
     public void deletePost(Long userId, Long postId) {
         // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+        User user = userRepository.findByIdWithPost(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
         Post post = user.getPosts().stream()
                 .filter(p -> p.getId().equals(postId))
                 .findAny()
-                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
+        List<Long> commentIds = post.getComments().stream()
+                .map(Comment::getId)
+                .toList();
+
+        commentLikeRepository.deleteAllByCommentIdIn(commentIds);
+        postLikeRepository.findByUserIdAndPostId(userId, postId).stream()
+                .forEach(user::removePostLike);
         user.removePost(post);
+    }
+
+    private static Post createPost(PostRequestDto requestDto) {
+        return Post.builder()
+                .content(requestDto.getContent())
+                .title(requestDto.getTitle())
+                .isPublic(requestDto.getIsPublic())
+                .build();
+    }
+
+    private Course createCourse(PostRequestDto requestDto) {
+        return Course.builder()
+                .location(requestDto.getLocation())
+                .build();
+    }
+
+    private List<Space> createSpaces(List<SpaceRequestDto> requestDto){
+        ArrayList<Space> spaces = new ArrayList<>();
+
+        int sequence = 0;
+        for (SpaceRequestDto spaceRequestDto : requestDto) {
+            SpaceDetail spaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceRequestDto.getGooglePlacesIdentifier())
+                    .orElseThrow(POST_NOT_FOUND_EXCEPTION);
+            spaces.add(Space.createSpace(spaceDetail, sequence));
+
+            sequence++;
+        }
+        return Collections.unmodifiableList(spaces);
+    }
+
+    private List<PostPhoto> createPostPhoto(List<String> postPhotos){
+        return postPhotos.stream()
+                .map(PhotoProvider::decode)
+                .map(postPhoto -> {
+                    return PostPhoto.builder()
+                            .photo(postPhoto)
+                            .build();
+                })
+                .toList();
+    }
+
+    private List<PostType> createPostType(List<String> postTypes){
+        return postTypes.stream()
+                .map(postType -> {
+                    return PostType.builder()
+                            .value(PostTypeValue.valueOf(postType))
+                            .build();
+                })
+                .toList();
+    }
+
+    private void connectEntities(User user, Post post, Course course, List<Space> spaces
+                                ,List<PostPhoto> postPhotos, List<PostType> postTypes) {
+        course.addSpaces(spaces);
+        post.addPostTypes(postTypes);
+        post.addPostPhotos(postPhotos);
+        post.setCourse(course);
+        user.addPost(post);
+    }
+
+    private void replaceSpaces(Course course, List<Space> spaces) {
+        course.removeEverySpace();
+        course.addSpaces(spaces);
+    }
+
+    private void replacePostPhotoAndPost(Post post, List<PostPhoto> postPhotos, List<PostType> postTypes) {
+        post.removeEveryPostPhotos();
+        post.removeEveryPostTypes();
+        post.addPostPhotos(postPhotos);
+        post.addPostTypes(postTypes);
     }
 }
