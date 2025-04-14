@@ -40,9 +40,6 @@ public abstract class User {
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<Schedule> schedules = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private final List<Comment> comments = new ArrayList<>();
-
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<SpaceLike> spaceLikes = new ArrayList<>();
 
@@ -85,16 +82,6 @@ public abstract class User {
         this.email = email;
         this.profilePhoto = profilePhoto;
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.getPost().getComments().add(comment);
-    }
-
-    public void removeComment(Comment comment) {
-        this.comments.remove(comment);
-        comment.getPost().getComments().remove(comment);
     }
 
     /**
@@ -144,5 +131,22 @@ public abstract class User {
 
         ratings.clear();
     }
+
+    /**
+     * User - Post 연관관계 편의 메서드(생성)
+     */
+    public void addPostLike(PostLike postLike) {
+        this.postLikes.add(postLike);
+        postLike.setUser(this);
+    }
+
+    /**
+     * User - Post 연관관계 편의 메서드(삭제)
+     */
+    public void removePostLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+        postLike.setUser(null);
+    }
+
 
 }
