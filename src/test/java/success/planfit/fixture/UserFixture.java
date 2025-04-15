@@ -62,7 +62,7 @@ public enum UserFixture {
         this.email = email;
     }
 
-    public User createInstance() {
+    public PlanfitUser createInstance() {
         return PlanfitUser.builder()
                 .loginId(loginId)
                 .password(password)

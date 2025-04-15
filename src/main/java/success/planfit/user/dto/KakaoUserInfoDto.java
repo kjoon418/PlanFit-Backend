@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class KaKaoUserInfoDto {
+public class KakaoUserInfoDto {
 
     private Long id;
 
@@ -70,4 +70,5 @@ public class KaKaoUserInfoDto {
 
         return kakaoAccount.isEmailValid && kakaoAccount.getIsEmailVerified;
     }
+
 }
