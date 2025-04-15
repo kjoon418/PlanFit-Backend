@@ -29,7 +29,7 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{postId}/{commentId}")
+    @DeleteMapping("/{postId}/{commentId}/remove")
     public ResponseEntity<String> removeComment(
             @PathVariable Long postId
             ,@PathVariable Long commentId
