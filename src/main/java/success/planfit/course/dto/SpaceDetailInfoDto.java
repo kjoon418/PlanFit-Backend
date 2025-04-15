@@ -3,7 +3,6 @@ package success.planfit.course.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import success.planfit.entity.space.Space;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.space.SpacePhoto;
 import success.planfit.entity.space.SpaceType;
@@ -11,14 +10,11 @@ import success.planfit.global.photo.PhotoProvider;
 
 import java.util.List;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = PRIVATE)
-public class SpaceResponseDto implements Comparable<SpaceResponseDto>{
-
-    private final int sequence;
+public class SpaceDetailInfoDto {
     private final String googlePlacesIdentifier;
     private final String name;
     private final String location;
@@ -29,15 +25,14 @@ public class SpaceResponseDto implements Comparable<SpaceResponseDto>{
     private final long likeCount;
     private final List<String> spacePhotos;
 
-    public static SpaceResponseDto createSpaceDto(Space space) {
-        SpaceDetail spaceDetail = space.getSpaceDetail();
+
+    public static SpaceDetailInfoDto of(SpaceDetail spaceDetail) {
         List<String> spacePhotos = spaceDetail.getSpacePhotos().stream()
                 .map(SpacePhoto::getValue)
                 .map(PhotoProvider::encode)
                 .toList();
 
-        return SpaceResponseDto.builder()
-                .sequence(space.getSequence())
+        return SpaceDetailInfoDto.builder()
                 .googlePlacesIdentifier(spaceDetail.getGooglePlacesIdentifier())
                 .name(spaceDetail.getSpaceName())
                 .location(spaceDetail.getLocation())
@@ -49,15 +44,4 @@ public class SpaceResponseDto implements Comparable<SpaceResponseDto>{
                 .spacePhotos(spacePhotos)
                 .build();
     }
-
-    @Override
-    public int compareTo(SpaceResponseDto requestDto) {
-        if (this.sequence > requestDto.sequence)
-            return 1;
-        else if (this.sequence == requestDto.sequence)
-            return 0;
-        else
-            return -1;
-    }
-
 }

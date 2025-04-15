@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.*;
@@ -19,6 +20,7 @@ public class PostType {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = LAZY)
     @JoinColumn(nullable = false)
     private Post post;

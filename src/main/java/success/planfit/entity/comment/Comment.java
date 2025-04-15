@@ -56,4 +56,15 @@ public class Comment {
         this.likeCount = 0L;
     }
 
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount < 0) {
+            throw new IllegalStateException("좋아요를 취소할 수 없음");
+        }
+        this.likeCount--;
+    }
+
 }
