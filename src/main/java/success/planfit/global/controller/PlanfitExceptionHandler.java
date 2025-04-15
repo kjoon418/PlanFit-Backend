@@ -46,4 +46,5 @@ public class PlanfitExceptionHandler {
         log.error("Unhandled error occurred", e);
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("예상하지 못한 예외가 발생했습니다: " + e.getMessage());
     }
+
 }

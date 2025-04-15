@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
-@NoArgsConstructor
 @Getter
-public class PlaceDetailRequestDto {
+public class SpaceDetailRequestDto {
     private Double latitude;
     private Double longitude;
+    private String spaceType;
 }

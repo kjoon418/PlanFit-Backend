@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import success.planfit.global.photo.PhotoProvider;
+
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -18,6 +22,7 @@ public class SpacePhoto {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = LAZY)
     private SpaceDetail spaceDetail;
 
@@ -34,4 +39,13 @@ public class SpacePhoto {
         this.value = value;
     }
 
+    public static List<SpacePhoto> createSpacePhoto(List<String> spacePhotos){
+        return spacePhotos.stream()
+                .map(PhotoProvider::decode)
+                .map(spacePhotoForFilter ->
+                {return SpacePhoto.builder()
+                        .value(spacePhotoForFilter)
+                        .build();})
+                .toList();
+    }
 }

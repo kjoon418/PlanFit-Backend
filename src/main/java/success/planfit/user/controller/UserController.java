@@ -21,19 +21,49 @@ public class UserController {
     private final UserService userService;
     private final PlanfitExceptionHandler exceptionHandler;
 
-    // 회원 정보 조회 API (기본키로 조회)
+    /**
+     * 회원 정보 조회
+     */
     @GetMapping
     public ResponseEntity<UserUpdateDto> getUserInfo(Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         UserUpdateDto userInfo = userService.getUserInfo(userId);
         return ResponseEntity.ok(userInfo);
     }
 
-    // 회원 정보 수정 API
+    /**
+     * 회원 정보 수정
+     */
     @PatchMapping("/update")
     public ResponseEntity<Void> updateUserInfo(Principal principal, @RequestBody UserUpdateDto userDto) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
-        userService.updateUserInfo(userId,userDto);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
+        userService.updateUserInfo(userId, userDto);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 로그아웃(리프레쉬 토큰 만료)
+     */
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(Principal principal) {
+        log.info("UserController.logout() called");
+
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
+        userService.invalidateRefreshToken(userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(Principal principal) {
+        log.info("UserController.withdraw() called");
+
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
+        userService.deleteUser(userId);
+
         return ResponseEntity.ok().build();
     }
 
@@ -43,4 +73,5 @@ public class UserController {
 
         return exceptionHandler.handle(exception);
     }
+
 }
