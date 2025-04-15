@@ -86,7 +86,7 @@ class PlanfitAuthorizationServiceTest {
 
             PlanfitUser user = findUserByRequestDto(requestDto);
 
-            equalityChecker.check(user, requestDto);
+            assertThat(equalityChecker.check(user, requestDto)).isTrue();
         }
 
         @Test
