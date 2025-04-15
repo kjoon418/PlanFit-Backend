@@ -44,6 +44,8 @@ public class SpaceDetail {
 
     private Double longitude;
 
+    private long likeCount;
+
     @Builder
     private SpaceDetail(
             String googlePlacesIdentifier,
@@ -61,6 +63,7 @@ public class SpaceDetail {
         this.link = link;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.likeCount = 0L;
     }
 
     /**
@@ -69,6 +72,13 @@ public class SpaceDetail {
     public void addRating(Rating rating) {
         this.ratings.add(rating);
         rating.setSpaceDetail(this);
+    }
+
+    public void addSpacePhoto(List<SpacePhoto> spacePhotos){
+        for (SpacePhoto spacePhoto : spacePhotos) {
+            spacePhoto.setSpaceDetail(this);
+        }
+        spacePhotos.addAll(spacePhotos);
     }
 
 }

@@ -31,8 +31,6 @@ public class Space {
 
     private Integer sequence;
 
-    private Long likeCount;
-
     @Builder
     private Space(
         SpaceDetail spaceDetail,
@@ -40,13 +38,12 @@ public class Space {
     ) {
         this.spaceDetail = spaceDetail;
         this.sequence = sequence;
-        this.likeCount = 0L;
     }
 
-    public static Space copyOf(Space original) {
+    public static Space createSpace(SpaceDetail spaceDetail, Integer sequence) {
         return Space.builder()
-                .spaceDetail(original.spaceDetail)
-                .sequence(original.sequence)
+                .spaceDetail(spaceDetail)
+                .sequence(sequence)
                 .build();
     }
 

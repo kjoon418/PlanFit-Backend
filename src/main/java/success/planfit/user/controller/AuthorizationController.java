@@ -15,156 +15,129 @@ import success.planfit.global.jwt.dto.AccessTokenResponseDto;
 import success.planfit.global.jwt.dto.TokenResponseDto;
 import success.planfit.user.dto.PlanfitUserSignInRequestDto;
 import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
-import success.planfit.user.service.AuthorizationService;
-
-import java.security.Principal;
+import success.planfit.user.service.GoogleAuthorizationService;
+import success.planfit.user.service.KaKaoAuthorizationService;
+import success.planfit.user.service.PlanfitAuthorizationService;
+import success.planfit.user.service.UserService;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/authorization")
 @Tag(
-        name = "인증/인가 API",
-        description = "회원가입, 로그인 관련 기능"
+    name = "인증/인가 API",
+    description = "회원가입, 로그인 관련 기능"
 )
 public class AuthorizationController {
 
-    private final AuthorizationService authorizationService;
     private final ControllerUtil util;
     private final PlanfitExceptionHandler exceptionHandler;
 
-    @PostMapping("/authorization/planfit")
+    private final KaKaoAuthorizationService kaKaoAuthorizationService;
+    private final PlanfitAuthorizationService planfitAuthorizationService;
+    private final GoogleAuthorizationService googleAuthorizationService;
+    private final UserService userService;
+
+    @PostMapping("/planfit")
     @Operation(
-            summary = "플랜핏 자체 회원가입",
-            description = "전달받은 정보를 통해 새로운 회원을 생성합니다"
+        summary = "플랜핏 자체 회원가입",
+        description = "전달받은 정보를 통해 새로운 회원을 생성합니다"
     )
     public ResponseEntity<TokenResponseDto> planfitSignUp(@Valid @RequestBody PlanfitUserSignUpRequestDto requestDto) {
-        log.info("UserController.planfitSignUp() called");
+        log.info("AuthorizationController.planfitSignUp() called");
 
-        TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
-
+        TokenResponseDto responseDto = planfitAuthorizationService.planfitSignUp(requestDto);
         return ResponseEntity.status(CREATED).body(responseDto);
     }
 
-    @PostMapping("/authorization/planfit/signIn")
+    @PostMapping("/planfit/signIn")
     @Operation(
-            summary = "플랜핏 로그인",
-            description = "아이디와 비밀번호를 통해 JWT를 발급합니다"
+        summary = "플랜핏 로그인",
+        description = "아이디와 비밀번호를 통해 JWT를 발급합니다"
     )
     public ResponseEntity<TokenResponseDto> planfitSignIn(@Valid @RequestBody PlanfitUserSignInRequestDto requestDto) {
-        log.info("UserController.planfitSignIn() called");
+        log.info("AuthorizationController.planfitSignIn() called");
 
-        TokenResponseDto responseDto = authorizationService.planfitSignIn(requestDto);
-
+        TokenResponseDto responseDto = planfitAuthorizationService.planfitSignIn(requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/google")
+    @GetMapping("/google")
     @Operation(
-            summary = "구글 소셜 로그인",
-            description = "구글을 통해 사용자를 인증하고 JWT를 발급합니다"
+        summary = "구글 소셜 로그인",
+        description = "구글을 통해 사용자를 인증하고 JWT를 발급합니다"
     )
     public ResponseEntity<TokenResponseDto> googleAuthorization(@RequestParam(name = "code") String code) {
-        log.info("UserController.googleCallback() called");
+        log.info("AuthorizationController.googleCallback() called");
 
-        String googleAccessToken = authorizationService.getGoogleAccessToken(code);
-        TokenResponseDto responseDto = authorizationService.googleSignUpOrSignIn(googleAccessToken);
-
+        String googleAccessToken = googleAuthorizationService.getGoogleAccessToken(code);
+        TokenResponseDto responseDto = googleAuthorizationService.signUpOrSignIn(googleAccessToken);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/google/redirection")
+    @GetMapping("/google/redirection")
     @Operation(
-            summary = "구글 로그인 화면 리다이렉트",
-            description = "구글 로그인 화면으로 리다이렉트합니다"
+        summary = "구글 로그인 화면 리다이렉트",
+        description = "구글 로그인 화면으로 리다이렉트합니다"
     )
     public ResponseEntity<Void> googleRedirect() {
-        log.info("UserController.googleRedirect() called");
+        log.info("AuthorizationController.googleRedirect() called");
 
         return ResponseEntity.status(SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
+                .header(HttpHeaders.LOCATION, googleAuthorizationService.getRedirectUrl())
                 .build();
     }
 
-    @GetMapping("/authorization/kakao")
+    @GetMapping("/kakao")
     @Operation(
-            summary = "카카오 소셜 로그인",
-            description = "카카오를 통해 사용자를 인증하고 JWT를 발급합니다"
+        summary = "카카오 소셜 로그인",
+        description = "카카오를 통해 사용자를 인증하고 JWT를 발급합니다"
     )
     public ResponseEntity<TokenResponseDto> kakaoAuthorization(@RequestParam(name = "code") String code) {
-        log.info("UserController.kakaoAuthorization() called");
+        log.info("AuthorizationController.kakaoAuthorization() called");
 
-        String kakaoAccessToken = authorizationService.getKakaoAccessToken(code);
-        TokenResponseDto responseDto = authorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
-
+        String kakaoAccessToken = kaKaoAuthorizationService.getKakaoAccessToken(code);
+        TokenResponseDto responseDto = kaKaoAuthorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/kakao/redirection")
+    @GetMapping("/kakao/redirection")
     @Operation(
-            summary = "카카오 로그인 화면 리다이렉트",
-            description = "카카오 로그인 화면으로 리다이렉트합니다"
+        summary = "카카오 로그인 화면 리다이렉트",
+        description = "카카오 로그인 화면으로 리다이렉트합니다"
     )
     public ResponseEntity<Void> kakaoRedirect() {
-        log.info("UserController.kakaoRedirect() called");
+        log.info("AuthorizationController.kakaoRedirect() called");
 
         return ResponseEntity.status(SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .header(HttpHeaders.LOCATION, kaKaoAuthorizationService.getRedirectUrl())
                 .build();
     }
 
-    @DeleteMapping("/user/logout")
+    @GetMapping("/reissue")
     @Operation(
-            summary = "로그아웃",
-            description = "해당 회원의 Refresh Token을 무효화합니다(Access Token은 자체 폐기 필요)"
-    )
-    public ResponseEntity<Void> logout(Principal principal) {
-        log.info("UserController.logout() called");
-
-        Long userId = util.findUserIdByPrincipal(principal);
-        authorizationService.invalidateRefreshToken(userId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/user/withdraw")
-    @Operation(
-            summary = "회원 탈퇴",
-            description = "해당 회원 정보를 삭제합니다"
-    )
-    public ResponseEntity<Void> withdraw(Principal principal) {
-        log.info("UserController.withdraw() called");
-
-        Long userId = util.findUserIdByPrincipal(principal);
-        authorizationService.deleteUser(userId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/authorization/reissue")
-    @Operation(
-            summary = "Access Token 재발급",
-            description = "Refresh Token을 통해 Access Token을 재발급합니다"
+        summary = "Access Token 재발급",
+        description = "Refresh Token을 통해 Access Token을 재발급합니다"
     )
     public ResponseEntity<AccessTokenResponseDto> reissueAccessToken(HttpServletRequest request) {
-        log.info("UserController.reissueAccessToken() called");
+        log.info("AuthorizationController.reissueAccessToken() called");
 
         String refreshToken = util.getTokenFromServletRequest(request);
-        AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
-
+        AccessTokenResponseDto responseDto = userService.reissueAccessToken(refreshToken);
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/authorization/duplication/{id}")
+    @GetMapping("/duplication/{id}")
     @Operation(
-            summary = "아이디 중복 여부 확인",
-            description = "해당 ID를 사용하는 회원이 이미 존재하는지를 검사합니다"
+        summary = "아이디 중복 여부 확인",
+        description = "해당 ID를 사용하는 회원이 이미 존재하는지를 검사합니다"
     )
     public ResponseEntity<String> idDuplicationCheck(@PathVariable(name = "id") String loginId) {
-        log.info("UserController.idDuplicateCheck() called");
+        log.info("AuthorizationController.idDuplicateCheck() called");
 
-        if (authorizationService.isDuplicatedLoginId(loginId)) {
+        if (planfitAuthorizationService.isDuplicatedLoginId(loginId)) {
             return ResponseEntity.status(CONFLICT).body("해당 아이디가 이미 존재합니다.");
         }
 
@@ -173,8 +146,9 @@ public class AuthorizationController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
-        log.info("UserController.handleException() called");
+        log.info("AuthorizationController.handleException() called");
 
         return exceptionHandler.handle(exception);
     }
+
 }

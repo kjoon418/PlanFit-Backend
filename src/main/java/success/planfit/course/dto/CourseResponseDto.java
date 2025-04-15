@@ -18,7 +18,7 @@ public class CourseResponseDto {
 
     public static CourseResponseDto from(Course course) {
         List<SpaceResponseDto> spaces = course.getSpaces().stream()
-                .map(SpaceResponseDto::from)
+                .map(SpaceResponseDto::createSpaceDto)
                 .toList();
 
         return CourseResponseDto.builder()

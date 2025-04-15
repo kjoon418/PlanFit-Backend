@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import success.planfit.space.dto.request.PlaceDetailRequestDto;
+import success.planfit.space.dto.request.SpaceDetailRequestDto;
 
 @Component
 public class OpenGooglePlaceApi {
@@ -35,7 +35,7 @@ public class OpenGooglePlaceApi {
         }
     }
 
-    public String fetchPlaceDetailsByLocation(PlaceDetailRequestDto requestDto){
+    public String fetchPlaceDetailsByLocation(Long userId, SpaceDetailRequestDto requestDto){
         // 엔드포인트 URL
         String url = "https://places.googleapis.com/v1/places:searchNearby?fields=places.types&key=" + apiKey;
 

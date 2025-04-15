@@ -2,7 +2,9 @@ package success.planfit.entity.course;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.course.dto.SpaceRequestDto;
 import success.planfit.entity.space.Space;
+import success.planfit.post.dto.request.PostRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +33,8 @@ public class Course {
         this.location = location;
     }
 
-    public static Course copyOf(Course original) {
-        Course copy = Course.builder()
-                .location(original.location)
-                .build();
-        copy.addSpaces(original.spaces);
-
-         return copy;
+    public void update(String location) {
+        this.location = location;
     }
 
     /**
@@ -61,5 +58,4 @@ public class Course {
 
         spaces.clear();
     }
-
 }
