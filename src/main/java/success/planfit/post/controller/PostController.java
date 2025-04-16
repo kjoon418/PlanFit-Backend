@@ -1,6 +1,6 @@
 package success.planfit.post.controller;
 
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @RequestMapping("/post")
 public class PostController {
 
@@ -58,7 +58,7 @@ public class PostController {
     /**
      * 포스트 단건 조회
      */
-    @GetMapping("/{postId}")
+    @GetMapping("/{postId}/get")
     public ResponseEntity<PostInfoDto> findPostById(@PathVariable long postId){
         PostInfoDto post = postService.findPost(postId);
         return ResponseEntity.ok(post);
@@ -67,9 +67,9 @@ public class PostController {
     /**
      * 포스트 최신순 3건 조회
      */
-    @GetMapping
-    public ResponseEntity<List<PostInfoDto>> findRecentPosts(int n){
-        List<PostInfoDto> postInfoDtoList = postService.findRecentPosts(n);
+    @GetMapping("/get/{postNum}")
+    public ResponseEntity<List<PostInfoDto>> findRecentPosts(int postNum){
+        List<PostInfoDto> postInfoDtoList = postService.findRecentPosts(postNum);
         return ResponseEntity.ok(postInfoDtoList);
     }
 

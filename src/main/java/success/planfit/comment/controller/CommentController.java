@@ -22,7 +22,7 @@ public class CommentController {
     private final CommentLikeService commentLikeService;
     private final ControllerUtil controllerUtil;
 
-    @PostMapping("/{postId}")
+    @PostMapping("/{postId}/createComment")
     public ResponseEntity<Void> addComment(@PathVariable Long postId, @RequestBody CommentSaveRequestDto requestDto, Principal principal){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentService.registerComment(userId, postId, requestDto);

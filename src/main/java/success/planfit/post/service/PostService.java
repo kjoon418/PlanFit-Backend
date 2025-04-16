@@ -37,6 +37,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 @Service
 public class PostService {
+    private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("유저 조회에 실패했습니다.");
     private static final Supplier<EntityNotFoundException> POST_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 지닌 포스트를 찾을 수 없습니다.");
     private static final int PAGE_SIZE = 10;
 
@@ -48,7 +49,7 @@ public class PostService {
 
     public void registerPost(long userId, PostRequestDto requestDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
 
         Post post = createPost(requestDto);
         Course course = createCourse(requestDto);
@@ -122,7 +123,7 @@ public class PostService {
 
     public void deletePost(long userId, long postId) {
         User user = userRepository.findByIdWithPost(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
         Post post = user.getPosts().stream()
                 .filter(p -> p.getId().equals(postId))
                 .findAny()
