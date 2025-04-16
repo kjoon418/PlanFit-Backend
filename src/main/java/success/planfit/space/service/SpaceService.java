@@ -13,7 +13,7 @@ import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.space.SpacePhoto;
 import success.planfit.entity.user.User;
-import success.planfit.global.exception.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import success.planfit.repository.ScheduleRepository;
 import success.planfit.repository.SpaceDetailRepository;
 import success.planfit.repository.UserRepository;

@@ -1,5 +1,6 @@
 package success.planfit.post.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,14 +10,17 @@ import success.planfit.entity.user.User;
 import success.planfit.repository.PostLikeRepository;
 import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
-import success.planfit.user.service.UserService;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PostLikeService {
+
+    private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new jakarta.persistence.EntityNotFoundException("유저 조회에 실패했습니다.");
+    private static final Supplier<EntityNotFoundException> POST_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 지닌 포스트를 찾을 수 없습니다.");
 
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
@@ -24,10 +28,10 @@ public class PostLikeService {
 
     public void likePost(long postId, long userId) {
         User user = userRepository.findById(userId).
-                orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                orElseThrow(USER_NOT_FOUND_EXCEPTION);
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 포스팅입니다."));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         postLikeRepository.findByUserIdAndPostId(userId, postId)
                 .ifPresent(like -> {
@@ -51,7 +55,7 @@ public class PostLikeService {
 
     public void unlikePost(long postId, long userId) {
         PostLike postLike = postLikeRepository.findByUserIdAndPostId(userId, postId)
-                .orElseThrow(() -> new IllegalArgumentException("좋아요하지 않은 포스트입니다."));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         postLikeRepository.delete(postLike);
         postLike.getPost().decreaseLikeCount();

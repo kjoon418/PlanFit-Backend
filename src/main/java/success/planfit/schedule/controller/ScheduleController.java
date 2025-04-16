@@ -145,7 +145,7 @@ public class ScheduleController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
-        log.info("UserController.handleException() called");
+        log.info("ScheduleController.handleException() called");
 
         return exceptionHandler.handle(exception);
     }

@@ -22,7 +22,7 @@ import success.planfit.global.photo.PhotoProvider;
 import success.planfit.post.dto.request.PostRequestDto;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.course.dto.CourseResponseDto;
-import success.planfit.global.exception.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import success.planfit.global.exception.IllegalRequestException;
 import success.planfit.repository.*;
 
