@@ -23,7 +23,9 @@ public class CommentController {
     private final ControllerUtil controllerUtil;
 
     @PostMapping("/{postId}/createComment")
-    public ResponseEntity<Void> addComment(@PathVariable Long postId, @RequestBody CommentSaveRequestDto requestDto, Principal principal){
+    public ResponseEntity<Void> addComment(@PathVariable Long postId,
+                                           @RequestBody CommentSaveRequestDto requestDto,
+                                           Principal principal){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentService.registerComment(userId, postId, requestDto);
         return ResponseEntity.ok().build();
@@ -40,14 +42,16 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}/{commentId}")
-    public ResponseEntity<Void> likeComment(@PathVariable Long postId, @PathVariable Long commentId, Principal principal){
+    public ResponseEntity<Void> likeComment(@PathVariable Long postId,
+                                            @PathVariable Long commentId, Principal principal){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentLikeService.likeComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}/{commentId}")
-    public ResponseEntity<Void> unlikeComment(@PathVariable Long postId, @PathVariable Long commentId, Principal principal){
+    public ResponseEntity<Void> unlikeComment(@PathVariable Long postId,
+                                              @PathVariable Long commentId, Principal principal){
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentLikeService.unlikeComment(userId, postId, commentId);
         return ResponseEntity.ok().build();

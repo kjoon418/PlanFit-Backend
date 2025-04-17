@@ -29,7 +29,8 @@ public class SpaceController {
      * AI에게 장소 조회 요청
      */
     @GetMapping("/toAI")
-    public ResponseEntity<SpaceInfoForAIDto> requestToAI(Principal principal, @RequestBody SpaceDetailRequestDto requestDto){
+    public ResponseEntity<SpaceInfoForAIDto> requestToAI(Principal principal,
+                                                         @RequestBody SpaceDetailRequestDto requestDto){
         long userId = controllerUtil.findUserIdByPrincipal(principal);
         SpaceInfoForAIDto spaceInfoForAIDto = spaceService.requestToAI(userId, requestDto);
         return ResponseEntity.ok(spaceInfoForAIDto);
@@ -39,7 +40,8 @@ public class SpaceController {
      * AI에게 장소 받아서 갱신, 정렬 후, 프론트 장소 리스트에게 전달
      */
     @GetMapping("/toFront")
-    public ResponseEntity<List<SpaceDetailInfoDto>> responseToFront(Principal principal, @RequestBody List<SpaceResponseFromAI> requestDtoList){
+    public ResponseEntity<List<SpaceDetailInfoDto>> responseToFront(Principal principal,
+                                                                    @RequestBody List<SpaceResponseFromAI> requestDtoList){
         long userId = controllerUtil.findUserIdByPrincipal(principal);
         List<SpaceDetailInfoDto> spaceResponseDtoList = spaceService.responseToFE(requestDtoList);
         return ResponseEntity.ok(spaceResponseDtoList);

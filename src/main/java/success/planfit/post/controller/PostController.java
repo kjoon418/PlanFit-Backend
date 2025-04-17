@@ -1,5 +1,6 @@
 package success.planfit.post.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class PostController {
      */
     @PostMapping
     public ResponseEntity<Void> registerPost(Principal principal,
-                                             PostRequestDto requestDto) {
+                                             @Valid @RequestBody(required = true) PostRequestDto requestDto) {
         long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
@@ -88,7 +89,8 @@ public class PostController {
      * 포스트 수정
      */
     @PatchMapping("/{postId}")
-    public ResponseEntity<Void> updatePost(Principal principal, long postId, PostRequestDto requestDto){
+    public ResponseEntity<Void> updatePost(Principal principal, long postId,
+                                           @Valid @RequestBody PostRequestDto requestDto){
         long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.updatePost(userId, postId, requestDto);
         return ResponseEntity.ok().build();
