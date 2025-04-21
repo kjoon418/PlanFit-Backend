@@ -75,11 +75,12 @@ public class SpaceDetail {
         rating.setSpaceDetail(this);
     }
 
-    public void addSpacePhoto(List<SpacePhoto> spacePhotos){
+    public void addSpacePhotos(List<SpacePhoto> spacePhotos){
         for (SpacePhoto spacePhoto : spacePhotos) {
             spacePhoto.setSpaceDetail(this);
         }
-        spacePhotos.addAll(spacePhotos);
+
+        this.spacePhotos.addAll(spacePhotos);
     }
 
 }
