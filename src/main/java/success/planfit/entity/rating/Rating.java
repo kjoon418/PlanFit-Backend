@@ -30,7 +30,6 @@ public class Rating {
     @JoinColumn(nullable = false)
     private SpaceDetail spaceDetail;
 
-    @Setter
     @Column(nullable = false)
     private Integer value;
 
