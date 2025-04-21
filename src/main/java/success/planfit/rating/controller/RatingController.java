@@ -26,7 +26,7 @@ public class RatingController {
     private final RatingService ratingService;
 
     @PostMapping
-    public ResponseEntity<Void> recordRating(Principal principal, RatingRecordRequestDto requestDto) {
+    public ResponseEntity<Void> recordRating(Principal principal, @RequestBody RatingRecordRequestDto requestDto) {
         log.info("RatingController.recordRating() called");
 
         long userId = util.findUserIdByPrincipal(principal);
@@ -36,7 +36,7 @@ public class RatingController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, LocalDate date) {
+    public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, @RequestParam LocalDate date) {
         log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
         long userId = util.findUserIdByPrincipal(principal);
