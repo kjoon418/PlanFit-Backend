@@ -50,7 +50,7 @@ public class SpaceService {
         for (SpaceResponseFromAI requestDto : requestDtos) {
             SpaceDetail spaceDetail = createSpaceDetail(requestDto);
             List<SpacePhoto> spacePhotos = SpacePhoto.createSpacePhoto(requestDto.getSpacePhotos());
-            spaceDetail.addSpacePhoto(spacePhotos);
+            spaceDetail.addSpacePhotos(spacePhotos);
             spaceDetailRepository.save(spaceDetail);
             responseDtos.add(SpaceDetailInfoDto.of(spaceDetail));
         }
