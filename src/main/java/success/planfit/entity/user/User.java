@@ -98,6 +98,20 @@ public abstract class User {
     }
 
     /**
+     * User - SpaceLike 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.add(spaceLike);
+    }
+
+
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.remove(spaceLike);
+    }
+  
      * User - Post 연관관계 편의 메서드(생성)
      */
     public void addPost(Post post) {
@@ -111,6 +125,22 @@ public abstract class User {
     public void removePost(Post post) {
         this.posts.remove(post);
         post.setUser(null);
+    }
+
+    /**
+     * User - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+        rating.setUser(this);
+    }
+
+    public void disconnectWithRatings() {
+        for (Rating rating : ratings) {
+            rating.setUser(null);
+    }
+
+        ratings.clear();
     }
 
     /**
