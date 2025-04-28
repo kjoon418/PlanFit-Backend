@@ -9,13 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
-import success.planfit.user.dto.PlanfitUserSignInRequestDto;
-import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
 import success.planfit.global.jwt.dto.AccessTokenResponseDto;
 import success.planfit.global.jwt.dto.TokenResponseDto;
-import success.planfit.user.service.AuthorizationService;
-
-import java.security.Principal;
+import success.planfit.user.dto.PlanfitUserSignInRequestDto;
+import success.planfit.user.dto.PlanfitUserSignUpRequestDto;
+import success.planfit.user.service.GoogleAuthorizationService;
+import success.planfit.user.service.KaKaoAuthorizationService;
+import success.planfit.user.service.PlanfitAuthorizationService;
+import success.planfit.user.service.UserService;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -25,26 +26,37 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/authorization")
 public class AuthorizationController {
 
-    private final AuthorizationService authorizationService;
     private final ControllerUtil util;
     private final PlanfitExceptionHandler exceptionHandler;
 
-    @PostMapping("/authorization/planfit")
-    public ResponseEntity<TokenResponseDto> planfitSignUp(@Valid @RequestBody PlanfitUserSignUpRequestDto requestDto) {
-        log.info("UserController.planfitSignUp() called");
+    private final KaKaoAuthorizationService kaKaoAuthorizationService;
+    private final PlanfitAuthorizationService planfitAuthorizationService;
+    private final GoogleAuthorizationService googleAuthorizationService;
+    private final UserService userService;
 
-        TokenResponseDto responseDto = authorizationService.planfitSignUp(requestDto);
+    /**
+     * 플랜핏 회원가입
+     */
+    @PostMapping("/planfit")
+    public ResponseEntity<TokenResponseDto> planfitSignUp(@Valid @RequestBody PlanfitUserSignUpRequestDto requestDto) {
+        log.info("AuthorizationController.planfitSignUp() called");
+
+        TokenResponseDto responseDto = planfitAuthorizationService.planfitSignUp(requestDto);
 
         return ResponseEntity.status(CREATED).body(responseDto);
     }
 
-    @PostMapping("/authorization/planfit/signIn")
+    /**
+     * 플랜핏 로그인
+     */
+    @PostMapping("/planfit/signIn")
     public ResponseEntity<TokenResponseDto> planfitSignIn(@Valid @RequestBody PlanfitUserSignInRequestDto requestDto) {
-        log.info("UserController.planfitSignIn() called");
+        log.info("AuthorizationController.planfitSignIn() called");
 
-        TokenResponseDto responseDto = authorizationService.planfitSignIn(requestDto);
+        TokenResponseDto responseDto = planfitAuthorizationService.planfitSignIn(requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -52,12 +64,12 @@ public class AuthorizationController {
     /**
      * 구글 로그인/회원가입
      */
-    @GetMapping("/authorization/google")
+    @GetMapping("/google")
     public ResponseEntity<TokenResponseDto> googleAuthorization(@RequestParam(name = "code") String code) {
-        log.info("UserController.googleCallback() called");
+        log.info("AuthorizationController.googleCallback() called");
 
-        String googleAccessToken = authorizationService.getGoogleAccessToken(code);
-        TokenResponseDto responseDto = authorizationService.googleSignUpOrSignIn(googleAccessToken);
+        String googleAccessToken = googleAuthorizationService.getGoogleAccessToken(code);
+        TokenResponseDto responseDto = googleAuthorizationService.signUpOrSignIn(googleAccessToken);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -65,24 +77,24 @@ public class AuthorizationController {
     /**
      * 구글 로그인 화면으로 리다이렉트
      */
-    @GetMapping("/authorization/google/redirection")
+    @GetMapping("/google/redirection")
     public ResponseEntity<Void> googleRedirect() {
-        log.info("UserController.googleRedirect() called");
+        log.info("AuthorizationController.googleRedirect() called");
 
         return ResponseEntity.status(SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getGoogleRedirectUrl())
+                .header(HttpHeaders.LOCATION, googleAuthorizationService.getRedirectUrl())
                 .build();
     }
 
     /**
      * 카카오 로그인/회원가입
      */
-    @GetMapping("/authorization/kakao")
+    @GetMapping("/kakao")
     public ResponseEntity<TokenResponseDto> kakaoAuthorization(@RequestParam(name = "code") String code) {
-        log.info("UserController.kakaoAuthorization() called");
+        log.info("AuthorizationController.kakaoAuthorization() called");
 
-        String kakaoAccessToken = authorizationService.getKakaoAccessToken(code);
-        TokenResponseDto responseDto = authorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
+        String kakaoAccessToken = kaKaoAuthorizationService.getKakaoAccessToken(code);
+        TokenResponseDto responseDto = kaKaoAuthorizationService.kakaoSignUpOrSignIn(kakaoAccessToken);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -90,50 +102,24 @@ public class AuthorizationController {
     /**
      * 카카오 로그인 화면으로 리다이렉트
      */
-    @GetMapping("/authorization/kakao/redirection")
+    @GetMapping("/kakao/redirection")
     public ResponseEntity<Void> kakaoRedirect() {
-        log.info("UserController.kakaoRedirect() called");
+        log.info("AuthorizationController.kakaoRedirect() called");
 
         return ResponseEntity.status(SEE_OTHER)
-                .header(HttpHeaders.LOCATION, authorizationService.getKakaoRedirectUrl())
+                .header(HttpHeaders.LOCATION, kaKaoAuthorizationService.getRedirectUrl())
                 .build();
-    }
-
-    /**
-     * 로그아웃(리프레쉬 토큰 만료)
-     */
-    @DeleteMapping("/user/logout")
-    public ResponseEntity<Void> logout(Principal principal) {
-        log.info("UserController.logout() called");
-
-        Long userId = util.findUserIdByPrincipal(principal);
-        authorizationService.invalidateRefreshToken(userId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * 회원 탈퇴
-     */
-    @DeleteMapping("/user/withdraw")
-    public ResponseEntity<Void> withdraw(Principal principal) {
-        log.info("UserController.withdraw() called");
-
-        Long userId = util.findUserIdByPrincipal(principal);
-        authorizationService.deleteUser(userId);
-
-        return ResponseEntity.ok().build();
     }
 
     /**
      * 엑세스 토큰 재발급
      */
-    @GetMapping("/authorization/reissue")
+    @GetMapping("/reissue")
     public ResponseEntity<AccessTokenResponseDto> reissueAccessToken(HttpServletRequest request) {
-        log.info("UserController.reissueAccessToken() called");
+        log.info("AuthorizationController.reissueAccessToken() called");
 
         String refreshToken = util.getTokenFromServletRequest(request);
-        AccessTokenResponseDto responseDto = authorizationService.reissueAccessToken(refreshToken);
+        AccessTokenResponseDto responseDto = userService.reissueAccessToken(refreshToken);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -141,11 +127,11 @@ public class AuthorizationController {
     /**
      * 아이디 중복 여부 확인
      */
-    @GetMapping("/authorization/duplication/{id}")
+    @GetMapping("/duplication/{id}")
     public ResponseEntity<String> idDuplicationCheck(@PathVariable(name = "id") String loginId) {
-        log.info("UserController.idDuplicateCheck() called");
+        log.info("AuthorizationController.idDuplicateCheck() called");
 
-        if (authorizationService.isDuplicatedLoginId(loginId)) {
+        if (planfitAuthorizationService.isDuplicatedLoginId(loginId)) {
             return ResponseEntity.status(CONFLICT).body("해당 아이디가 이미 존재합니다.");
         }
 
@@ -154,8 +140,9 @@ public class AuthorizationController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception exception) {
-        log.info("UserController.handleException() called");
+        log.info("AuthorizationController.handleException() called");
 
         return exceptionHandler.handle(exception);
     }
+
 }
