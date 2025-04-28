@@ -9,6 +9,7 @@ import success.planfit.comment.dto.CommentSaveRequestDto;
 import success.planfit.comment.service.CommentLikeService;
 import success.planfit.comment.service.CommentService;
 import success.planfit.global.controller.ControllerUtil;
+import success.planfit.global.controller.PlanfitExceptionHandler;
 
 import java.security.Principal;
 
@@ -21,6 +22,7 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentLikeService commentLikeService;
     private final ControllerUtil controllerUtil;
+    private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/{postId}/createComment")
     public ResponseEntity<Void> addComment(@PathVariable Long postId,
@@ -55,6 +57,13 @@ public class CommentController {
         Long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentLikeService.unlikeComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception exception) {
+        log.info("CommentController.handleException() called");
+
+        return exceptionHandler.handle(exception);
     }
 
 }
