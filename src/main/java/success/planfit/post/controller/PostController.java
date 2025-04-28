@@ -2,6 +2,7 @@ package success.planfit.post.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/post")
 public class PostController {
 
@@ -30,7 +31,7 @@ public class PostController {
      */
     @PostMapping
     public ResponseEntity<Void> registerPost(Principal principal,
-                                             @Valid @RequestBody(required = true) PostRequestDto requestDto) {
+                                             @Valid @RequestBody PostRequestDto requestDto) {
         long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
