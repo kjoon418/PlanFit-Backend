@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.like.PostLike;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
+import success.planfit.post.dto.response.PostPreviewDto;
 import success.planfit.repository.PostLikeRepository;
 import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
@@ -47,10 +48,12 @@ public class PostLikeService {
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getLikedPosts(long userId) {
-        return postLikeRepository.findByUserId(userId).
-                stream()
-                .map(like -> like.getPost().getId())
+    public List<PostPreviewDto> getLikedPosts(long userId) {
+        User user = userRepository.findById(userId).
+                orElseThrow(USER_NOT_FOUND_EXCEPTION);
+
+        return user.getPostLikes().stream()
+                .map(postLike -> PostPreviewDto.of(postLike.getPost(), user))
                 .toList();
     }
 

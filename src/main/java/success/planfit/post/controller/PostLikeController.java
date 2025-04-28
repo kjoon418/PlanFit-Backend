@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.global.controller.PlanfitExceptionHandler;
+import success.planfit.post.dto.response.PostPreviewDto;
 import success.planfit.post.service.PostLikeService;
 
 import java.security.Principal;
@@ -23,21 +24,21 @@ public class PostLikeController {
 
     @PostMapping("/{postId}")
     public ResponseEntity<String> likePost(@PathVariable long postId, Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postLikeService.likePost(userId, postId);
 
         return ResponseEntity.ok("포스트를 좋아요 했습니다.");
     }
 
     @GetMapping
-    public ResponseEntity<List<Long>> getLikedPosts(Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<List<PostPreviewDto>> getLikedPosts(Principal principal) {
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         return ResponseEntity.ok(postLikeService.getLikedPosts(userId));
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<String> unlikePost(@PathVariable long postId, Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postLikeService.unlikePost(userId, postId);
 
         return ResponseEntity.ok("포스트 좋아요 취소했습니다.");
