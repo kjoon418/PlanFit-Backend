@@ -38,10 +38,11 @@ public class PostLikeService {
                     throw new IllegalArgumentException("이미 좋아요한 포스트입니다.");
                 });
 
-        postLikeRepository.save(PostLike.builder()
-                .user(user)
+        PostLike postLike = PostLike.builder()
                 .post(post)
-                .build());
+                .build();
+        user.addPostLike(postLike);
+        postLikeRepository.save(postLike);
         post.increaseLikeCount();
     }
 
@@ -54,10 +55,11 @@ public class PostLikeService {
     }
 
     public void unlikePost(long postId, long userId) {
-        PostLike postLike = postLikeRepository.findByUserIdAndPostId(userId, postId)
+        User user = userRepository.findById(userId).
+                orElseThrow(USER_NOT_FOUND_EXCEPTION);
+        PostLike postLike = postLikeRepository.findByPostId(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
-
-        postLikeRepository.delete(postLike);
+        user.removePostLike(postLike);
         postLike.getPost().decreaseLikeCount();
     }
 

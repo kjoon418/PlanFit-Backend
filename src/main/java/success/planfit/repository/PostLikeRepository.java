@@ -15,4 +15,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
     @Query("select p from PostLike p where p.user.id  = :userId order by p.id desc")
     List<PostLike> findByUserId(@Param("userId") Long userId);
 
+    Optional<PostLike> findByPostId(Long postId);
+
 }
