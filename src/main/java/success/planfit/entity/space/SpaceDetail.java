@@ -2,6 +2,7 @@ package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.entity.rating.Rating;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,11 +86,12 @@ public class SpaceDetail {
         rating.setSpaceDetail(this);
     }
 
-    public void addSpacePhoto(List<SpacePhoto> spacePhotos){
+    public void addSpacePhotos(List<SpacePhoto> spacePhotos){
         for (SpacePhoto spacePhoto : spacePhotos) {
             spacePhoto.setSpaceDetail(this);
         }
-        spacePhotos.addAll(spacePhotos);
+
+        this.spacePhotos.addAll(spacePhotos);
     }
 
 }
