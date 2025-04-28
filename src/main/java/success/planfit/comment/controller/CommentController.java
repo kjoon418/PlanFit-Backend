@@ -25,10 +25,10 @@ public class CommentController {
     private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/{postId}/createComment")
-    public ResponseEntity<Void> addComment(@PathVariable Long postId,
+    public ResponseEntity<Void> addComment(@PathVariable long postId,
                                            @RequestBody CommentSaveRequestDto requestDto,
                                            Principal principal){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentService.registerComment(userId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
@@ -38,23 +38,23 @@ public class CommentController {
             @PathVariable Long postId
             ,@PathVariable Long commentId
             ,Principal principal) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentService.removeComment(userId, postId, commentId);
         return ResponseEntity.ok("Deleted successfully");
     }
 
     @PostMapping("/{postId}/{commentId}")
-    public ResponseEntity<Void> likeComment(@PathVariable Long postId,
-                                            @PathVariable Long commentId, Principal principal){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> likeComment(@PathVariable long postId,
+                                            @PathVariable long commentId, Principal principal){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentLikeService.likeComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}/{commentId}")
-    public ResponseEntity<Void> unlikeComment(@PathVariable Long postId,
-                                              @PathVariable Long commentId, Principal principal){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> unlikeComment(@PathVariable long postId,
+                                              @PathVariable long commentId, Principal principal){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         commentLikeService.unlikeComment(userId, postId, commentId);
         return ResponseEntity.ok().build();
     }

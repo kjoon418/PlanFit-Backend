@@ -27,7 +27,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    public void registerComment(Long userId, Long postId, CommentSaveRequestDto requestDto){
+    public void registerComment(long userId, long postId, CommentSaveRequestDto requestDto){
         // 유저 조회
         User user = userRepository.findById(userId)
                 .orElseThrow(USER_NOT_FOUND_EXCEPTION);
@@ -46,7 +46,7 @@ public class CommentService {
         postRepository.save(post);
     }
 
-    public void removeComment(Long userId, Long postId, Long commentId){
+    public void removeComment(long userId, long postId, long commentId){
         // Post 조회
         Post post = postRepository.findByIdWithComment(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
