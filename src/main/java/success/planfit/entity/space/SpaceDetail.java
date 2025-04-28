@@ -2,7 +2,6 @@ package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class SpaceDetail {
 
     private Double longitude;
 
+    @Column(nullable = false)
     private long likeCount;
 
     @Builder
@@ -55,6 +55,7 @@ public class SpaceDetail {
             String link,
             Double latitude,
             Double longitude
+            long likeCount
     ) {
         this.googlePlacesIdentifier = googlePlacesIdentifier;
         this.spaceName = spaceName;
@@ -64,6 +65,16 @@ public class SpaceDetail {
         this.latitude = latitude;
         this.longitude = longitude;
         this.likeCount = 0L;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 
     /**
