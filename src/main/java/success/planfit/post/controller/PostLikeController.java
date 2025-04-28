@@ -32,4 +32,5 @@ public class PostLikeController {
 
         return ResponseEntity.ok("포스트 좋아요 취소했습니다.");
     }
+
 }

@@ -5,18 +5,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import success.planfit.entity.comment.Comment;
+import success.planfit.entity.like.CommentLike;
+import success.planfit.entity.like.PostLike;
+import success.planfit.entity.like.SpaceLike;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
-import success.planfit.entity.like.*;
-import success.planfit.entity.space.Rating;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 
 @Getter
@@ -48,9 +48,6 @@ public abstract class User {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<PostLike> postLikes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private final List<Rating> ratings = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)
@@ -101,6 +98,20 @@ public abstract class User {
     }
 
     /**
+     * User - SpaceLike 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.add(spaceLike);
+    }
+
+
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.remove(spaceLike);
+    }
+  
      * User - Post 연관관계 편의 메서드(생성)
      */
     public void addPost(Post post) {
@@ -127,7 +138,7 @@ public abstract class User {
     public void disconnectWithRatings() {
         for (Rating rating : ratings) {
             rating.setUser(null);
-        }
+    }
 
         ratings.clear();
     }
@@ -147,6 +158,5 @@ public abstract class User {
         this.postLikes.remove(postLike);
         postLike.setUser(null);
     }
-
 
 }
