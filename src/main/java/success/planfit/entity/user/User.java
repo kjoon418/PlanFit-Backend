@@ -5,18 +5,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import success.planfit.entity.comment.Comment;
+import success.planfit.entity.like.CommentLike;
+import success.planfit.entity.like.PostLike;
+import success.planfit.entity.like.SpaceLike;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
-import success.planfit.entity.like.*;
-import success.planfit.entity.space.Rating;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 
 @Getter
@@ -41,9 +41,6 @@ public abstract class User {
     private final List<Schedule> schedules = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
-    private final List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<SpaceLike> spaceLikes = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
@@ -51,9 +48,6 @@ public abstract class User {
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<PostLike> postLikes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private final List<Rating> ratings = new ArrayList<>();
 
     @Setter
     @Column(nullable = false)
@@ -87,16 +81,6 @@ public abstract class User {
         this.refreshToken = RefreshToken.builder().build(); // 빈 값인 RefreshToken 엔티티 생성
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.setUser(this);
-    }
-
-    public void removeComment(Comment comment) {
-        this.comments.remove(comment);
-        comment.setUser(null);
-    }
-
     /**
      * User - Schedule 연관관계 편의 메서드(생성)
      */
@@ -120,6 +104,7 @@ public abstract class User {
         this.spaceLikes.add(spaceLike);
     }
 
+
     /**
      * User - SpaceLike 연관관계 편의 메서드(삭제)
      */
@@ -127,6 +112,21 @@ public abstract class User {
         this.spaceLikes.remove(spaceLike);
     }
   
+     * User - Post 연관관계 편의 메서드(생성)
+     */
+    public void addPost(Post post) {
+        this.posts.add(post);
+        post.setUser(this);
+    }
+
+    /**
+     * User - Post 연관관계 편의 메서드(삭제)
+     */
+    public void removePost(Post post) {
+        this.posts.remove(post);
+        post.setUser(null);
+    }
+
     /**
      * User - Rating 연관관계 편의 메서드(생성)
      */
@@ -144,17 +144,19 @@ public abstract class User {
     }
 
     /**
-     * User - PostLike 연관관계 편의 메서드(생성)
+     * User - Post 연관관계 편의 메서드(생성)
      */
     public void addPostLike(PostLike postLike) {
         this.postLikes.add(postLike);
+        postLike.setUser(this);
     }
 
     /**
-     * User - PostLike 연관관계 편의 메서드(삭제)
+     * User - Post 연관관계 편의 메서드(삭제)
      */
     public void removePostLike(PostLike postLike) {
         this.postLikes.remove(postLike);
+        postLike.setUser(null);
     }
 
 }

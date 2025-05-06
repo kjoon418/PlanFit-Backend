@@ -40,10 +40,10 @@ public class Space {
         this.sequence = sequence;
     }
 
-    public static Space copyOf(Space original) {
+    public static Space createSpace(SpaceDetail spaceDetail, Integer sequence) {
         return Space.builder()
-                .spaceDetail(original.spaceDetail)
-                .sequence(original.sequence)
+                .spaceDetail(spaceDetail)
+                .sequence(sequence)
                 .build();
     }
 

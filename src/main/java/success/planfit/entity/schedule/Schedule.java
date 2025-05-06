@@ -1,20 +1,22 @@
 package success.planfit.entity.schedule;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import success.planfit.entity.course.Course;
+import success.planfit.entity.rating.Rating;
 import success.planfit.entity.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
@@ -24,8 +26,11 @@ public class Schedule implements Comparable<Schedule> {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "schedule")
+    private final List<Rating> ratings = new ArrayList<>();
+
     @Setter
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(nullable = false)
     private Course course;
 
@@ -81,6 +86,21 @@ public class Schedule implements Comparable<Schedule> {
     @Override
     public int compareTo(Schedule other) {
         return this.getDate().compareTo(other.getDate());
+    }
+
+    /**
+     * Schedule - Rating 연관관계 편의 메서드(생성)
+     */
+    public void addRating(Rating rating) {
+        ratings.add(rating);
+        rating.setSchedule(this);
+    }
+
+    /**
+     * Schedule - Rating 연관관계 편의 메서드(전체 삭제)
+     */
+    public void clearRatings() {
+        ratings.clear();
     }
 
 }
