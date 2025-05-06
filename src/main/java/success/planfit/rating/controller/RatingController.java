@@ -45,12 +45,11 @@ public class RatingController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/available")
     @Operation(
             summary = "별점 요청이 가능한 일정 조회",
             description = "별점 요청이 가능한 일정 하나를 반환합니다. 한번 반환된 일정은 다시 반환되지 않습니다."
     )
-    @GetMapping("/available")
     public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, @RequestParam LocalDate date) {
         log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
