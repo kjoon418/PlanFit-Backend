@@ -45,12 +45,11 @@ public class RatingController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/available")
     @Operation(
             summary = "별점 요청이 가능한 일정 조회",
             description = "별점 요청이 가능한 일정 하나를 반환합니다. 한번 반환된 일정은 다시 반환되지 않습니다."
     )
-    @GetMapping("/available")
     public ResponseEntity<ScheduleResponseDto> findRatingRequestAvailableSchedule(Principal principal, @RequestParam LocalDate date) {
         log.info("RatingController.findRatingRequestAvailableSchedule() called");
 
@@ -61,6 +60,10 @@ public class RatingController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "사용자가 남긴 별점 조회",
+            description = "사용자가 그동안 남긴 별점 전체를 조회합니다."
+    )
     public ResponseEntity<List<RatingInfoResponseDto>> findRatings(Principal principal) {
         log.info("RatingController.findRatings() called");
 
@@ -71,6 +74,10 @@ public class RatingController {
     }
 
     @DeleteMapping("/{scheduleId}")
+    @Operation(
+            summary = "별점 삭제",
+            description = "별점 ID를 받아 해당 별점 정보를 삭제합니다."
+    )
     public ResponseEntity<Void> removeRating(Principal principal, @PathVariable(name = "scheduleId") long scheduleId) {
         log.info("RatingController.removeRating() called");
 

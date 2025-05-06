@@ -1,5 +1,7 @@
 package success.planfit.comment.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,9 @@ import java.security.Principal;
 @RestController
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @RequestMapping("/post")
+@Tag(
+        name = "장소 API"
+)
 public class CommentController {
 
     private final CommentService commentService;
@@ -25,6 +30,9 @@ public class CommentController {
     private final PlanfitExceptionHandler exceptionHandler;
 
     @PostMapping("/{postId}/createComment")
+    @Operation(
+            summary = "댓글 추가"
+    )
     public ResponseEntity<Void> addComment(@PathVariable long postId,
                                            @RequestBody CommentSaveRequestDto requestDto,
                                            Principal principal){
@@ -34,6 +42,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{postId}/{commentId}/remove")
+    @Operation(
+            summary = "댓글 제거"
+    )
     public ResponseEntity<String> removeComment(
             @PathVariable Long postId
             ,@PathVariable Long commentId
@@ -44,6 +55,9 @@ public class CommentController {
     }
 
     @PostMapping("/{postId}/{commentId}")
+    @Operation(
+            summary = "댓글 좋아요"
+    )
     public ResponseEntity<Void> likeComment(@PathVariable long postId,
                                             @PathVariable long commentId, Principal principal){
         long userId = controllerUtil.findUserIdByPrincipal(principal);
@@ -52,6 +66,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{postId}/{commentId}")
+    @Operation(
+            summary = "댓글 좋아요 취소"
+    )
     public ResponseEntity<Void> unlikeComment(@PathVariable long postId,
                                               @PathVariable long commentId, Principal principal){
         long userId = controllerUtil.findUserIdByPrincipal(principal);
