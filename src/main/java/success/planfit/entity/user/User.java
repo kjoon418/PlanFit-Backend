@@ -127,6 +127,7 @@ public abstract class User {
         this.posts.remove(post);
         post.setUser(null);
     }
+
     /**
      * User - Post 연관관계 편의 메서드(생성)
      */

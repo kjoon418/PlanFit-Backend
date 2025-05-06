@@ -8,13 +8,11 @@ import success.planfit.comment.dto.CommentSaveRequestDto;
 import success.planfit.entity.comment.Comment;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
-import success.planfit.global.exception.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import success.planfit.repository.CommentLikeRepository;
 import success.planfit.repository.PostRepository;
 import success.planfit.repository.UserRepository;
-
-import java.util.List;
-
+import java.util.function.Supplier;
 
 @Slf4j
 @Transactional
@@ -22,18 +20,21 @@ import java.util.List;
 @Service
 public class CommentService {
 
+    private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new jakarta.persistence.EntityNotFoundException("유저 조회에 실패했습니다.");
+    private static final Supplier<EntityNotFoundException> POST_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 지닌 포스트를 찾을 수 없습니다.");
+
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    public void registerComment(Long userId, Long postId, CommentSaveRequestDto requestDto){
+    public void registerComment(long userId, long postId, CommentSaveRequestDto requestDto){
         // 유저 조회
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
 
         // Post 조회
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         // Comment 생성
         Comment comment = Comment.builder()
@@ -45,14 +46,14 @@ public class CommentService {
         postRepository.save(post);
     }
 
-    public void removeComment(Long userId, Long postId, Long commentId){
+    public void removeComment(long userId, long postId, long commentId){
         // Post 조회
         Post post = postRepository.findByIdWithComment(postId)
-                .orElseThrow(() -> new EntityNotFoundException("포스트 조회 실패"));
+                .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         // 댓글 가져오기
         Comment comment = post.getComments().stream()
-                .filter(c -> c.getId().equals(commentId)  && c.getUser().getId().equals(userId))
+                .filter(commentForFilter -> commentForFilter.getId().equals(commentId)  && commentForFilter.getUser().getId().equals(userId))
                 .findAny()
                 .orElseThrow(() -> new EntityNotFoundException("댓글 조회 실패"));
 

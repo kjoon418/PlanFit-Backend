@@ -32,7 +32,9 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/authorization/**").permitAll()
-                        .requestMatchers("/schedule/share/view/**").permitAll()
+                        .requestMatchers("/schedule/share/view/**").permitAll() // 시리얼 공유
+                        .requestMatchers("/swagger-ui/**").permitAll() // swagger
+                        .requestMatchers("/v3/api-docs/**").permitAll() // SpringDoc
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(configurationSource()))

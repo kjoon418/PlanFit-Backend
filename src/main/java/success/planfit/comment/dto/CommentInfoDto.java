@@ -15,7 +15,7 @@ public class CommentInfoDto {
     private LocalDateTime createdAt;
     private Long likeCount;
 
-    public static CommentInfoDto toDto(Comment comment) {
+    public static CommentInfoDto from(Comment comment) {
         return CommentInfoDto.builder()
                 .username(comment.getUser().getName())
                 .userPhoto(PhotoProvider.encode(comment.getUser().getProfilePhoto()))
