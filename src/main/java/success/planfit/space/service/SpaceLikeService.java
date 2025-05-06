@@ -1,5 +1,6 @@
 package success.planfit.space.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.like.SpaceLike;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.user.User;
-import success.planfit.global.exception.EntityNotFoundException;
 import success.planfit.repository.SpaceDetailRepository;
 import success.planfit.repository.SpaceLikeRepository;
 import success.planfit.repository.UserRepository;
