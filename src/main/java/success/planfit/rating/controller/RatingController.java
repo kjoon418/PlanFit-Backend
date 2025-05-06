@@ -60,6 +60,10 @@ public class RatingController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "사용자가 남긴 별점 조회",
+            description = "사용자가 그동안 남긴 별점 전체를 조회합니다."
+    )
     public ResponseEntity<List<RatingInfoResponseDto>> findRatings(Principal principal) {
         log.info("RatingController.findRatings() called");
 
@@ -70,6 +74,10 @@ public class RatingController {
     }
 
     @DeleteMapping("/{scheduleId}")
+    @Operation(
+            summary = "별점 삭제",
+            description = "별점 ID를 받아 해당 별점 정보를 삭제합니다."
+    )
     public ResponseEntity<Void> removeRating(Principal principal, @PathVariable(name = "scheduleId") long scheduleId) {
         log.info("RatingController.removeRating() called");
 
