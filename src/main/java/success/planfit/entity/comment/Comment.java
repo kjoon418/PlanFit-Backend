@@ -5,18 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
-
-import java.time.LocalDateTime;
+import success.planfit.global.BaseEntity;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +33,6 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Column(nullable = false)
     private Long likeCount;
 
@@ -52,6 +46,17 @@ public class Comment {
         this.user = user;
         this.content = content;
         this.likeCount = 0L;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount++;
+    }
+
+    public void decreaseLikeCount() {
+        if (this.likeCount < 0) {
+            throw new IllegalStateException("좋아요를 취소할 수 없음");
+        }
+        this.likeCount--;
     }
 
 }

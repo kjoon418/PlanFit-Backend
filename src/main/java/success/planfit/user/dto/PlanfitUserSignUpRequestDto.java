@@ -1,5 +1,7 @@
 package success.planfit.user.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import success.planfit.entity.user.IdentityType;
@@ -11,6 +13,8 @@ import success.planfit.global.validation.NotEmptyAndNotBlank;
 import java.time.LocalDate;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class PlanfitUserSignUpRequestDto {
 
     @NotEmptyAndNotBlank(value = "name")
@@ -57,4 +61,5 @@ public class PlanfitUserSignUpRequestDto {
                 .profilePhoto(photo)
                 .build();
     }
+
 }

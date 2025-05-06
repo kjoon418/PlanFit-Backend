@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class UserUpdateDto {
+
     private String name;
     private String email;
     private String phoneNumber;
@@ -32,6 +33,5 @@ public class UserUpdateDto {
                 .email(user.getEmail())
                 .build();
     }
-
 
 }

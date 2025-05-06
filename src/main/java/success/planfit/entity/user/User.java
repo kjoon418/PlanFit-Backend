@@ -5,18 +5,18 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import success.planfit.entity.comment.Comment;
+import success.planfit.entity.like.CommentLike;
+import success.planfit.entity.like.PostLike;
+import success.planfit.entity.like.SpaceLike;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.schedule.Schedule;
-import success.planfit.entity.like.*;
-import success.planfit.entity.preference.UserPreference;
 import success.planfit.global.jwt.RefreshToken;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.ALL;
 
 
 @Getter
@@ -35,16 +35,10 @@ public abstract class User {
     private RefreshToken refreshToken;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
-    private final List<UserPreference> userPreferences = new ArrayList<>();
-
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<Post> posts = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<Schedule> schedules = new ArrayList<>();
-
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
-    private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "user")
     private final List<SpaceLike> spaceLikes = new ArrayList<>();
@@ -88,29 +82,66 @@ public abstract class User {
     }
 
     /**
-     * User - UserPreference 연관관계 편의 메서드(생성)
+     * User - Schedule 연관관계 편의 메서드(생성)
      */
-    public void addUserPreference(UserPreference userPreference) {
-        this.userPreferences.add(userPreference);
-        userPreference.setUser(this);
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+        schedule.setUser(this);
     }
 
     /**
-     * User - UserPreference 연관관계 편의 메서드(삭제)
+     * User - Schedule 연관관계 편의 메서드(삭제)
      */
-    public void removeUserPreference(UserPreference userPreference) {
-        this.userPreferences.remove(userPreference);
-        userPreference.setUser(null);
+    public void removeSchedule(Schedule schedule) {
+        this.schedules.remove(schedule);
+        schedule.setUser(null);
     }
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-        comment.setUser(this);
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(생성)
+     */
+    public void addSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.add(spaceLike);
     }
 
-    public void removeComment(Comment comment) {
-        this.comments.remove(comment);
-        comment.setUser(null);
+
+    /**
+     * User - SpaceLike 연관관계 편의 메서드(삭제)
+     */
+    public void removeSpaceLike(SpaceLike spaceLike) {
+        this.spaceLikes.remove(spaceLike);
+    }
+
+    /*
+     * User - Post 연관관계 편의 메서드(생성)
+     */
+    public void addPost(Post post) {
+        this.posts.add(post);
+        post.setUser(this);
+    }
+
+    /**
+     * User - Post 연관관계 편의 메서드(삭제)
+     */
+    public void removePost(Post post) {
+        this.posts.remove(post);
+        post.setUser(null);
+    }
+
+    /**
+     * User - Post 연관관계 편의 메서드(생성)
+     */
+    public void addPostLike(PostLike postLike) {
+        this.postLikes.add(postLike);
+        postLike.setUser(this);
+    }
+
+    /**
+     * User - Post 연관관계 편의 메서드(삭제)
+     */
+    public void removePostLike(PostLike postLike) {
+        this.postLikes.remove(postLike);
+        postLike.setUser(null);
     }
 
 }

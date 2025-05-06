@@ -60,6 +60,11 @@ dependencies {
     // Bean Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Apache Common Lang
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+
+    // SpringDoc OpenAPI (Swagger UI)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
 
 tasks.named('test') {

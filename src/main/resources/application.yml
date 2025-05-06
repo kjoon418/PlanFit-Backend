@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/planfit
-    username: sa
-#    password: ${DB_PASSWORD}
-    driver-class-name: org.h2.Driver
+    url: ${DB_JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     properties:
@@ -16,7 +16,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: default
   jpa:
     hibernate:
       ddl-auto: create

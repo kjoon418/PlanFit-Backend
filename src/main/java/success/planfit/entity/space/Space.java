@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ManyToAny;
+import lombok.Setter;
 import success.planfit.entity.course.Course;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -20,7 +20,8 @@ public class Space {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToAny(fetch = LAZY)
+    @Setter
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(nullable = false)
     private Course course;
 
@@ -30,18 +31,20 @@ public class Space {
 
     private Integer sequence;
 
-    private Long likeCount;
-
     @Builder
     private Space(
-        Course course,
         SpaceDetail spaceDetail,
         Integer sequence
     ) {
-        this.course = course;
         this.spaceDetail = spaceDetail;
         this.sequence = sequence;
-        this.likeCount = 0L;
+    }
+
+    public static Space createSpace(SpaceDetail spaceDetail, Integer sequence) {
+        return Space.builder()
+                .spaceDetail(spaceDetail)
+                .sequence(sequence)
+                .build();
     }
 
 }

@@ -1,44 +1,40 @@
 package success.planfit.user.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import success.planfit.entity.user.PlanfitUser;
 import success.planfit.entity.user.User;
-import success.planfit.user.dto.UserUpdateDto;
+import success.planfit.global.exception.IllegalRequestException;
+import success.planfit.global.jwt.TokenProvider;
+import success.planfit.global.jwt.TokenType;
+import success.planfit.global.jwt.dto.AccessTokenResponseDto;
 import success.planfit.global.photo.PhotoProvider;
 import success.planfit.repository.UserRepository;
+import success.planfit.user.dto.UserUpdateDto;
 
-@Slf4j
+import java.util.function.Supplier;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
 
+    private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID로 회원을 조회할 수 없습니다.");
+
     private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
 
     @Transactional(readOnly = true)
-    public User findById(Long id) {
-        log.info("UserService.findById() called");
+    public UserUpdateDto getUserInfo(long userId) {
+        User user = findUserById(userId);
 
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 id로 회원이 조회되지 않음."));
-    }
-    // 회원 정보 조회 (기본키로 조회)
-    public UserUpdateDto getUserInfo(Long userId) {  // 회원 기본키 (userId)를 파라미터로 받음
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("회원 정보 조회 실패"));
-
-        return UserUpdateDto.from(user);  // UserDto로 변환하여 반환
+        return UserUpdateDto.from(user);
     }
 
-    // 회원 정보 수정
     @Transactional
-    public void updateUserInfo(Long userId, UserUpdateDto userDto) {
-        User user = userRepository.findById(userId)  // ID로 조회
-                .orElseThrow(() -> new RuntimeException("회원 정보 조회 실패"));
+    public void updateUserInfo(long userId, UserUpdateDto userDto) {
+        User user = findUserById(userId);
 
         if (userDto.getProfilePhoto() != null) {
             user.setProfilePhoto(PhotoProvider.decode(userDto.getProfilePhoto()));
@@ -64,4 +60,55 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    public void invalidateRefreshToken(long userId) {
+        User user = findUserById(userId);
+        user.getRefreshToken().setTokenValue(null);
+    }
+
+    @Transactional
+    public void deleteUser(long userId) {
+        User user = findUserById(userId);
+
+        userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public AccessTokenResponseDto reissueAccessToken(String refreshToken) {
+        if (!tokenProvider.validateToken(refreshToken, TokenType.REFRESH)) {
+            throw new IllegalRequestException("부적절한 리프레쉬 토큰입니다.");
+        }
+
+        long userId = findUserIdFromToken(refreshToken);
+        User user = findUserById(userId);
+
+        if (!isEqualWithSavedToken(user, refreshToken)) {
+            throw new IllegalRequestException("만료된 리프레쉬 토큰입니다.");
+        }
+
+        return AccessTokenResponseDto.builder()
+                .accessToken(tokenProvider.createToken(user, TokenType.ACCESS))
+                .build();
+    }
+
+    private User findUserById(long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
+    }
+
+    private long findUserIdFromToken(String token) {
+        String userId = tokenProvider.parseClaims(token)
+                .getSubject();
+
+        return Long.parseLong(userId);
+    }
+
+    private boolean isEqualWithSavedToken(User user, String refreshTokenValue) {
+        String actualValue = user.getRefreshToken()
+                .getTokenValue();
+
+        return refreshTokenValue.equals(actualValue);
+    }
+
 }
