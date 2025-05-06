@@ -7,11 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import success.planfit.course.dto.SpaceDetailInfoDto;
 import success.planfit.course.dto.SpaceRequestDto;
-import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.space.dto.request.SpaceDetailRequestDto;
-import success.planfit.space.dto.request.SpaceRequestFromAI;
-import success.planfit.space.dto.response.SpaceInfoForAIDto;
+import success.planfit.space.dto.response.SpaceResponseFromAI;
+import success.planfit.space.dto.request.SpaceInfoForAIDto;
 import success.planfit.space.service.SpaceService;
 
 import java.security.Principal;
@@ -30,8 +29,9 @@ public class SpaceController {
      * AI에게 장소 조회 요청
      */
     @GetMapping("/toAI")
-    public ResponseEntity<SpaceInfoForAIDto> requestToAI(Principal principal, @RequestBody SpaceDetailRequestDto requestDto){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<SpaceInfoForAIDto> requestToAI(Principal principal,
+                                                         @RequestBody SpaceDetailRequestDto requestDto){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         SpaceInfoForAIDto spaceInfoForAIDto = spaceService.requestToAI(userId, requestDto);
         return ResponseEntity.ok(spaceInfoForAIDto);
     }
@@ -40,8 +40,9 @@ public class SpaceController {
      * AI에게 장소 받아서 갱신, 정렬 후, 프론트 장소 리스트에게 전달
      */
     @GetMapping("/toFront")
-    public ResponseEntity<List<SpaceDetailInfoDto>> responseToFront(Principal principal, @RequestBody List<SpaceRequestFromAI> requestDtoList){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<List<SpaceDetailInfoDto>> responseToFront(Principal principal,
+                                                                    @RequestBody List<SpaceResponseFromAI> requestDtoList){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         List<SpaceDetailInfoDto> spaceResponseDtoList = spaceService.responseToFE(requestDtoList);
         return ResponseEntity.ok(spaceResponseDtoList);
     }
@@ -61,9 +62,9 @@ public class SpaceController {
     @GetMapping("/{scheduleId}")
     public ResponseEntity<List<SpaceRequestDto>> findSpacesFromSchedule(
             Principal principal,
-            @PathVariable Long scheduleId
+            @PathVariable long scheduleId
     ){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         List<SpaceRequestDto> spacesFromSchedule = spaceService.getSpacesFromSchedule(userId, scheduleId);
         return ResponseEntity.ok(spacesFromSchedule);
     }
@@ -72,7 +73,7 @@ public class SpaceController {
      * 장소 단건 조회
      */
     @GetMapping("/{spaceDetailId}")
-    public ResponseEntity<SpaceDetailInfoDto> findSpaceDetailInfo(Long spaceDetailId){
+    public ResponseEntity<SpaceDetailInfoDto> findSpaceDetailInfo(long spaceDetailId){
         SpaceDetailInfoDto spaceDetailInfo = spaceService.findSpaceDetailInfo(spaceDetailId);
         return ResponseEntity.ok(spaceDetailInfo);
     }

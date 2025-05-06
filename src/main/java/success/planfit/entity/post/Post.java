@@ -9,25 +9,20 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import success.planfit.entity.comment.Comment;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.user.User;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import success.planfit.global.BaseEntity;
 import success.planfit.post.dto.request.PostRequestDto;
-
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -48,10 +43,6 @@ public class Post {
 
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "post")
     List<Comment> comments = new ArrayList<>();
@@ -125,9 +116,6 @@ public class Post {
      * Post - PostPhoto 연관관계 편의 메서드(전체 삭제)
      */
     public void removeEveryPostPhotos() {
-        for (PostPhoto postPhoto : postPhotos) {
-            postPhoto.setPost(null);
-        }
         postPhotos.clear();
     }
 
@@ -146,9 +134,6 @@ public class Post {
      * Post - PostType 연관관계 편의 메서드(전체 삭제)
      */
     public void removeEveryPostTypes() {
-        for (PostType postType : postTypes) {
-            postType.setPost(null);
-        }
         postTypes.clear();
     }
 }

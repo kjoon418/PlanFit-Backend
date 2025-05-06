@@ -22,7 +22,7 @@ import success.planfit.global.photo.PhotoProvider;
 import success.planfit.post.dto.request.PostRequestDto;
 import success.planfit.post.dto.response.PostInfoDto;
 import success.planfit.course.dto.CourseResponseDto;
-import success.planfit.global.exception.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import success.planfit.global.exception.IllegalRequestException;
 import success.planfit.repository.*;
 
@@ -37,6 +37,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 @Service
 public class PostService {
+    private static final Supplier<EntityNotFoundException> USER_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("유저 조회에 실패했습니다.");
     private static final Supplier<EntityNotFoundException> POST_NOT_FOUND_EXCEPTION = () -> new EntityNotFoundException("해당 ID를 지닌 포스트를 찾을 수 없습니다.");
     private static final int PAGE_SIZE = 10;
 
@@ -46,10 +47,9 @@ public class PostService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostLikeRepository postLikeRepository;
 
-    // 사용자가 코스 생성해서 포스팅
-    public void registerPost(Long userId, PostRequestDto requestDto) {
+    public void registerPost(long userId, PostRequestDto requestDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
 
         Post post = createPost(requestDto);
         Course course = createCourse(requestDto);
@@ -62,7 +62,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public CourseResponseDto findCourseInPublicPost(Long postId) {
+    public CourseResponseDto findCourseInPublicPost(long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
         validatePublic(post);
@@ -76,18 +76,14 @@ public class PostService {
         }
     }
 
-    // 포스트 단건 조회
     @Transactional(readOnly = true)
-    public PostInfoDto findPost(Long postId) {
-        Post post = postRepository.findById(postId).stream()
-                .filter(postForFilter -> postForFilter.getId().equals(postId))
-                .findAny()
+    public PostInfoDto findPost(long postId) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(POST_NOT_FOUND_EXCEPTION);
 
         return PostInfoDto.from(post);
     }
 
-    // 포스트 N건 조회 - 최신순
     @Transactional(readOnly = true)
     public List<PostInfoDto> findRecentPosts(int n) {
         List<Post> posts = postRepository.findTopNByOrderByCreatedAtDesc(n)
@@ -100,7 +96,6 @@ public class PostService {
         return postInfoDtos;
     }
 
-    // 모든 포스트 최신순 조회
     @Transactional(readOnly = true)
     public List<PostInfoDto> findAll(int pageNo, String criteria){
         Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE,Sort.by(Sort.Direction.DESC,criteria));
@@ -109,8 +104,7 @@ public class PostService {
         return page.getContent();
     }
 
-    // 포스트 수정
-    public void updatePost(Long userId, Long postId, PostRequestDto requestDto) {
+    public void updatePost(long userId, long postId, PostRequestDto requestDto) {
         Post post = postRepository.findByIdWithUserAndCourseAndComment(postId).stream()
                 .filter(postForFilter -> postForFilter.getUser().getId().equals(userId))
                 .findAny()
@@ -127,11 +121,9 @@ public class PostService {
         replacePostPhotoAndPost(post, postPhotos, postTypes);
     }
 
-    // 포스트 삭제
-    public void deletePost(Long userId, Long postId) {
-        // 유저 조회
+    public void deletePost(long userId, long postId) {
         User user = userRepository.findByIdWithPost(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
+                .orElseThrow(USER_NOT_FOUND_EXCEPTION);
         Post post = user.getPosts().stream()
                 .filter(p -> p.getId().equals(postId))
                 .findAny()

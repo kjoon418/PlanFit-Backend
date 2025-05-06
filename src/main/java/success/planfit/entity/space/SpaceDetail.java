@@ -55,7 +55,7 @@ public class SpaceDetail {
             SpaceType spaceType,
             String link,
             Double latitude,
-            Double longitude
+            Double longitude,
             long likeCount
     ) {
         this.googlePlacesIdentifier = googlePlacesIdentifier;

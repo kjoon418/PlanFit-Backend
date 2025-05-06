@@ -1,6 +1,7 @@
 package success.planfit.post.controller;
 
-import lombok.AccessLevel;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @RequestMapping("/post")
 public class PostController {
 
@@ -25,11 +26,13 @@ public class PostController {
     private final PlanfitExceptionHandler exceptionHandler;
     private final PostService postService;
 
-    // 사용자가 코스 생성해서 포스팅
+    /**
+     * 포스팅
+     */
     @PostMapping
     public ResponseEntity<Void> registerPost(Principal principal,
-                                             PostRequestDto requestDto) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+                                             @Valid @RequestBody PostRequestDto requestDto) {
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.registerPost(userId, requestDto);
         return ResponseEntity.ok().build();
     }
@@ -38,7 +41,7 @@ public class PostController {
      * 포스트 속 코스 정보 조회
      */
     @GetMapping("/{postId}")
-    public ResponseEntity<CourseResponseDto> findCourseInPublicPost(@PathVariable Long postId) {
+    public ResponseEntity<CourseResponseDto> findCourseInPublicPost(@PathVariable long postId) {
         log.info("PostController.findCourseInPost()");
 
         CourseResponseDto responseDto = postService.findCourseInPublicPost(postId);
@@ -56,8 +59,8 @@ public class PostController {
     /**
      * 포스트 단건 조회
      */
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostInfoDto> findPostById(@PathVariable Long postId){
+    @GetMapping("/{postId}/get")
+    public ResponseEntity<PostInfoDto> findPostById(@PathVariable long postId){
         PostInfoDto post = postService.findPost(postId);
         return ResponseEntity.ok(post);
     }
@@ -65,9 +68,9 @@ public class PostController {
     /**
      * 포스트 최신순 3건 조회
      */
-    @GetMapping
-    public ResponseEntity<List<PostInfoDto>> findRecentPosts(int n){
-        List<PostInfoDto> postInfoDtoList = postService.findRecentPosts(n);
+    @GetMapping("/get/{postNum}")
+    public ResponseEntity<List<PostInfoDto>> findRecentPosts(int postNum){
+        List<PostInfoDto> postInfoDtoList = postService.findRecentPosts(postNum);
         return ResponseEntity.ok(postInfoDtoList);
     }
 
@@ -87,8 +90,9 @@ public class PostController {
      * 포스트 수정
      */
     @PatchMapping("/{postId}")
-    public ResponseEntity<Void> updatePost(Principal principal, Long postId, PostRequestDto requestDto){
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> updatePost(Principal principal, long postId,
+                                           @Valid @RequestBody PostRequestDto requestDto){
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.updatePost(userId, postId, requestDto);
         return ResponseEntity.ok().build();
     }
@@ -97,11 +101,9 @@ public class PostController {
      * 포스트 삭제
      */
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(Principal principal, @PathVariable Long postId) {
-        Long userId = controllerUtil.findUserIdByPrincipal(principal);
+    public ResponseEntity<Void> deletePost(Principal principal, @PathVariable long postId) {
+        long userId = controllerUtil.findUserIdByPrincipal(principal);
         postService.deletePost(userId, postId);
         return ResponseEntity.ok().build();
     }
-
-
 }

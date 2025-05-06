@@ -25,7 +25,7 @@ public class Course {
     @Column(nullable = false)
     private String location;
 
-    @OneToMany(mappedBy = "course", fetch = LAZY, orphanRemoval = true, cascade = ALL)
+    @OneToMany(mappedBy = "course", orphanRemoval = true, cascade = ALL)
     private final List<Space> spaces = new ArrayList<>();
 
     @Builder

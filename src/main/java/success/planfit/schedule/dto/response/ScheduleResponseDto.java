@@ -6,13 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import success.planfit.course.dto.CourseResponseDto;
-import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
-import success.planfit.course.dto.SpaceResponseDto;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Getter
 @Builder
