@@ -105,8 +105,8 @@ public class SpaceService {
     }
 
     private void saveSpaceDetail(List<SpaceDetailInfoDto> SpaceDetailInfoDtos) {
-        SpaceDetailInfoDtos.stream()
-                .map(spaceDetailInfoDto -> {
+        SpaceDetailInfoDtos
+                .forEach(spaceDetailInfoDto -> {
                     Optional<SpaceDetail> foundSpaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceDetailInfoDto.getGooglePlacesIdentifier());
                     // 만약에 DB 값이 있다면 데이터 업데이트
                     foundSpaceDetail.ifPresent(spaceDetail ->
@@ -117,8 +117,6 @@ public class SpaceService {
                     List<SpacePhoto> spacePhotos = SpacePhoto.createSpacePhoto(spaceDetailInfoDto.getSpacePhotos());
                     spaceDetail.addSpacePhotos(spacePhotos);
                     spaceDetailRepository.save(spaceDetail);
-
-                    return SpaceDetailInfoDto.of(spaceDetail);
                 });
     }
 
