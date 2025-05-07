@@ -112,9 +112,9 @@ public abstract class User {
         this.spaceLikes.remove(spaceLike);
     }
 
-    /*
-     * User - Post 연관관계 편의 메서드(생성)
-     */
+     /**
+      * User - Post 연관관계 편의 메서드(생성)
+      */
     public void addPost(Post post) {
         this.posts.add(post);
         post.setUser(this);
