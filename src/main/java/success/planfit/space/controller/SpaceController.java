@@ -1,6 +1,5 @@
 package success.planfit.space.controller;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +8,6 @@ import success.planfit.course.dto.SpaceDetailInfoDto;
 import success.planfit.course.dto.SpaceRequestDto;
 import success.planfit.global.controller.ControllerUtil;
 import success.planfit.space.dto.request.SpaceDetailRequestDto;
-import success.planfit.space.dto.response.SpaceResponseFromAI;
-import success.planfit.space.dto.request.SpaceInfoForAIDto;
 import success.planfit.space.service.SpaceService;
 
 import java.security.Principal;
@@ -18,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @RequestMapping("/space")
 public class SpaceController {
 
@@ -26,25 +23,13 @@ public class SpaceController {
     private final SpaceService spaceService;
 
     /**
-     * AI에게 장소 조회 요청
+     * AI에게 장소 조회 요청 갱신, 정렬 후,
+     * 프론트 장소 리스트에게 전달
      */
-    @GetMapping("/toAI")
-    public ResponseEntity<SpaceInfoForAIDto> requestToAI(Principal principal,
-                                                         @RequestBody SpaceDetailRequestDto requestDto){
-        long userId = controllerUtil.findUserIdByPrincipal(principal);
-        SpaceInfoForAIDto spaceInfoForAIDto = spaceService.requestToAI(userId, requestDto);
-        return ResponseEntity.ok(spaceInfoForAIDto);
-    }
-
-    /**
-     * AI에게 장소 받아서 갱신, 정렬 후, 프론트 장소 리스트에게 전달
-     */
-    @GetMapping("/toFront")
-    public ResponseEntity<List<SpaceDetailInfoDto>> responseToFront(Principal principal,
-                                                                    @RequestBody List<SpaceResponseFromAI> requestDtoList){
-        long userId = controllerUtil.findUserIdByPrincipal(principal);
-        List<SpaceDetailInfoDto> spaceResponseDtoList = spaceService.responseToFE(requestDtoList);
-        return ResponseEntity.ok(spaceResponseDtoList);
+    @GetMapping("/getSpaceDetails")
+    public ResponseEntity<List<SpaceDetailInfoDto>> getSpaceDetails(@RequestBody SpaceDetailRequestDto requestDto){
+        List<SpaceDetailInfoDto> spaceDetailInfoDtos = spaceService.getSpaceDetails(requestDto);
+        return ResponseEntity.ok(spaceDetailInfoDtos);
     }
 
     /**
