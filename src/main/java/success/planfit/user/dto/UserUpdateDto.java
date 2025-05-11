@@ -23,9 +23,11 @@ public class UserUpdateDto {
     private String profilePhoto;
 
     public static UserUpdateDto from(User user) {
+        byte[] profilePhoto = user.getProfilePhoto();
+
         return UserUpdateDto.builder()
                 .name(user.getName())
-                .profilePhoto(PhotoProvider.encode(user.getProfilePhoto()))
+                .profilePhoto(profilePhoto == null ? null : PhotoProvider.encode(profilePhoto))
                 .birthOfDate(user.getBirthOfDate())
                 .name(user.getName())
                 .phoneNumber(user.getPhoneNumber())
