@@ -12,6 +12,11 @@ spring:
         format_sql: true
     open-in-view: false
 
+external:
+  ai:
+    base-url: ${AI_URL}
+
+
 ---
 spring:
   config:

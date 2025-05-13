@@ -4,6 +4,7 @@ package success.planfit.space.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -28,13 +29,19 @@ import java.util.Optional;
 
 @Slf4j
 @Transactional
-@RequiredArgsConstructor
 @Service
 public class SpaceService {
 
     private final SpaceDetailRepository spaceDetailRepository;
     private final ScheduleRepository scheduleRepository;
-    private final String URL = "";
+    private  String URL;
+
+    public SpaceService(ScheduleRepository scheduleRepository, SpaceDetailRepository spaceDetailRepository,
+                        @Value("${external.ai.base-url}") String URL) {
+        this.scheduleRepository = scheduleRepository;
+        this.spaceDetailRepository = spaceDetailRepository;
+        this.URL = URL;
+    }
 
     /**
      * AI에게 장소 조회 요청
