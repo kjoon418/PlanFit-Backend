@@ -1,5 +1,6 @@
 package success.planfit.schedule.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class ScheduleTitleInfoResponseDto {
 
     private final String title;
     private final LocalDate date;
+    @Schema(description = "시작 시간", type = "string", example = "17:50:00")
     private final LocalTime startTime;
     private final String location;
 

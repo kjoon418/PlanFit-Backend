@@ -1,6 +1,7 @@
 package success.planfit.schedule.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class ScheduleResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Schema(description = "시작 시간", type = "string", example = "17:50:00")
     private final LocalTime startTime;
     private final String title;
     private final String content;
