@@ -1,11 +1,13 @@
 package success.planfit.comment.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import success.planfit.entity.comment.Comment;
 import success.planfit.global.photo.PhotoProvider;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 public class CommentInfoDto {
 

@@ -1,6 +1,7 @@
 package success.planfit.post.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 import success.planfit.comment.dto.CommentInfoDto;
 import success.planfit.course.dto.SpaceResponseDto;
 import success.planfit.entity.comment.Comment;
@@ -10,6 +11,7 @@ import success.planfit.global.photo.PhotoProvider;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Builder
 public class PostInfoDto {
     private String username;

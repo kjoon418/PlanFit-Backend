@@ -38,7 +38,7 @@ public class ScheduleController {
             summary = "일정 등록",
             description = "새로운 일정을 생성합니다"
     )
-    public ResponseEntity<Void> registerSchedule(Principal principal, ScheduleRequestDto requestDto) {
+    public ResponseEntity<Void> registerSchedule(Principal principal, @RequestBody ScheduleRequestDto requestDto) {
         log.info("ScheduleController.registerSchedule() called");
 
         long userId = util.findUserIdByPrincipal(principal);

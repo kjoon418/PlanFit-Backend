@@ -1,12 +1,14 @@
 package success.planfit.post.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 import success.planfit.entity.post.Post;
 import success.planfit.entity.user.User;
 import success.planfit.global.photo.PhotoProvider;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Builder
 public class PostPreviewDto {
     private String username;
