@@ -1,5 +1,6 @@
 package success.planfit.schedule.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +16,10 @@ import java.time.LocalTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScheduleTitleInfoResponseDto {
 
+    private final Long id;
     private final String title;
     private final LocalDate date;
+    @Schema(description = "시작 시간", type = "string", example = "17:50:00")
     private final LocalTime startTime;
     private final String location;
 
@@ -24,6 +27,7 @@ public class ScheduleTitleInfoResponseDto {
         Course course = schedule.getCourse();
 
         return ScheduleTitleInfoResponseDto.builder()
+                .id(schedule.getId())
                 .title(schedule.getTitle())
                 .date(schedule.getDate())
                 .startTime(schedule.getStartTime())

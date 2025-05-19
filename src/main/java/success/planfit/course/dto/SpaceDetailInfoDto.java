@@ -1,6 +1,5 @@
 package success.planfit.course.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import success.planfit.entity.space.SpaceDetail;
@@ -10,13 +9,11 @@ import success.planfit.global.photo.PhotoProvider;
 
 import java.util.List;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @Getter
 @Builder
-public class SpaceDetailInfoDto {
+public class SpaceDetailInfoDto implements Comparable<SpaceDetailInfoDto> {
     private final String googlePlacesIdentifier;
-    private final String name;
+    private final String spaceName;
     private final String location;
     private final SpaceType spaceType;
     private final String link;
@@ -24,6 +21,7 @@ public class SpaceDetailInfoDto {
     private final Double longitude;
     private final long likeCount;
     private final List<String> spacePhotos;
+    private int similarityOrder;
 
 
     public static SpaceDetailInfoDto of(SpaceDetail spaceDetail) {
@@ -34,7 +32,7 @@ public class SpaceDetailInfoDto {
 
         return SpaceDetailInfoDto.builder()
                 .googlePlacesIdentifier(spaceDetail.getGooglePlacesIdentifier())
-                .name(spaceDetail.getSpaceName())
+                .spaceName(spaceDetail.getSpaceName())
                 .location(spaceDetail.getLocation())
                 .spaceType(spaceDetail.getSpaceType())
                 .link(spaceDetail.getLink())
@@ -43,5 +41,10 @@ public class SpaceDetailInfoDto {
                 .likeCount(spaceDetail.getLikeCount())
                 .spacePhotos(spacePhotos)
                 .build();
+    }
+
+    @Override
+    public int compareTo(SpaceDetailInfoDto o) {
+        return this.similarityOrder - o.similarityOrder;
     }
 }
