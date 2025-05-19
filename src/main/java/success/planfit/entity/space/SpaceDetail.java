@@ -2,7 +2,9 @@ package success.planfit.entity.space;
 
 import jakarta.persistence.*;
 import lombok.*;
+import success.planfit.course.dto.SpaceDetailInfoDto;
 import success.planfit.entity.rating.Rating;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +57,7 @@ public class SpaceDetail {
             SpaceType spaceType,
             String link,
             Double latitude,
-            Double longitude,
-            long likeCount
+            Double longitude
     ) {
         this.googlePlacesIdentifier = googlePlacesIdentifier;
         this.spaceName = spaceName;
@@ -92,6 +93,15 @@ public class SpaceDetail {
         }
 
         this.spacePhotos.addAll(spacePhotos);
+    }
+
+    public void update(SpaceDetailInfoDto requestDto){
+        this.spaceName = requestDto.getSpaceName();
+        this.location = requestDto.getLocation();
+        this.spaceType = requestDto.getSpaceType();
+        this.link = requestDto.getLink();
+        this.longitude = requestDto.getLongitude();
+        this.latitude = requestDto.getLatitude();
     }
 
 }

@@ -1,63 +1,69 @@
 package success.planfit.space.service;
 
 
-
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import success.planfit.course.dto.SpaceDetailInfoDto;
 import success.planfit.course.dto.SpaceRequestDto;
 import success.planfit.entity.course.Course;
 import success.planfit.entity.schedule.Schedule;
 import success.planfit.entity.space.SpaceDetail;
 import success.planfit.entity.space.SpacePhoto;
-import success.planfit.entity.user.User;
-import jakarta.persistence.EntityNotFoundException;
 import success.planfit.repository.ScheduleRepository;
 import success.planfit.repository.SpaceDetailRepository;
-import success.planfit.repository.UserRepository;
 import success.planfit.space.dto.request.SpaceDetailRequestDto;
-import success.planfit.space.dto.response.SpaceResponseFromAI;
 import success.planfit.space.dto.request.SpaceInfoForAIDto;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
 @Transactional
-@RequiredArgsConstructor
 @Service
 public class SpaceService {
 
-    private final UserRepository userRepository;
     private final SpaceDetailRepository spaceDetailRepository;
     private final ScheduleRepository scheduleRepository;
+    private  String URL;
+
+    public SpaceService(ScheduleRepository scheduleRepository, SpaceDetailRepository spaceDetailRepository,
+                        @Value("${external.ai.base-url}") String URL) {
+        this.scheduleRepository = scheduleRepository;
+        this.spaceDetailRepository = spaceDetailRepository;
+        this.URL = URL;
+    }
 
     /**
      * AI에게 장소 조회 요청
      */
-    public SpaceInfoForAIDto requestToAI(long userId, SpaceDetailRequestDto requestDto){
-        // 유저 조회
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("유저 조회 실패"));
-        return SpaceInfoForAIDto.of(user, requestDto);
-    }
+    public List<SpaceDetailInfoDto> getSpaceDetails(SpaceDetailRequestDto requestDto){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List<SpaceDetailInfoDto>> responseEntity = restTemplate.exchange(URL, HttpMethod.POST, new HttpEntity<>(SpaceInfoForAIDto.of(requestDto)), new ParameterizedTypeReference<>() {
+        });
 
-    // AI에게 장소 받아서 캐싱, 정렬 후, 프론트 장소 리스트에게 전달
-    public List<SpaceDetailInfoDto> responseToFE(List<SpaceResponseFromAI> requestDtos){
-        List<SpaceDetailInfoDto> responseDtos = new ArrayList<>();
-        for (SpaceResponseFromAI requestDto : requestDtos) {
-            SpaceDetail spaceDetail = createSpaceDetail(requestDto);
-            List<SpacePhoto> spacePhotos = SpacePhoto.createSpacePhoto(requestDto.getSpacePhotos());
-            spaceDetail.addSpacePhotos(spacePhotos);
-            spaceDetailRepository.save(spaceDetail);
-            responseDtos.add(SpaceDetailInfoDto.of(spaceDetail));
+        if (isRequestSuccess(responseEntity)){
+            List<SpaceDetailInfoDto> spaceDetailInfoDtos = responseEntity.getBody();
+            saveSpaceDetail(spaceDetailInfoDtos);
+
+            return spaceDetailInfoDtos.stream().
+                    sorted().toList();
         }
-        return responseDtos;
+        throw new RuntimeException("장소 조회 실패");
     }
 
-    // 직접 장소 고르기
+    /**
+     * 직접 장소 고르기
+     */
     public List<SpaceRequestDto> getSpacesFromUser(List<SpaceRequestDto> requestDtos){
         return requestDtos;
     }
@@ -70,11 +76,10 @@ public class SpaceService {
 
         Course course = schedule.getCourse();
         return course.getSpaces().stream()
-                .map(space -> {
-                    return SpaceRequestDto.builder()
+                .map(space -> SpaceRequestDto.builder()
                             .googlePlacesIdentifier(space.getSpaceDetail().getGooglePlacesIdentifier())
-                            .build();
-                })
+                            .build()
+                )
                 .toList();
     }
 
@@ -89,17 +94,37 @@ public class SpaceService {
                 .orElseThrow(() ->  new EntityNotFoundException("장소 정보를 찾을 수 없음"));
     }
 
-    private static SpaceDetail createSpaceDetail(SpaceResponseFromAI spaceResponseFromAI) {
+    private static SpaceDetail createSpaceDetail(SpaceDetailInfoDto spaceDetailInfoDto) {
         SpaceDetail spaceDetail = SpaceDetail.builder()
-                .googlePlacesIdentifier(spaceResponseFromAI.getGooglePlacesIdentifier())
-                .spaceName(spaceResponseFromAI.getName())
-                .location(spaceResponseFromAI.getLocation())
-                .spaceType(spaceResponseFromAI.getSpaceType())
-                .latitude(spaceResponseFromAI.getLatitude())
-                .longitude(spaceResponseFromAI.getLongitude())
-                .link(spaceResponseFromAI.getLink())
+                .googlePlacesIdentifier(spaceDetailInfoDto.getGooglePlacesIdentifier())
+                .spaceName(spaceDetailInfoDto.getSpaceName())
+                .location(spaceDetailInfoDto.getLocation())
+                .spaceType(spaceDetailInfoDto.getSpaceType())
+                .latitude(spaceDetailInfoDto.getLatitude())
+                .longitude(spaceDetailInfoDto.getLongitude())
+                .link(spaceDetailInfoDto.getLink())
                 .build();
         return spaceDetail;
+    }
+
+    private boolean isRequestSuccess(ResponseEntity<List<SpaceDetailInfoDto>> responseEntity) {
+        return responseEntity.getStatusCode().is2xxSuccessful();
+    }
+
+    private void saveSpaceDetail(List<SpaceDetailInfoDto> SpaceDetailInfoDtos) {
+        SpaceDetailInfoDtos
+                .forEach(spaceDetailInfoDto -> {
+                    Optional<SpaceDetail> foundSpaceDetail = spaceDetailRepository.findByGooglePlacesIdentifier(spaceDetailInfoDto.getGooglePlacesIdentifier());
+                    // 만약에 DB 값이 있다면 데이터 업데이트
+                    foundSpaceDetail.ifPresent(spaceDetail ->
+                        spaceDetail.update(spaceDetailInfoDto)
+                    );
+                    // 만약에 DB 값이 없다면 DB에 저장
+                    SpaceDetail spaceDetail = createSpaceDetail(spaceDetailInfoDto);
+                    List<SpacePhoto> spacePhotos = SpacePhoto.createSpacePhoto(spaceDetailInfoDto.getSpacePhotos());
+                    spaceDetail.addSpacePhotos(spacePhotos);
+                    spaceDetailRepository.save(spaceDetail);
+                });
     }
 
 }
